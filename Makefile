@@ -7,6 +7,7 @@ GITBRANCH:=$(shell git symbolic-ref --short HEAD 2>/dev/null)
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 GOPATH=$(shell go env GOPATH)
+GO111MODULE=on
 
 # gofmt
 UNFORMATTED_FILES=$(shell find . -not -path "./vendor/*" -name "*.go" | xargs gofmt -s -l)
@@ -50,7 +51,6 @@ deps:
 	@go get golang.org/x/tools/cmd/goimports
 	@go get golang.org/x/tools/cmd/stringer
 	@go get -u github.com/mna/pigeon
-	@go get github.com/kardianos/govendor
 
 dev: deps ## Build and install a development build
 	@grep 'const VersionPrerelease = ""' version/version.go > /dev/null ; if [ $$? -eq 0 ]; then \
@@ -113,7 +113,7 @@ testrace: fmt-check mode-check vet ## Test with race detection enabled
 	@go test -race $(TEST) $(TESTARGS) -timeout=2m -p=8
 
 updatedeps:
-	@echo "INFO: Packer deps are managed by govendor. See .github/CONTRIBUTING.md"
+	@echo "INFO: Packer deps are managed by go modules. See .github/CONTRIBUTING.md"
 
 vet: ## Vet Go code
 	@go tool vet $(VET)  ; if [ $$? -eq 1 ]; then \
