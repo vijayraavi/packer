@@ -7,7 +7,6 @@ GITBRANCH:=$(shell git symbolic-ref --short HEAD 2>/dev/null)
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 GOPATH=$(shell go env GOPATH)
-GO111MODULE=on
 
 # gofmt
 UNFORMATTED_FILES=$(shell find . -not -path "./vendor/*" -name "*.go" | xargs gofmt -s -l)
@@ -31,12 +30,12 @@ ci: testrace
 release: deps test releasebin package ## Build a release build
 
 bin: deps ## Build debug/test build
-	@go get github.com/mitchellh/gox
+	@GO111MODULE=off go get github.com/mitchellh/gox
 	@echo "WARN: 'make bin' is for debug / test builds only. Use 'make release' for release builds."
 	@sh -c "$(CURDIR)/scripts/build.sh"
 
 releasebin: deps
-	@go get github.com/mitchellh/gox
+	@GO111MODULE=off go get github.com/mitchellh/gox
 	@grep 'const VersionPrerelease = "dev"' version/version.go > /dev/null ; if [ $$? -eq 0 ]; then \
 		echo "ERROR: You must remove prerelease tags from version/version.go prior to release."; \
 		exit 1; \
@@ -48,9 +47,9 @@ package:
 	@sh -c "$(CURDIR)/scripts/dist.sh $(VERSION)"
 
 deps:
-	@go get golang.org/x/tools/cmd/goimports
-	@go get golang.org/x/tools/cmd/stringer
-	@go get -u github.com/mna/pigeon
+	@GO111MODULE=off go get golang.org/x/tools/cmd/goimports
+	@GO111MODULE=off go get golang.org/x/tools/cmd/stringer
+	@GO111MODULE=off go get -u github.com/mna/pigeon
 
 dev: deps ## Build and install a development build
 	@grep 'const VersionPrerelease = ""' version/version.go > /dev/null ; if [ $$? -eq 0 ]; then \
