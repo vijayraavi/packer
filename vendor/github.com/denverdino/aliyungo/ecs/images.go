@@ -37,6 +37,13 @@ const (
 	ImageUsageNone     = ImageUsage("none")
 )
 
+type ImageFormatType string
+
+const (
+	RAW = ImageFormatType("RAW")
+	VHD = ImageFormatType("VHD")
+)
+
 // DescribeImagesArgs repsents arguments to describe images
 type DescribeImagesArgs struct {
 	RegionId        common.Region
@@ -63,8 +70,10 @@ type DescribeImagesResponse struct {
 type DiskDeviceMapping struct {
 	SnapshotId string
 	//Why Size Field is string-type.
-	Size   string
-	Device string
+	Size string
+	// Now the key Size change to DiskImageSize
+	DiskImageSize string
+	Device        string
 	//For import images
 	Format    string
 	OSSBucket string
