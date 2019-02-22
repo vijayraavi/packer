@@ -26,6 +26,7 @@ import (
 	"golang.org/x/crypto/ssh"
 
 	"github.com/hashicorp/packer/common"
+	"github.com/hashicorp/packer/common/adapter"
 	commonhelper "github.com/hashicorp/packer/helper/common"
 	"github.com/hashicorp/packer/helper/config"
 	"github.com/hashicorp/packer/packer"
@@ -51,7 +52,7 @@ type Config struct {
 	EmptyGroups          []string `mapstructure:"empty_groups"`
 	HostAlias            string   `mapstructure:"host_alias"`
 	User                 string   `mapstructure:"user"`
-	LocalPort            string   `mapstructure:"local_port"`
+	LocalPort            uint     `mapstructure:"local_port"`
 	SSHHostKeyFile       string   `mapstructure:"ssh_host_key_file"`
 	SSHAuthorizedKeyFile string   `mapstructure:"ssh_authorized_key_file"`
 	SFTPCmd              string   `mapstructure:"sftp_command"`
@@ -63,7 +64,7 @@ type Config struct {
 
 type Provisioner struct {
 	config            Config
-	adapter           *adapter
+	adapter           *adapter.Adapter
 	done              chan struct{}
 	ansibleVersion    string
 	ansibleMajVersion uint
@@ -130,12 +131,8 @@ func (p *Provisioner) Prepare(raws ...interface{}) error {
 		p.config.AnsibleEnvVars = append(p.config.AnsibleEnvVars, "ANSIBLE_SCP_IF_SSH=True")
 	}
 
-	if len(p.config.LocalPort) > 0 {
-		if _, err := strconv.ParseUint(p.config.LocalPort, 10, 16); err != nil {
-			errs = packer.MultiErrorAppend(errs, fmt.Errorf("local_port: %s must be a valid port", p.config.LocalPort))
-		}
-	} else {
-		p.config.LocalPort = "0"
+	if p.config.LocalPort > 65535 {
+		errs = packer.MultiErrorAppend(errs, fmt.Errorf("local_port: %d must be a valid port", p.config.LocalPort))
 	}
 
 	if len(p.config.InventoryDirectory) > 0 {
@@ -256,11 +253,8 @@ func (p *Provisioner) Provision(ui packer.Ui, comm packer.Communicator) error {
 	config.AddHostKey(hostSigner)
 
 	localListener, err := func() (net.Listener, error) {
-		port, err := strconv.ParseUint(p.config.LocalPort, 10, 16)
-		if err != nil {
-			return nil, err
-		}
 
+		port := p.config.LocalPort
 		tries := 1
 		if port != 0 {
 			tries = 10
@@ -272,11 +266,17 @@ func (p *Provisioner) Provision(ui packer.Ui, comm packer.Communicator) error {
 				ui.Say(err.Error())
 				continue
 			}
-			_, p.config.LocalPort, err = net.SplitHostPort(l.Addr().String())
+			_, portStr, err := net.SplitHostPort(l.Addr().String())
 			if err != nil {
 				ui.Say(err.Error())
 				continue
 			}
+			portUint64, err := strconv.ParseUint(portStr, 10, 0)
+			if err != nil {
+				ui.Say(err.Error())
+				continue
+			}
+			p.config.LocalPort = uint(portUint64)
 			return l, nil
 		}
 		return nil, errors.New("Error setting up SSH proxy connection")
@@ -286,8 +286,11 @@ func (p *Provisioner) Provision(ui packer.Ui, comm packer.Communicator) error {
 		return err
 	}
 
-	ui = newUi(ui)
-	p.adapter = newAdapter(p.done, localListener, config, p.config.SFTPCmd, ui, comm)
+	ui = &packer.SafeUi{
+		Sem: make(chan int, 1),
+		Ui:  ui,
+	}
+	p.adapter = adapter.NewAdapter(p.done, localListener, config, p.config.SFTPCmd, ui, comm)
 
 	defer func() {
 		log.Print("shutting down the SSH proxy")
@@ -304,10 +307,10 @@ func (p *Provisioner) Provision(ui packer.Ui, comm packer.Communicator) error {
 		}
 		defer os.Remove(tf.Name())
 
-		host := fmt.Sprintf("%s ansible_host=127.0.0.1 ansible_user=%s ansible_port=%s\n",
+		host := fmt.Sprintf("%s ansible_host=127.0.0.1 ansible_user=%s ansible_port=%d\n",
 			p.config.HostAlias, p.config.User, p.config.LocalPort)
 		if p.ansibleMajVersion < 2 {
-			host = fmt.Sprintf("%s ansible_ssh_host=127.0.0.1 ansible_ssh_user=%s ansible_ssh_port=%s\n",
+			host = fmt.Sprintf("%s ansible_ssh_host=127.0.0.1 ansible_ssh_user=%s ansible_ssh_port=%d\n",
 				p.config.HostAlias, p.config.User, p.config.LocalPort)
 		}
 
@@ -556,50 +559,4 @@ func getWinRMPassword(buildName string) string {
 	winRMPass, _ := commonhelper.RetrieveSharedState("winrm_password", buildName)
 	packer.LogSecretFilter.Set(winRMPass)
 	return winRMPass
-}
-
-// Ui provides concurrency-safe access to packer.Ui.
-type Ui struct {
-	sem chan int
-	ui  packer.Ui
-}
-
-func newUi(ui packer.Ui) packer.Ui {
-	return &Ui{sem: make(chan int, 1), ui: ui}
-}
-
-func (ui *Ui) Ask(s string) (string, error) {
-	ui.sem <- 1
-	ret, err := ui.ui.Ask(s)
-	<-ui.sem
-
-	return ret, err
-}
-
-func (ui *Ui) Say(s string) {
-	ui.sem <- 1
-	ui.ui.Say(s)
-	<-ui.sem
-}
-
-func (ui *Ui) Message(s string) {
-	ui.sem <- 1
-	ui.ui.Message(s)
-	<-ui.sem
-}
-
-func (ui *Ui) Error(s string) {
-	ui.sem <- 1
-	ui.ui.Error(s)
-	<-ui.sem
-}
-
-func (ui *Ui) Machine(t string, args ...string) {
-	ui.sem <- 1
-	ui.ui.Machine(t, args...)
-	<-ui.sem
-}
-
-func (ui *Ui) ProgressBar() packer.ProgressBar {
-	return new(packer.NoopProgressBar)
 }
