@@ -37,7 +37,7 @@ require (
 	github.com/denisenkom/go-mssqldb v0.0.0-20181014144952-4e0d7dc8888f // indirect
 	github.com/denverdino/aliyungo v0.0.0-20180417075537-ebad04655e03
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/digitalocean/godo v0.0.0-20170407151542-4c04abe183f4
+	github.com/digitalocean/godo v1.7.1
 	github.com/dnaeon/go-vcr v1.0.0 // indirect
 	github.com/docker/docker v0.0.0-20170406124027-fa3e2d5ab9b5 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect

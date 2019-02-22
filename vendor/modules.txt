@@ -113,7 +113,7 @@ github.com/denverdino/aliyungo/ram
 github.com/denverdino/aliyungo/util
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
-# github.com/digitalocean/godo v0.0.0-20170407151542-4c04abe183f4
+# github.com/digitalocean/godo v1.7.1
 github.com/digitalocean/godo
 # github.com/docker/docker v0.0.0-20170406124027-fa3e2d5ab9b5
 github.com/docker/docker/pkg/namesgenerator
@@ -151,7 +151,6 @@ github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/bootfromvolum
 github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs
 github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/startstop
 github.com/gophercloud/gophercloud/openstack/compute/v2/flavors
-github.com/gophercloud/gophercloud/openstack/compute/v2/images
 github.com/gophercloud/gophercloud/openstack/compute/v2/servers
 github.com/gophercloud/gophercloud/openstack/imageservice/v2/images
 github.com/gophercloud/gophercloud/openstack/imageservice/v2/members
@@ -162,6 +161,7 @@ github.com/gophercloud/gophercloud/pagination
 github.com/gophercloud/gophercloud/openstack/identity/v2/tokens
 github.com/gophercloud/gophercloud/openstack/identity/v3/tokens
 github.com/gophercloud/gophercloud/openstack/utils
+github.com/gophercloud/gophercloud/openstack/compute/v2/images
 github.com/gophercloud/gophercloud/internal
 github.com/gophercloud/gophercloud/openstack/identity/v2/tenants
 # github.com/gophercloud/utils v0.0.0-20180806215700-d6e28a8b3199
@@ -352,7 +352,7 @@ github.com/vmware/govmomi/vim25/methods
 github.com/vmware/govmomi/vim25/progress
 github.com/vmware/govmomi/vim25/debug
 github.com/vmware/govmomi/vim25/xml
-# github.com/xanzy/go-cloudstack v2.1.4+incompatible
+# github.com/xanzy/go-cloudstack v2.4.1+incompatible
 github.com/xanzy/go-cloudstack/cloudstack
 # golang.org/x/crypto v0.0.0-20180322175230-88942b9c40a4
 golang.org/x/crypto/ssh
@@ -366,15 +366,15 @@ golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20181201002055-351d144fa1fc
 golang.org/x/net/proxy
+golang.org/x/net/http2
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
-golang.org/x/net/http2
-golang.org/x/net/html
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
+golang.org/x/net/html
 golang.org/x/net/html/atom
 # golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 golang.org/x/oauth2
@@ -392,6 +392,9 @@ golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
 golang.org/x/text/transform
+golang.org/x/text/secure/bidirule
+golang.org/x/text/unicode/bidi
+golang.org/x/text/unicode/norm
 golang.org/x/text/language
 golang.org/x/text/encoding/internal/identifier
 golang.org/x/text/encoding/internal
@@ -400,9 +403,6 @@ golang.org/x/text/encoding/korean
 golang.org/x/text/encoding/simplifiedchinese
 golang.org/x/text/encoding/traditionalchinese
 golang.org/x/text/encoding/unicode
-golang.org/x/text/secure/bidirule
-golang.org/x/text/unicode/bidi
-golang.org/x/text/unicode/norm
 golang.org/x/text/internal/tag
 golang.org/x/text/internal/utf8internal
 golang.org/x/text/runes

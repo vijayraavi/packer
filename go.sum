@@ -77,8 +77,8 @@ github.com/denverdino/aliyungo v0.0.0-20180417075537-ebad04655e03 h1:NYqwUkb/ypX
 github.com/denverdino/aliyungo v0.0.0-20180417075537-ebad04655e03/go.mod h1:dV8lFg6daOBZbT6/BDGIz6Y3WFGn8juu6G+CQ6LHtl0=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
-github.com/digitalocean/godo v0.0.0-20170407151542-4c04abe183f4 h1:34XBbvedApvUMZY6E6Q95ksnpl+FtX+KF3ywZzZY6X0=
-github.com/digitalocean/godo v0.0.0-20170407151542-4c04abe183f4/go.mod h1:h6faOIcZ8lWIwNQ+DN7b3CgX4Kwby5T+nbpNqkUIozU=
+github.com/digitalocean/godo v1.7.1 h1:bc4MQyL5ou0bsIx3PcVRDO15xQyyXFbJjE9aE6H0QPc=
+github.com/digitalocean/godo v1.7.1/go.mod h1:h6faOIcZ8lWIwNQ+DN7b3CgX4Kwby5T+nbpNqkUIozU=
 github.com/dnaeon/go-vcr v1.0.0 h1:1QZ+ahihvRvppcJnFvuoHAdnZTf1PqKjO4Ftr1cfQTo=
 github.com/dnaeon/go-vcr v1.0.0/go.mod h1:aBB1+wY4s93YsC3HHjMBMrwTj2R9FHDzUr9KyGc8n1E=
 github.com/docker/docker v0.0.0-20170406124027-fa3e2d5ab9b5 h1:DwY2bFs8p+xf2WaQewx2hnGdjYR5K4UAaxcNPyKkTek=
