@@ -8,10 +8,9 @@ GEM
       tzinfo (~> 1.1)
     autoprefixer-rails (8.3.0)
       execjs
-    bootstrap-sass (3.4.1)
+    bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
-      sassc (>= 2.0.0)
     builder (3.2.3)
     capybara (2.4.4)
       mime-types (>= 1.16)
@@ -80,7 +79,7 @@ GEM
       thor (>= 0.15.2, < 2.0)
       tilt (~> 1.4.1, < 2.0)
     middleman-hashicorp (0.3.37)
-      bootstrap-sass (~> 3.4.1)
+      bootstrap-sass (~> 3.3)
       builder (~> 3.2)
       middleman (~> 3.4)
       middleman-livereload (~> 3.4)
@@ -118,16 +117,12 @@ GEM
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
-    rake (12.3.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     redcarpet (3.4.0)
     rouge (2.2.1)
     sass (3.4.25)
-    sassc (2.0.0)
-      ffi (~> 1.9.6)
-      rake
     sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -161,4 +156,4 @@ DEPENDENCIES
   middleman-hashicorp (= 0.3.37)
 
 BUNDLED WITH
-   1.16.4
+   1.16.1
