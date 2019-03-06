@@ -1,3 +1,14 @@
+---
+description: |
+    The Vagrant Packer builder is able to launch Vagrant boxes and
+    re-package them into .box files
+layout: docs
+page_title: 'Vagrant - Builders'
+sidebar_current: 'docs-builders-vagrant'
+---
+
+# Vagrant Builder
+
 The Vagrant builder is intended for building new boxes from already-existing
 boxes. Your source should be a URL or path to a .box file or a Vagrant Cloud
 box name such as `hashicorp/precise64`.
@@ -19,7 +30,8 @@ by setting the `skip package` option. You can also change the behavior so that
 rather than inititalizing a new Vagrant workspace, you use an already defined
 one, by using `global_id` instead of `source_box`.
 
-Required:
+## Configuration Reference
+### Required:
 
 -    `source_path` (string) - URL of the vagrant box to use, or the name of the
     vagrant box. `hashicorp/precise64`, `./mylocalbox.box` and
@@ -38,7 +50,7 @@ Required:
    `source_box`, Packer will skip the Vagrant initialize and add steps, and
    simply launch the box directly using the global id.
 
-Optional:
+### Optional:
 
 -   `output_dir` (string) - The directory to create that will contain
     your output box. We always create this directory and run from inside of it to
@@ -94,7 +106,7 @@ Optional:
     `vagrant add`; defaults to unset.
 
 -   `add_insecure` (bool) - Equivalent to setting the
-    [`--force`](https://www.vagrantup.com/docs/cli/box.html#insecure) flag in
+    [`--insecure`](https://www.vagrantup.com/docs/cli/box.html#insecure) flag in
     `vagrant add`; defaults to unset.
 
 -   `skip_package` (bool) - if true, Packer will not call `vagrant package` to
