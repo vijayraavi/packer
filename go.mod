@@ -69,6 +69,7 @@ require (
 	github.com/masterzen/winrm v0.0.0-20180224160350-7e40f93ae939
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/mattn/go-runewidth v0.0.3 // indirect
+	github.com/mattn/go-tty v0.0.0-20181127064339-e4f871175a2f
 	github.com/miekg/dns v1.1.1 // indirect
 	github.com/mitchellh/cli v1.0.0
 	github.com/mitchellh/go-fs v0.0.0-20180402234041-7b48fa161ea7
