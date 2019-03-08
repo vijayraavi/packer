@@ -278,7 +278,7 @@ github.com/mitchellh/go-homedir
 github.com/mitchellh/go-vnc
 # github.com/mitchellh/iochan v1.0.0
 github.com/mitchellh/iochan
-# github.com/mitchellh/mapstructure v1.1.2
+# github.com/mitchellh/mapstructure v0.0.0-20180111000720-b4575eea38cc
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/panicwrap v0.0.0-20170106182340-fce601fe5557
 github.com/mitchellh/panicwrap
