@@ -70,7 +70,7 @@ one, by using `global_id` instead of `source_box`.
     not recommended since OVA files can be very large and corruption does happen
     from time to time.
 
--   `vagrantfile_template` (string) - a path to a golang template for a
+-   `template` (string) - a path to a golang template for a
     vagrantfile. Our default template can be found
     [here](https://github.com/hashicorp/packer/tree/master/builder/vagrant/step_initialize_vagrant.go#L23-L30). So far the only template variables available to you are {{ .BoxName }} and
     {{ .SyncedFolder }}, which correspond to the Packer options `box_name` and
