@@ -30,7 +30,7 @@ func (d *DockerDriver) DeleteImage(id string) error {
 	cmd.Stderr = &stderr
 
 	log.Printf("Deleting image: %s", id)
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return err
 	}
 
@@ -64,7 +64,7 @@ func (d *DockerDriver) Commit(id string, author string, changes []string, messag
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return "", err
 	}
 
@@ -84,7 +84,7 @@ func (d *DockerDriver) Export(id string, dst io.Writer) error {
 	cmd.Stderr = &stderr
 
 	log.Printf("Exporting container: %s", id)
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return err
 	}
 
@@ -127,7 +127,7 @@ func (d *DockerDriver) Import(path string, changes []string, repo string) (strin
 
 	log.Printf("Importing tarball with args: %v", args)
 
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return "", err
 	}
 
@@ -244,7 +244,7 @@ func (d *DockerDriver) SaveImage(id string, dst io.Writer) error {
 	cmd.Stderr = &stderr
 
 	log.Printf("Exporting image: %s", id)
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return err
 	}
 
@@ -295,7 +295,7 @@ func (d *DockerDriver) StartContainer(config *ContainerConfig) (string, error) {
 	cmd.Stderr = &stderr
 
 	log.Printf("Starting container with args: %v", args)
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return "", err
 	}
 
@@ -358,7 +358,7 @@ func (d *DockerDriver) TagImage(id string, repo string, force bool) error {
 	cmd := exec.Command("docker", args...)
 	cmd.Stderr = &stderr
 
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Start(ctx); err != nil {
 		return err
 	}
 

@@ -59,7 +59,7 @@ func (s *StepBundleVolume) Run(_ context.Context, state multistep.StateBag) mult
 		ui.Say(fmt.Sprintf("Running: %s", config.BundleVolCommand))
 	}
 
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		state.Put("error", fmt.Errorf("Error bundling volume: %s", err))
 		ui.Error(state.Get("error").(error).Error())
 		return multistep.ActionHalt

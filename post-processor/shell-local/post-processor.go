@@ -41,7 +41,7 @@ func (p *PostProcessor) PostProcess(ctx context.Context, ui packer.Ui, artifact 
 	// this particular post-processor doesn't do anything with the artifact
 	// except to return it.
 
-	retBool, retErr := sl.Run(ui, &p.config)
+	retBool, retErr := sl.Run(ctx, ui, &p.config)
 	if !retBool {
 		return nil, retBool, retErr
 	}

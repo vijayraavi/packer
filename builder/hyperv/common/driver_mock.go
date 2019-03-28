@@ -281,7 +281,7 @@ func (d *DriverMock) Uptime(vmName string) (uint64, error) {
 	return d.Uptime_Return, d.Uptime_Err
 }
 
-func (d *DriverMock) Start(vmName string) error {
+func (d *DriverMock) Start(ctx context.Context, vmName string) error {
 	d.Start_Called = true
 	d.Start_VmName = vmName
 	return d.Start_Err

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"net"
 	"sync"
 
@@ -198,7 +199,7 @@ func (d *DriverMock) GuestIP(state multistep.StateBag) (string, error) {
 	return d.GuestIPResult, d.GuestIPErr
 }
 
-func (d *DriverMock) Start(path string, headless bool) error {
+func (d *DriverMock) Start(ctx context.Context, path string, headless bool) error {
 	d.StartCalled = true
 	d.StartPath = path
 	d.StartHeadless = headless

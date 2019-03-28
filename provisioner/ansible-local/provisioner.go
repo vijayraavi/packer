@@ -358,7 +358,7 @@ func (p *Provisioner) executeGalaxy(ui packer.Ui, comm packer.Communicator) erro
 	cmd := &packer.RemoteCmd{
 		Command: command,
 	}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -410,7 +410,7 @@ func (p *Provisioner) executeAnsiblePlaybook(
 	cmd := &packer.RemoteCmd{
 		Command: command,
 	}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -469,7 +469,7 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 	}
 
 	ui.Message(fmt.Sprintf("Creating directory: %s", dir))
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 
@@ -485,7 +485,7 @@ func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir stri
 	}
 
 	ui.Message(fmt.Sprintf("Removing directory: %s", dir))
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 

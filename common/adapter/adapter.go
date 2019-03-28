@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -163,7 +164,7 @@ func (c *Adapter) handleSession(newChannel ssh.NewChannel) error {
 
 					log.Print("starting sftp subsystem")
 					go func() {
-						_ = c.remoteExec(sftpCmd, channel, channel, channel.Stderr())
+						_ = c.remoteExec(ctx, sftpCmd, channel, channel, channel.Stderr())
 						close(done)
 					}()
 					req.Reply(true, nil)
@@ -226,7 +227,7 @@ func (c *Adapter) scpExec(args string, in io.Reader, out io.Writer) error {
 	return errors.New("no scp mode specified")
 }
 
-func (c *Adapter) remoteExec(command string, in io.Reader, out io.Writer, err io.Writer) int {
+func (c *Adapter) remoteExec(ctx context.Context, command string, in io.Reader, out io.Writer, err io.Writer) int {
 	cmd := &packer.RemoteCmd{
 		Stdin:   in,
 		Stdout:  out,
@@ -234,7 +235,7 @@ func (c *Adapter) remoteExec(command string, in io.Reader, out io.Writer, err io
 		Command: command,
 	}
 
-	if err := c.comm.Start(cmd); err != nil {
+	if err := c.comm.Start(ctx, cmd); err != nil {
 		c.ui.Error(err.Error())
 		return cmd.ExitStatus
 	}

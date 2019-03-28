@@ -52,7 +52,7 @@ func (s *stepShutdown) Run(_ context.Context, state multistep.StateBag) multiste
 		ui.Say("Gracefully halting virtual machine...")
 		log.Printf("Executing shutdown command: %s", config.ShutdownCommand)
 		cmd := &packer.RemoteCmd{Command: config.ShutdownCommand}
-		if err := cmd.StartWithUi(comm, ui); err != nil {
+		if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 			err := fmt.Errorf("Failed to send shutdown command: %s", err)
 			state.Put("error", err)
 			ui.Error(err.Error())

@@ -78,7 +78,7 @@ func TestStart(t *testing.T) {
 	cmd.Command = "echo foo"
 	cmd.Stdout = stdout
 
-	err = c.Start(&cmd)
+	err = c.Start(ctx, &cmd)
 	if err != nil {
 		t.Fatalf("error executing remote command: %s", err)
 	}

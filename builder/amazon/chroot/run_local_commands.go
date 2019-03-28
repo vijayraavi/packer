@@ -25,7 +25,7 @@ func RunLocalCommands(commands []string, wrappedCommand CommandWrapper, ctx inte
 			ExecuteCommand: []string{"sh", "-c", command},
 		}
 		cmd := &packer.RemoteCmd{Command: command}
-		if err := cmd.StartWithUi(comm, ui); err != nil {
+		if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 			return fmt.Errorf("Error executing command: %s", err)
 		}
 		if cmd.ExitStatus != 0 {

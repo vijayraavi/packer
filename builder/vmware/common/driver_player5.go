@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -103,7 +104,7 @@ func (d *Player5Driver) CommHost(state multistep.StateBag) (string, error) {
 	return CommHost(d.SSHConfig)(state)
 }
 
-func (d *Player5Driver) Start(vmxPath string, headless bool) error {
+func (d *Player5Driver) Start(ctx context.Context, vmxPath string, headless bool) error {
 	guiArgument := "gui"
 	if headless {
 		guiArgument = "nogui"

@@ -130,7 +130,7 @@ func (d *ESX5Driver) ReloadVM() error {
 	}
 }
 
-func (d *ESX5Driver) Start(vmxPathLocal string, headless bool) error {
+func (d *ESX5Driver) Start(ctx context.Context, vmxPathLocal string, headless bool) error {
 	for i := 0; i < 20; i++ {
 		//intentionally not checking for error since poweron may fail specially after initial VM registration
 		d.sh("vim-cmd", "vmsvc/power.on", d.vmId)
@@ -696,7 +696,7 @@ func (d *ESX5Driver) ssh(command string, stdin io.Reader) (*bytes.Buffer, error)
 		Stdin:   stdin,
 	}
 
-	err := d.comm.Start(cmd)
+	err := d.comm.Start(ctx, cmd)
 	if err != nil {
 		return nil, err
 	}

@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -197,7 +198,7 @@ func (c *Client) Kill() {
 // This method is safe to call multiple times. Subsequent calls have no effect.
 // Once a client has been started once, it cannot be started again, even if
 // it was killed.
-func (c *Client) Start() (addr net.Addr, err error) {
+func (c *Client) Start(ctx context.Context) (addr net.Addr, err error) {
 	c.l.Lock()
 	defer c.l.Unlock()
 
@@ -224,7 +225,7 @@ func (c *Client) Start() (addr net.Addr, err error) {
 	cmd.Stdout = stdout_w
 
 	log.Printf("Starting plugin: %s %#v", cmd.Path, cmd.Args)
-	err = cmd.Start()
+	err = cmd.Start(ctx)
 	if err != nil {
 		return
 	}
@@ -359,7 +360,7 @@ func (c *Client) logStderr(r io.Reader) {
 }
 
 func (c *Client) packrpcClient() (*packrpc.Client, error) {
-	addr, err := c.Start()
+	addr, err := c.Start(ctx)
 	if err != nil {
 		return nil, err
 	}

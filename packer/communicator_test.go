@@ -25,7 +25,7 @@ func TestRemoteCmd_StartWithUi(t *testing.T) {
 		Stdout:  originalOutput,
 	}
 
-	err := rc.StartWithUi(testComm, testUi)
+	err := rc.StartWithUi(ctx, testComm, testUi)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

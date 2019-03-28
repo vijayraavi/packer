@@ -22,7 +22,7 @@ func (s *StepRun) Run(_ context.Context, state multistep.StateBag) multistep.Ste
 
 	ui.Say("Starting the virtual machine...")
 
-	err := driver.Start(vmName)
+	err := driver.Start(ctx, vmName)
 	if err != nil {
 		err := fmt.Errorf("Error starting vm: %s", err)
 		state.Put("error", err)

@@ -28,7 +28,7 @@ func TestCommunicator(t *testing.T) {
 		Stdout: &buf,
 	}
 
-	if err := c.Start(cmd); err != nil {
+	if err := c.Start(ctx, cmd); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 

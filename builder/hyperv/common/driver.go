@@ -22,7 +22,7 @@ type Driver interface {
 	Uptime(vmName string) (uint64, error)
 
 	// Start starts a VM specified by the name given.
-	Start(string) error
+	Start(ctx, string) error
 
 	// Stop stops a VM specified by the name given.
 	Stop(string) error

@@ -470,7 +470,7 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 	ui.Message(fmt.Sprintf("Creating directory: %s", dir))
 
 	cmd := &packer.RemoteCmd{Command: p.guestCommands.CreateDir(dir)}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -479,7 +479,7 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 
 	// Chmod the directory to 0777 just so that we can access it as our user
 	cmd = &packer.RemoteCmd{Command: p.guestCommands.Chmod(dir, "0777")}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -527,7 +527,7 @@ func (p *Provisioner) knifeExec(ui packer.Ui, comm packer.Communicator, node str
 	}
 
 	cmd := &packer.RemoteCmd{Command: command}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -544,7 +544,7 @@ func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir stri
 	ui.Message(fmt.Sprintf("Removing directory: %s", dir))
 
 	cmd := &packer.RemoteCmd{Command: p.guestCommands.RemoveDir(dir)}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 
@@ -575,7 +575,7 @@ func (p *Provisioner) executeChef(ui packer.Ui, comm packer.Communicator, config
 		Command: command,
 	}
 
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 
@@ -600,7 +600,7 @@ func (p *Provisioner) installChef(ui packer.Ui, comm packer.Communicator) error 
 	ui.Message(command)
 
 	cmd := &packer.RemoteCmd{Command: command}
-	if err := cmd.StartWithUi(comm, ui); err != nil {
+	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 

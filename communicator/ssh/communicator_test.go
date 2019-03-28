@@ -188,7 +188,7 @@ func TestStart(t *testing.T) {
 		Stdout:  new(bytes.Buffer),
 	}
 
-	client.Start(cmd)
+	client.Start(ctx, cmd)
 }
 
 func TestHandshakeTimeout(t *testing.T) {
