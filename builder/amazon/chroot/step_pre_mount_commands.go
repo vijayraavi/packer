@@ -26,11 +26,11 @@ func (s *StepPreMountCommands) Run(ctx context.Context, state multistep.StateBag
 		return multistep.ActionContinue
 	}
 
-	ctx := config.ctx
-	ctx.Data = &preMountCommandsData{Device: device}
+	ictx := config.ctx
+	ictx.Data = &preMountCommandsData{Device: device}
 
 	ui.Say("Running device setup commands...")
-	if err := RunLocalCommands(s.Commands, wrappedCommand, ctx, ui); err != nil {
+	if err := RunLocalCommands(s.Commands, wrappedCommand, ictx, ui); err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
 		return multistep.ActionHalt

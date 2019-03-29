@@ -29,14 +29,14 @@ func (s *StepPostMountCommands) Run(ctx context.Context, state multistep.StateBa
 		return multistep.ActionContinue
 	}
 
-	ctx := config.ctx
-	ctx.Data = &postMountCommandsData{
+	ictx := config.ctx
+	ictx.Data = &postMountCommandsData{
 		Device:    device,
 		MountPath: mountPath,
 	}
 
 	ui.Say("Running post-mount commands...")
-	if err := RunLocalCommands(s.Commands, wrappedCommand, ctx, ui); err != nil {
+	if err := RunLocalCommands(s.Commands, wrappedCommand, ictx, ui); err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
 		return multistep.ActionHalt
