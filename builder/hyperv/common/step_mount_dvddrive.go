@@ -44,7 +44,7 @@ func (s *StepMountDvdDrive) Run(ctx context.Context, state multistep.StateBag) m
 	// For IDE, there are only 2 controllers (0,1) with 2 locations each (0,1)
 
 	var dvdControllerProperties DvdControllerProperties
-	controllerNumber, controllerLocation, err := driver.CreateDvdDrive(vmName, isoPath, s.Generation)
+	controllerNumber, controllerLocation, err := driver.CreateDvdDrive(ctx, vmName, isoPath, s.Generation)
 	if err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
@@ -58,7 +58,7 @@ func (s *StepMountDvdDrive) Run(ctx context.Context, state multistep.StateBag) m
 	state.Put("os.dvd.properties", dvdControllerProperties)
 
 	ui.Say(fmt.Sprintf("Setting boot drive to os dvd drive %s ...", isoPath))
-	err = driver.SetBootDvdDrive(vmName, controllerNumber, controllerLocation, s.Generation)
+	err = driver.SetBootDvdDrive(ctx, vmName, controllerNumber, controllerLocation, s.Generation)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)
@@ -67,7 +67,7 @@ func (s *StepMountDvdDrive) Run(ctx context.Context, state multistep.StateBag) m
 	}
 
 	ui.Say(fmt.Sprintf("Mounting os dvd drive %s ...", isoPath))
-	err = driver.MountDvdDrive(vmName, isoPath, controllerNumber, controllerLocation)
+	err = driver.MountDvdDrive(ctx, vmName, isoPath, controllerNumber, controllerLocation)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)
@@ -93,14 +93,16 @@ func (s *StepMountDvdDrive) Cleanup(state multistep.StateBag) {
 
 	ui.Say("Clean up os dvd drive...")
 
+	ctx := context.TODO()
+
 	if dvdController.Existing {
-		err := driver.UnmountDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.UnmountDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			err := fmt.Errorf("Error unmounting dvd drive: %s", err)
 			log.Print(fmt.Sprintf(errorMsg, err))
 		}
 	} else {
-		err := driver.DeleteDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.DeleteDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			err := fmt.Errorf("Error deleting dvd drive: %s", err)
 			log.Print(fmt.Sprintf(errorMsg, err))

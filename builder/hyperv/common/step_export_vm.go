@@ -34,7 +34,7 @@ func (s *StepExportVm) Run(ctx context.Context, state multistep.StateBag) multis
 	// The export process exports the VM to a folder named 'vmName' under
 	// the output directory. This contains the usual 'Snapshots', 'Virtual
 	// Hard Disks' and 'Virtual Machines' directories.
-	err := driver.ExportVirtualMachine(vmName, s.OutputDir)
+	err := driver.ExportVirtualMachine(ctx, vmName, s.OutputDir)
 	if err != nil {
 		err = fmt.Errorf("Error exporting vm: %s", err)
 		state.Put("error", err)

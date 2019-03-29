@@ -138,7 +138,7 @@ func (c *Adapter) handleSession(newChannel ssh.NewChannel) error {
 				}
 
 				go func(channel ssh.Channel) {
-					exit := c.exec(string(req.Payload), channel, channel, channel.Stderr())
+					exit := c.exec(ctx, string(req.Payload), channel, channel, channel.Stderr())
 
 					exitStatus := make([]byte, 4)
 					binary.BigEndian.PutUint32(exitStatus, uint32(exit))
@@ -187,7 +187,7 @@ func (c *Adapter) Shutdown() {
 	c.l.Close()
 }
 
-func (c *Adapter) exec(command string, in io.Reader, out io.Writer, err io.Writer) int {
+func (c *Adapter) exec(ctx context.Context, command string, in io.Reader, out io.Writer, err io.Writer) int {
 	var exitStatus int
 	switch {
 	case strings.HasPrefix(command, "scp ") && serveSCP(command[4:]):

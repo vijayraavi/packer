@@ -25,7 +25,7 @@ func (s *StepWaitInit) Run(ctx context.Context, state multistep.StateBag) multis
 	waitDone := make(chan bool, 1)
 	go func() {
 		ui.Say("Waiting for container to finish init...")
-		err = s.waitForInit(state, cancel)
+		err = s.waitForInit(ctx, state, cancel)
 		waitDone <- true
 	}()
 
@@ -63,7 +63,7 @@ WaitLoop:
 func (s *StepWaitInit) Cleanup(multistep.StateBag) {
 }
 
-func (s *StepWaitInit) waitForInit(state multistep.StateBag, cancel <-chan struct{}) error {
+func (s *StepWaitInit) waitForInit(ctx context.Context, state multistep.StateBag, cancel <-chan struct{}) error {
 	config := state.Get("config").(*Config)
 	mountPath := state.Get("mount_path").(string)
 	wrappedCommand := state.Get("wrappedCommand").(CommandWrapper)
@@ -83,7 +83,7 @@ func (s *StepWaitInit) waitForInit(state multistep.StateBag, cancel <-chan struc
 			CmdWrapper:    wrappedCommand,
 		}
 
-		runlevel, _ := comm.CheckInit()
+		runlevel, _ := comm.CheckInit(ctx)
 		currentRunlevel := "unknown"
 		if arr := strings.Split(runlevel, " "); len(arr) >= 2 {
 			currentRunlevel = arr[1]

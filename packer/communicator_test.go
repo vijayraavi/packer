@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestRemoteCmd_StartWithUi(t *testing.T) {
+func TestRemoteCmd_RunWithUi(t *testing.T) {
 	data := "hello\nworld\nthere"
 
 	originalOutput := new(bytes.Buffer)
@@ -25,7 +25,7 @@ func TestRemoteCmd_StartWithUi(t *testing.T) {
 		Stdout:  originalOutput,
 	}
 
-	err := rc.StartWithUi(ctx, testComm, testUi)
+	err := rc.RunWithUi(ctx, testComm, testUi)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

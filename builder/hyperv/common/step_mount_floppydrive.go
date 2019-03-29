@@ -52,7 +52,7 @@ func (s *StepMountFloppydrive) Run(ctx context.Context, state multistep.StateBag
 
 	ui.Say("Mounting floppy drive...")
 
-	err = driver.MountFloppyDrive(vmName, floppyPath)
+	err = driver.MountFloppyDrive(ctx, vmName, floppyPath)
 	if err != nil {
 		state.Put("error", fmt.Errorf("Error mounting floppy drive: %s", err))
 		return multistep.ActionHalt
@@ -80,7 +80,9 @@ func (s *StepMountFloppydrive) Cleanup(state multistep.StateBag) {
 
 	ui.Say("Cleanup floppy drive...")
 
-	err := driver.UnmountFloppyDrive(vmName)
+	ctx := context.TODO()
+
+	err := driver.UnmountFloppyDrive(ctx, vmName)
 	if err != nil {
 		log.Print(fmt.Sprintf(errorMsg, err))
 	}

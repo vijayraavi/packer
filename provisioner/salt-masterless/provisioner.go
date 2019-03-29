@@ -231,14 +231,14 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			Command: fmt.Sprintf(p.guestOSTypeConfig.bootstrapFetchCmd),
 		}
 		ui.Message(fmt.Sprintf("Downloading saltstack bootstrap to /tmp/install_salt.sh"))
-		if err = cmd.StartWithUi(ctx, comm, ui); err != nil {
+		if err = cmd.RunWithUi(ctx, comm, ui); err != nil {
 			return fmt.Errorf("Unable to download Salt: %s", err)
 		}
 		cmd = &packer.RemoteCmd{
 			Command: fmt.Sprintf("%s %s", p.sudo(p.guestOSTypeConfig.bootstrapRunCmd), p.config.BootstrapArgs),
 		}
 		ui.Message(fmt.Sprintf("Installing Salt with command %s", cmd.Command))
-		if err = cmd.StartWithUi(ctx, comm, ui); err != nil {
+		if err = cmd.RunWithUi(ctx, comm, ui); err != nil {
 			return fmt.Errorf("Unable to install Salt: %s", err)
 		}
 	}
@@ -342,7 +342,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 
 	ui.Message(fmt.Sprintf("Running: salt-call --local %s", p.config.CmdArgs))
 	cmd := &packer.RemoteCmd{Command: p.sudo(fmt.Sprintf("%s --local %s", filepath.Join(p.config.SaltBinDir, "salt-call"), p.config.CmdArgs))}
-	if err = cmd.StartWithUi(ctx, comm, ui); err != nil || cmd.ExitStatus != 0 {
+	if err = cmd.RunWithUi(ctx, comm, ui); err != nil || cmd.ExitStatus != 0 {
 		if err == nil {
 			err = fmt.Errorf("Bad exit status: %d", cmd.ExitStatus)
 		}
@@ -410,7 +410,7 @@ func (p *Provisioner) moveFile(ui packer.Ui, comm packer.Communicator, dst strin
 	cmd := &packer.RemoteCmd{
 		Command: p.sudo(p.guestCommands.MovePath(src, dst)),
 	}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil || cmd.ExitStatus != 0 {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil || cmd.ExitStatus != 0 {
 		if err == nil {
 			err = fmt.Errorf("Bad exit status: %d", cmd.ExitStatus)
 		}
@@ -425,7 +425,7 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.CreateDir(dir),
 	}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -439,7 +439,7 @@ func (p *Provisioner) statPath(ui packer.Ui, comm packer.Communicator, path stri
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.StatPath(path),
 	}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -453,7 +453,7 @@ func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir stri
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.RemoveDir(dir),
 	}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {

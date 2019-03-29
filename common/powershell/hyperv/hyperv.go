@@ -1465,6 +1465,6 @@ func ConnectVirtualMachine(ctx context.Context, vmName string) (context.CancelFu
 	return cancel, err
 }
 
-func DisconnectVirtualMachine(ctx context.Context, cancel context.CancelFunc) {
+func DisconnectVirtualMachine(cancel context.CancelFunc) {
 	cancel()
 }

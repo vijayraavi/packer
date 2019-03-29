@@ -231,7 +231,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	ui.Say("Provisioning with Puppet...")
 	p.communicator = comm
 	ui.Message("Creating Puppet staging directory...")
-	if err := p.createDir(ui, comm, p.config.StagingDir); err != nil {
+	if err := p.createDir(ctx, ui, comm, p.config.StagingDir); err != nil {
 		return fmt.Errorf("Error creating staging directory: %s", err)
 	}
 
@@ -241,7 +241,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		ui.Message(fmt.Sprintf(
 			"Uploading client cert from: %s", p.config.ClientCertPath))
 		remoteClientCertPath = fmt.Sprintf("%s/certs", p.config.StagingDir)
-		err := p.uploadDirectory(ui, comm, remoteClientCertPath, p.config.ClientCertPath)
+		err := p.uploadDirectory(ctx, ui, comm, remoteClientCertPath, p.config.ClientCertPath)
 		if err != nil {
 			return fmt.Errorf("Error uploading client cert: %s", err)
 		}
@@ -253,7 +253,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		ui.Message(fmt.Sprintf(
 			"Uploading client private keys from: %s", p.config.ClientPrivateKeyPath))
 		remoteClientPrivateKeyPath = fmt.Sprintf("%s/private_keys", p.config.StagingDir)
-		err := p.uploadDirectory(ui, comm, remoteClientPrivateKeyPath, p.config.ClientPrivateKeyPath)
+		err := p.uploadDirectory(ctx, ui, comm, remoteClientPrivateKeyPath, p.config.ClientPrivateKeyPath)
 		if err != nil {
 			return fmt.Errorf("Error uploading client private keys: %s", err)
 		}
@@ -301,7 +301,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	}
 
 	ui.Message(fmt.Sprintf("Running Puppet: %s", command))
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 
@@ -310,7 +310,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	}
 
 	if p.config.CleanStagingDir {
-		if err := p.removeDir(ui, comm, p.config.StagingDir); err != nil {
+		if err := p.removeDir(ctx, ui, comm, p.config.StagingDir); err != nil {
 			return fmt.Errorf("Error removing staging directory: %s", err)
 		}
 	}
@@ -318,11 +318,11 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	return nil
 }
 
-func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir string) error {
+func (p *Provisioner) createDir(ctx context.Context, ui packer.Ui, comm packer.Communicator, dir string) error {
 	ui.Message(fmt.Sprintf("Creating directory: %s", dir))
 
 	cmd := &packer.RemoteCmd{Command: p.guestCommands.CreateDir(dir)}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -331,7 +331,7 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 
 	// Chmod the directory to 0777 just so that we can access it as our user
 	cmd = &packer.RemoteCmd{Command: p.guestCommands.Chmod(dir, "0777")}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 	if cmd.ExitStatus != 0 {
@@ -341,9 +341,9 @@ func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir stri
 	return nil
 }
 
-func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir string) error {
+func (p *Provisioner) removeDir(ctx context.Context, ui packer.Ui, comm packer.Communicator, dir string) error {
 	cmd := &packer.RemoteCmd{Command: p.guestCommands.RemoveDir(dir)}
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 		return err
 	}
 
@@ -354,8 +354,8 @@ func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir stri
 	return nil
 }
 
-func (p *Provisioner) uploadDirectory(ui packer.Ui, comm packer.Communicator, dst string, src string) error {
-	if err := p.createDir(ui, comm, dst); err != nil {
+func (p *Provisioner) uploadDirectory(ctx context.Context, ui packer.Ui, comm packer.Communicator, dst string, src string) error {
+	if err := p.createDir(ctx, ui, comm, dst); err != nil {
 		return err
 	}
 

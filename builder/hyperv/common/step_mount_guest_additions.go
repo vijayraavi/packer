@@ -36,7 +36,7 @@ func (s *StepMountGuestAdditions) Run(ctx context.Context, state multistep.State
 
 	var dvdControllerProperties DvdControllerProperties
 
-	controllerNumber, controllerLocation, err := driver.CreateDvdDrive(vmName, s.GuestAdditionsPath, s.Generation)
+	controllerNumber, controllerLocation, err := driver.CreateDvdDrive(ctx, vmName, s.GuestAdditionsPath, s.Generation)
 	if err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
@@ -49,7 +49,7 @@ func (s *StepMountGuestAdditions) Run(ctx context.Context, state multistep.State
 	state.Put("guest.dvd.properties", dvdControllerProperties)
 
 	ui.Say(fmt.Sprintf("Mounting Integration Services dvd drive %s ...", s.GuestAdditionsPath))
-	err = driver.MountDvdDrive(vmName, s.GuestAdditionsPath, controllerNumber, controllerLocation)
+	err = driver.MountDvdDrive(ctx, vmName, s.GuestAdditionsPath, controllerNumber, controllerLocation)
 	if err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
@@ -81,13 +81,14 @@ func (s *StepMountGuestAdditions) Cleanup(state multistep.StateBag) {
 
 	ui.Say("Cleanup Integration Services dvd drive...")
 
+	ctx := context.TODO()
 	if dvdController.Existing {
-		err := driver.UnmountDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.UnmountDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			log.Print(fmt.Sprintf(errorMsg, err))
 		}
 	} else {
-		err := driver.DeleteDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.DeleteDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			log.Print(fmt.Sprintf(errorMsg, err))
 		}

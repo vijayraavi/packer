@@ -24,7 +24,7 @@ type LxcAttachCommunicator struct {
 }
 
 func (c *LxcAttachCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
-	localCmd, err := c.Execute(cmd.Command)
+	localCmd, err := c.Execute(ctx, cmd.Command)
 
 	if err != nil {
 		return err
@@ -152,9 +152,9 @@ func (c *LxcAttachCommunicator) Execute(ctx context.Context, commandString strin
 	return localCmd, nil
 }
 
-func (c *LxcAttachCommunicator) CheckInit() (string, error) {
+func (c *LxcAttachCommunicator) CheckInit(ctx context.Context) (string, error) {
 	log.Printf("Debug runlevel exec")
-	localCmd, err := c.Execute("/sbin/runlevel")
+	localCmd, err := c.Execute(ctx, "/sbin/runlevel")
 
 	if err != nil {
 		return "", err

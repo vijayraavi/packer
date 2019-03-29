@@ -262,7 +262,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			}
 
 			cmd = &packer.RemoteCmd{Command: command}
-			return cmd.StartWithUi(ctx, comm, ui)
+			return cmd.RunWithUi(ctx, comm, ui)
 		})
 		if err != nil {
 			return err

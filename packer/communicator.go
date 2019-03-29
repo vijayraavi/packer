@@ -41,9 +41,6 @@ type RemoteCmd struct {
 	// Once Exited is true, this will contain the exit code of the process.
 	ExitStatus int
 
-	// Internal fields
-	exitCh chan struct{}
-
 	// This thing is a mutex, lock when making modifications concurrently
 	sync.Mutex
 }
@@ -57,9 +54,8 @@ type RemoteCmd struct {
 type Communicator interface {
 	// Start takes a RemoteCmd and starts it. The RemoteCmd must not be
 	// modified after being used with Start, and it must not be used with
-	// Start again. The Start method returns immediately once the command
-	// is started. It does not wait for the command to complete. The
-	// RemoteCmd.Exited field should be used for this.
+	// Start again. Start can be cancelled by the context. Start should be
+	// run in a goroutine.
 	Start(context.Context, *RemoteCmd) error
 
 	// Upload uploads a file to the machine to the given path with the
@@ -85,10 +81,10 @@ type Communicator interface {
 	DownloadDir(ctx context.Context, src string, dst string, exclude []string) error
 }
 
-// StartWithUi runs the remote command and streams the output to any
+// RunWithUi runs the remote command and streams the output to any
 // configured Writers for stdout/stderr, while also writing each line
 // as it comes to a Ui.
-func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) error {
+func (r *RemoteCmd) RunWithUi(ctx context.Context, c Communicator, ui Ui) error {
 	stdout_r, stdout_w := io.Pipe()
 	stderr_r, stderr_w := io.Pipe()
 	defer stdout_w.Close()
@@ -133,7 +129,7 @@ func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) erro
 		defer close(exitCh)
 		defer stdout_w.Close()
 		defer stderr_w.Close()
-		r.Wait()
+		<-ctx.Done()
 	}()
 
 	// Loop and get all our output
@@ -173,25 +169,8 @@ func (r *RemoteCmd) SetExited(status int) {
 	r.Lock()
 	defer r.Unlock()
 
-	if r.exitCh == nil {
-		r.exitCh = make(chan struct{})
-	}
-
 	r.Exited = true
 	r.ExitStatus = status
-	close(r.exitCh)
-}
-
-// Wait waits for the remote command to complete.
-func (r *RemoteCmd) Wait() {
-	// Make sure our condition variable is initialized.
-	r.Lock()
-	if r.exitCh == nil {
-		r.exitCh = make(chan struct{})
-	}
-	r.Unlock()
-
-	<-r.exitCh
 }
 
 // cleanOutputLine cleans up a line so that '\r' don't muck up the

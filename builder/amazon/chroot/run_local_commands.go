@@ -1,6 +1,7 @@
 package chroot
 
 import (
+	"context"
 	"fmt"
 
 	sl "github.com/hashicorp/packer/common/shell-local"
@@ -8,9 +9,9 @@ import (
 	"github.com/hashicorp/packer/template/interpolate"
 )
 
-func RunLocalCommands(commands []string, wrappedCommand CommandWrapper, ctx interpolate.Context, ui packer.Ui) error {
+func RunLocalCommands(ctx context.Context, commands []string, wrappedCommand CommandWrapper, ictx interpolate.Context, ui packer.Ui) error {
 	for _, rawCmd := range commands {
-		intCmd, err := interpolate.Render(rawCmd, &ctx)
+		intCmd, err := interpolate.Render(rawCmd, &ictx)
 		if err != nil {
 			return fmt.Errorf("Error interpolating: %s", err)
 		}
@@ -25,7 +26,7 @@ func RunLocalCommands(commands []string, wrappedCommand CommandWrapper, ctx inte
 			ExecuteCommand: []string{"sh", "-c", command},
 		}
 		cmd := &packer.RemoteCmd{Command: command}
-		if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+		if err := cmd.RunWithUi(ctx, comm, ui); err != nil {
 			return fmt.Errorf("Error executing command: %s", err)
 		}
 		if cmd.ExitStatus != 0 {

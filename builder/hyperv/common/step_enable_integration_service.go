@@ -20,7 +20,7 @@ func (s *StepEnableIntegrationService) Run(ctx context.Context, state multistep.
 	vmName := state.Get("vmName").(string)
 	s.name = "Guest Service Interface"
 
-	err := driver.EnableVirtualMachineIntegrationService(vmName, s.name)
+	err := driver.EnableVirtualMachineIntegrationService(ctx, vmName, s.name)
 
 	if err != nil {
 		err := fmt.Errorf("Error enabling Integration Service: %s", err)

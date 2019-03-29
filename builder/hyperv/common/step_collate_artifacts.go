@@ -32,7 +32,7 @@ func (s *StepCollateArtifacts) Run(ctx context.Context, state multistep.StateBag
 		// called function searches for all disks under the given source
 		// directory and moves them to a 'Virtual Hard Disks' folder under
 		// the destination directory
-		err := driver.MoveCreatedVHDsToOutputDir(buildDir, s.OutputDir)
+		err := driver.MoveCreatedVHDsToOutputDir(ctx, buildDir, s.OutputDir)
 		if err != nil {
 			err = fmt.Errorf("Error moving VHDs from build dir to output dir: %s", err)
 			state.Put("error", err)
@@ -54,7 +54,7 @@ func (s *StepCollateArtifacts) Run(ctx context.Context, state multistep.StateBag
 		// when complete.
 		// The 'Snapshots' folder will not be moved into the output
 		// directory if it is empty.
-		err := driver.PreserveLegacyExportBehaviour(exportPath, s.OutputDir)
+		err := driver.PreserveLegacyExportBehaviour(ctx, exportPath, s.OutputDir)
 		if err != nil {
 			// No need to halt here; Just warn the user instead
 			err = fmt.Errorf("WARNING: Error restoring legacy export dir structure: %s", err)
