@@ -2,6 +2,7 @@ package hyperone
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -22,6 +23,7 @@ func formatOpenAPIError(err error) string {
 }
 
 func runCommands(commands []string, ictx interpolate.Context, state multistep.StateBag) error {
+	ctx := context.TODO()
 	ui := state.Get("ui").(packer.Ui)
 	wrappedCommand := state.Get("wrappedCommand").(CommandWrapper)
 	comm := state.Get("communicator").(packer.Communicator)
@@ -43,7 +45,7 @@ func runCommands(commands []string, ictx interpolate.Context, state multistep.St
 
 		ui.Say(fmt.Sprintf("Executing command: %s", command))
 
-		err = remoteCmd.StartWithUi(comm, ui)
+		err = remoteCmd.StartWithUi(ctx, comm, ui)
 		if err != nil {
 			return fmt.Errorf("error running remote cmd: %s", err)
 		}

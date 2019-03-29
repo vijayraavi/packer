@@ -1,6 +1,7 @@
 package packer
 
 import (
+	"context"
 	"io"
 	"os"
 	"strings"
@@ -87,7 +88,7 @@ type Communicator interface {
 // StartWithUi runs the remote command and streams the output to any
 // configured Writers for stdout/stderr, while also writing each line
 // as it comes to a Ui.
-func (r *RemoteCmd) StartWithUi(c Communicator, ui Ui) error {
+func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) error {
 	stdout_r, stdout_w := io.Pipe()
 	stderr_r, stderr_w := io.Pipe()
 	defer stdout_w.Close()
