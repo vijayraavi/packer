@@ -32,7 +32,7 @@ method should do.
 ``` go
 type Builder interface {
   Prepare(...interface{}) error
-  Run(ui Ui, hook Hook, cache Cache) (Artifact, error)
+  Run(ctx, ui Ui, hook Hook, cache Cache) (Artifact, error)
   Cancel()
 }
 ```

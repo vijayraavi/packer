@@ -123,7 +123,7 @@ func runCommand(shell *winrm.Shell, cmd *winrm.Command, rc *packer.RemoteCmd) {
 }
 
 // Upload implementation of communicator.Communicator interface
-func (c *Communicator) Upload(path string, input io.Reader, fi *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, path string, input io.Reader, fi *os.FileInfo) error {
 	wcp, err := c.newCopyClient()
 	if err != nil {
 		return fmt.Errorf("Was unable to create winrm client: %s", err)
@@ -137,7 +137,7 @@ func (c *Communicator) Upload(path string, input io.Reader, fi *os.FileInfo) err
 }
 
 // UploadDir implementation of communicator.Communicator interface
-func (c *Communicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	if !strings.HasSuffix(src, "/") {
 		dst = fmt.Sprintf("%s\\%s", dst, filepath.Base(src))
 	}
@@ -149,7 +149,7 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 	return wcp.Copy(src, dst)
 }
 
-func (c *Communicator) Download(src string, dst io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, src string, dst io.Writer) error {
 	client, err := c.newWinRMClient()
 	if err != nil {
 		return err
@@ -165,7 +165,7 @@ func (c *Communicator) Download(src string, dst io.Writer) error {
 	return err
 }
 
-func (c *Communicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	return fmt.Errorf("WinRM doesn't support download dir.")
 }
 

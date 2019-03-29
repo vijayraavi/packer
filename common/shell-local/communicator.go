@@ -23,13 +23,13 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 
 	// Build the local command to execute
 	log.Printf("[INFO] (shell-local communicator): Executing local shell command %s", c.ExecuteCommand)
-	localCmd := exec.Command(c.ExecuteCommand[0], c.ExecuteCommand[1:]...)
+	localCmd := exec.CommandContext(ctx, c.ExecuteCommand[0], c.ExecuteCommand[1:]...)
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
 
 	// Start it. If it doesn't work, then error right away.
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 
@@ -56,18 +56,18 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	return nil
 }
 
-func (c *Communicator) Upload(string, io.Reader, *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, string, io.Reader, *os.FileInfo) error {
 	return fmt.Errorf("upload not supported")
 }
 
-func (c *Communicator) UploadDir(string, string, []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, string, string, []string) error {
 	return fmt.Errorf("uploadDir not supported")
 }
 
-func (c *Communicator) Download(string, io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, string, io.Writer) error {
 	return fmt.Errorf("download not supported")
 }
 
-func (c *Communicator) DownloadDir(string, string, []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, string, string, []string) error {
 	return fmt.Errorf("downloadDir not supported")
 }

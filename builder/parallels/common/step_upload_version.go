@@ -22,7 +22,7 @@ type StepUploadVersion struct {
 }
 
 // Run uploads a file containing the version of Parallels Desktop.
-func (s *StepUploadVersion) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepUploadVersion) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
@@ -41,7 +41,7 @@ func (s *StepUploadVersion) Run(_ context.Context, state multistep.StateBag) mul
 	ui.Say(fmt.Sprintf("Uploading Parallels version info (%s)", version))
 	var data bytes.Buffer
 	data.WriteString(version)
-	if err := comm.Upload(s.Path, &data, nil); err != nil {
+	if err := comm.Upload(ctx, s.Path, &data, nil); err != nil {
 		state.Put("error", fmt.Errorf("Error uploading Parallels version: %s", err))
 		return multistep.ActionHalt
 	}

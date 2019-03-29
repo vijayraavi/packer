@@ -346,7 +346,7 @@ func (p *Provisioner) uploadFile(ui packer.Ui, comm packer.Communicator, remoteP
 	}
 	defer f.Close()
 
-	return comm.Upload(remotePath, f, nil)
+	return comm.Upload(ctx, remotePath, f, nil)
 }
 
 func (p *Provisioner) createConfig(
@@ -403,7 +403,7 @@ func (p *Provisioner) createConfig(
 	}
 
 	remotePath := filepath.ToSlash(filepath.Join(p.config.StagingDir, "client.rb"))
-	if err := comm.Upload(remotePath, bytes.NewReader([]byte(configString)), nil); err != nil {
+	if err := comm.Upload(ctx, remotePath, bytes.NewReader([]byte(configString)), nil); err != nil {
 		return "", err
 	}
 
@@ -430,7 +430,7 @@ func (p *Provisioner) createKnifeConfig(ui packer.Ui, comm packer.Communicator, 
 	}
 
 	remotePath := filepath.ToSlash(filepath.Join(p.config.StagingDir, "knife.rb"))
-	if err := comm.Upload(remotePath, bytes.NewReader([]byte(configString)), nil); err != nil {
+	if err := comm.Upload(ctx, remotePath, bytes.NewReader([]byte(configString)), nil); err != nil {
 		return "", err
 	}
 
@@ -459,7 +459,7 @@ func (p *Provisioner) createJson(ui packer.Ui, comm packer.Communicator) (string
 
 	// Upload the bytes
 	remotePath := filepath.ToSlash(filepath.Join(p.config.StagingDir, "first-boot.json"))
-	if err := comm.Upload(remotePath, bytes.NewReader(jsonBytes), nil); err != nil {
+	if err := comm.Upload(ctx, remotePath, bytes.NewReader(jsonBytes), nil); err != nil {
 		return "", err
 	}
 

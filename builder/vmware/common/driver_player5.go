@@ -110,7 +110,7 @@ func (d *Player5Driver) Start(ctx context.Context, vmxPath string, headless bool
 		guiArgument = "nogui"
 	}
 
-	cmd := exec.Command(d.VmrunPath, "-T", "player", "start", vmxPath, guiArgument)
+	cmd := exec.CommandContext(ctx, d.VmrunPath, "-T", "player", "start", vmxPath, guiArgument)
 	if _, _, err := runAndLog(cmd); err != nil {
 		return err
 	}

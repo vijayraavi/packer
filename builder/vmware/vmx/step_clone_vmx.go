@@ -23,7 +23,7 @@ type StepCloneVMX struct {
 	tempDir   string
 }
 
-func (s *StepCloneVMX) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepCloneVMX) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	halt := func(err error) multistep.StepAction {
 		state.Put("error", err)
 		return multistep.ActionHalt
@@ -56,7 +56,7 @@ func (s *StepCloneVMX) Run(_ context.Context, state multistep.StateBag) multiste
 		}
 		s.tempDir = tempDir
 		vmxPath = filepath.Join(tempDir, s.VMName+".vmx")
-		if err = remoteDriver.Download(remoteVmxPath, vmxPath); err != nil {
+		if err = remoteDriver.Download(ctx, remoteVmxPath, vmxPath); err != nil {
 			return halt(err)
 		}
 	}

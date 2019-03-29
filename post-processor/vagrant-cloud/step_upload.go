@@ -13,7 +13,7 @@ import (
 type stepUpload struct {
 }
 
-func (s *stepUpload) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *stepUpload) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	client := state.Get("client").(*VagrantCloudClient)
 	ui := state.Get("ui").(packer.Ui)
 	upload := state.Get("upload").(*Upload)
@@ -28,7 +28,7 @@ func (s *stepUpload) Run(_ context.Context, state multistep.StateBag) multistep.
 	err := common.Retry(10, 10, 3, func(i uint) (bool, error) {
 		ui.Message(fmt.Sprintf("Uploading box, attempt %d", i+1))
 
-		resp, err := client.Upload(artifactFilePath, url)
+		resp, err := client.Upload(ctx, artifactFilePath, url)
 		if err != nil {
 			ui.Message(fmt.Sprintf(
 				"Error uploading box! Will retry in 10 seconds. Error: %s", err))

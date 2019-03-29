@@ -65,7 +65,7 @@ type Communicator interface {
 	// Upload uploads a file to the machine to the given path with the
 	// contents coming from the given reader. This method will block until
 	// it completes.
-	Upload(string, io.Reader, *os.FileInfo) error
+	Upload(context.Context, string, io.Reader, *os.FileInfo) error
 
 	// UploadDir uploads the contents of a directory recursively to
 	// the remote path. It also takes an optional slice of paths to
@@ -75,14 +75,14 @@ type Communicator interface {
 	// is a trailing slash on the source "/". For example: "/tmp/src" as
 	// the source will create a "src" directory in the destination unless
 	// a trailing slash is added. This is identical behavior to rsync(1).
-	UploadDir(dst string, src string, exclude []string) error
+	UploadDir(ctx context.Context, dst string, src string, exclude []string) error
 
 	// Download downloads a file from the machine from the given remote path
 	// with the contents writing to the given writer. This method will
 	// block until it completes.
-	Download(string, io.Writer) error
+	Download(context.Context, string, io.Writer) error
 
-	DownloadDir(src string, dst string, exclude []string) error
+	DownloadDir(ctx context.Context, src string, dst string, exclude []string) error
 }
 
 // StartWithUi runs the remote command and streams the output to any

@@ -209,7 +209,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 				return err
 			}
 
-			if err := comm.Upload(p.config.RemotePath, f, nil); err != nil {
+			if err := comm.Upload(ctx, p.config.RemotePath, f, nil); err != nil {
 				return fmt.Errorf("Error uploading script: %s", err)
 			}
 

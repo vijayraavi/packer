@@ -47,7 +47,7 @@ func (c *Communicator) Start(ctx context.Context, remote *packer.RemoteCmd) erro
 			append([]string{"-u", c.Config.ExecUser}, dockerArgs[2:]...)...)
 	}
 
-	cmd := exec.Command("docker", dockerArgs...)
+	cmd := exec.CommandContext(ctx, "docker", dockerArgs...)
 
 	var (
 		stdin_w io.WriteCloser
@@ -76,7 +76,7 @@ func (c *Communicator) Start(ctx context.Context, remote *packer.RemoteCmd) erro
 }
 
 // Upload uploads a file to the docker container
-func (c *Communicator) Upload(dst string, src io.Reader, fi *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, dst string, src io.Reader, fi *os.FileInfo) error {
 	if fi == nil {
 		return c.uploadReader(dst, src)
 	}
@@ -162,7 +162,7 @@ func (c *Communicator) uploadFile(dst string, src io.Reader, fi *os.FileInfo) er
 	return nil
 }
 
-func (c *Communicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	/*
 		from https://docs.docker.com/engine/reference/commandline/cp/#extended-description
 		SRC_PATH specifies a directory
@@ -222,7 +222,7 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 // Download pulls a file out of a container using `docker cp`. We have a source
 // path and want to write to an io.Writer, not a file. We use - to make docker
 // cp to write to stdout, and then copy the stream to our destination io.Writer.
-func (c *Communicator) Download(src string, dst io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, src string, dst io.Writer) error {
 	log.Printf("Downloading file from container: %s:%s", c.ContainerID, src)
 	localCmd := exec.Command("docker", "cp", fmt.Sprintf("%s:%s", c.ContainerID, src), "-")
 
@@ -237,7 +237,7 @@ func (c *Communicator) Download(src string, dst io.Writer) error {
 
 	// When you use - to send docker cp to stdout it is streamed as a tar; this
 	// enables it to work with directories. We don't actually support
-	// directories in Download() but we still need to handle the tar format.
+	// directories in Download(ctx context.Context, ) but we still need to handle the tar format.
 	archive := tar.NewReader(pipe)
 	_, err = archive.Next()
 	if err != nil {
@@ -257,7 +257,7 @@ func (c *Communicator) Download(src string, dst io.Writer) error {
 	return nil
 }
 
-func (c *Communicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	return fmt.Errorf("DownloadDir is not implemented for docker")
 }
 

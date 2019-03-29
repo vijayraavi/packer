@@ -38,7 +38,7 @@ type StepUploadParallelsTools struct {
 }
 
 // Run uploads the Parallels Tools ISO to the VM.
-func (s *StepUploadParallelsTools) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepUploadParallelsTools) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	ui := state.Get("ui").(packer.Ui)
 
@@ -72,7 +72,7 @@ func (s *StepUploadParallelsTools) Run(_ context.Context, state multistep.StateB
 
 	ui.Say(fmt.Sprintf("Uploading Parallels Tools for '%s' to path: '%s'",
 		s.ParallelsToolsFlavor, s.ParallelsToolsGuestPath))
-	if err := comm.Upload(s.ParallelsToolsGuestPath, f, nil); err != nil {
+	if err := comm.Upload(ctx, s.ParallelsToolsGuestPath, f, nil); err != nil {
 		err = fmt.Errorf("Error uploading Parallels Tools: %s", err)
 		state.Put("error", err)
 		ui.Error(err.Error())

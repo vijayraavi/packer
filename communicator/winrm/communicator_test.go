@@ -104,13 +104,13 @@ func TestUpload(t *testing.T) {
 		t.Fatalf("error creating communicator: %s", err)
 	}
 	file := "C:/Temp/packer.cmd"
-	err = c.Upload(file, strings.NewReader(PAYLOAD), nil)
+	err = c.Upload(ctx, file, strings.NewReader(PAYLOAD), nil)
 	if err != nil {
 		t.Fatalf("error uploading file: %s", err)
 	}
 
 	dest := new(bytes.Buffer)
-	err = c.Download(file, dest)
+	err = c.Download(ctx, file, dest)
 	if err != nil {
 		t.Fatalf("error downloading file: %s", err)
 	}

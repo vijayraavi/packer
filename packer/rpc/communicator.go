@@ -127,7 +127,7 @@ func (c *communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) (err er
 	return
 }
 
-func (c *communicator) Upload(path string, r io.Reader, fi *os.FileInfo) (err error) {
+func (c *communicator) Upload(ctx context.Context, path string, r io.Reader, fi *os.FileInfo) (err error) {
 	// Pipe the reader through to the connection
 	streamId := c.mux.NextId()
 	go serveSingleCopy("uploadData", c.mux, streamId, nil, r)
@@ -145,7 +145,7 @@ func (c *communicator) Upload(path string, r io.Reader, fi *os.FileInfo) (err er
 	return
 }
 
-func (c *communicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	args := &CommunicatorUploadDirArgs{
 		Dst:     dst,
 		Src:     src,
@@ -161,7 +161,7 @@ func (c *communicator) UploadDir(dst string, src string, exclude []string) error
 	return err
 }
 
-func (c *communicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	args := &CommunicatorDownloadDirArgs{
 		Dst:     dst,
 		Src:     src,
@@ -177,7 +177,7 @@ func (c *communicator) DownloadDir(src string, dst string, exclude []string) err
 	return err
 }
 
-func (c *communicator) Download(path string, w io.Writer) (err error) {
+func (c *communicator) Download(ctx context.Context, path string, w io.Writer) (err error) {
 	// Serve a single connection and a single copy
 	streamId := c.mux.NextId()
 
@@ -280,7 +280,7 @@ func (c *CommunicatorServer) Start(ctx context.Context, args *CommunicatorStartA
 	return nil
 }
 
-func (c *CommunicatorServer) Upload(args *CommunicatorUploadArgs, reply *interface{}) (err error) {
+func (c *CommunicatorServer) Upload(ctx context.Context, args *CommunicatorUploadArgs, reply *interface{}) (err error) {
 	readerC, err := c.mux.Dial(args.ReaderStreamId)
 	if err != nil {
 		return
@@ -292,26 +292,26 @@ func (c *CommunicatorServer) Upload(args *CommunicatorUploadArgs, reply *interfa
 		fi = new(os.FileInfo)
 		*fi = *args.FileInfo
 	}
-	err = c.c.Upload(args.Path, readerC, fi)
+	err = c.c.Upload(ctx, args.Path, readerC, fi)
 	return
 }
 
-func (c *CommunicatorServer) UploadDir(args *CommunicatorUploadDirArgs, reply *error) error {
-	return c.c.UploadDir(args.Dst, args.Src, args.Exclude)
+func (c *CommunicatorServer) UploadDir(ctx context.Context, args *CommunicatorUploadDirArgs, reply *error) error {
+	return c.c.UploadDir(ctx, args.Dst, args.Src, args.Exclude)
 }
 
-func (c *CommunicatorServer) DownloadDir(args *CommunicatorUploadDirArgs, reply *error) error {
-	return c.c.DownloadDir(args.Src, args.Dst, args.Exclude)
+func (c *CommunicatorServer) DownloadDir(ctx context.Context, args *CommunicatorUploadDirArgs, reply *error) error {
+	return c.c.DownloadDir(ctx, args.Src, args.Dst, args.Exclude)
 }
 
-func (c *CommunicatorServer) Download(args *CommunicatorDownloadArgs, reply *interface{}) (err error) {
+func (c *CommunicatorServer) Download(ctx context.Context, args *CommunicatorDownloadArgs, reply *interface{}) (err error) {
 	writerC, err := c.mux.Dial(args.WriterStreamId)
 	if err != nil {
 		return
 	}
 	defer writerC.Close()
 
-	err = c.c.Download(args.Path, writerC)
+	err = c.c.Download(ctx, args.Path, writerC)
 	return
 }
 

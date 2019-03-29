@@ -118,7 +118,7 @@ func (p *Provisioner) ProvisionDownload(ui packer.Ui, comm packer.Communicator) 
 		}
 		// if the src was a dir, download the dir
 		if strings.HasSuffix(src, "/") || strings.ContainsAny(src, "*?[") {
-			return comm.DownloadDir(src, dst, nil)
+			return comm.DownloadDir(ctx.Context, src, dst, nil)
 		}
 
 		f, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
@@ -131,7 +131,7 @@ func (p *Provisioner) ProvisionDownload(ui packer.Ui, comm packer.Communicator) 
 		pf := io.MultiWriter(f)
 
 		// Download the file
-		if err = comm.Download(src, pf); err != nil {
+		if err = comm.Download(ctx, src, pf); err != nil {
 			ui.Error(fmt.Sprintf("Download failed: %s", err))
 			return err
 		}
@@ -152,7 +152,7 @@ func (p *Provisioner) ProvisionUpload(ui packer.Ui, comm packer.Communicator) er
 
 		// If we're uploading a directory, short circuit and do that
 		if info.IsDir() {
-			return comm.UploadDir(p.config.Destination, src, nil)
+			return comm.UploadDir(ctx, p.config.Destination, src, nil)
 		}
 
 		// We're uploading a file...
@@ -175,7 +175,7 @@ func (p *Provisioner) ProvisionUpload(ui packer.Ui, comm packer.Communicator) er
 		defer pf.Close()
 
 		// Upload the file
-		if err = comm.Upload(dst, pf, &fi); err != nil {
+		if err = comm.Upload(ctx, dst, pf, &fi); err != nil {
 			if strings.Contains(err.Error(), "Error restoring file") {
 				ui.Error(fmt.Sprintf("Upload failed: %s; this can occur when "+
 					"your file destination is a folder without a trailing "+

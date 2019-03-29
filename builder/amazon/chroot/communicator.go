@@ -33,7 +33,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 		return err
 	}
 
-	localCmd := ShellCommand(command)
+	localCmd := ShellCommand(ctx, command)
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
@@ -65,7 +65,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	return nil
 }
 
-func (c *Communicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, dst string, r io.Reader, fi *os.FileInfo) error {
 	dst = filepath.Join(c.Chroot, dst)
 	log.Printf("Uploading to chroot dir: %s", dst)
 	tf, err := tmp.File("packer-amazon-chroot")
@@ -83,10 +83,10 @@ func (c *Communicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
 		return err
 	}
 
-	return ShellCommand(cpCmd).Run()
+	return ShellCommand(ctx, cpCmd).Run()
 }
 
-func (c *Communicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	// If src ends with a trailing "/", copy from "src/." so that
 	// directory contents (including hidden files) are copied, but the
 	// directory "src" is omitted.  BSD does this automatically when
@@ -105,7 +105,7 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 	}
 
 	var stderr bytes.Buffer
-	cmd := ShellCommand(cpCmd)
+	cmd := ShellCommand(ctx, cpCmd)
 	cmd.Env = append(cmd.Env, "LANG=C")
 	cmd.Env = append(cmd.Env, os.Environ()...)
 	cmd.Stderr = &stderr
@@ -122,11 +122,11 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 	return err
 }
 
-func (c *Communicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	return fmt.Errorf("DownloadDir is not implemented for amazon-chroot")
 }
 
-func (c *Communicator) Download(src string, w io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, src string, w io.Writer) error {
 	src = filepath.Join(c.Chroot, src)
 	log.Printf("Downloading from chroot dir: %s", src)
 	f, err := os.Open(src)

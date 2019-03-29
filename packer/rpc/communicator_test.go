@@ -83,7 +83,7 @@ func TestCommunicatorRPC(t *testing.T) {
 		defer uploadW.Close()
 		uploadW.Write([]byte("uploadfoo\n"))
 	}()
-	err = remote.Upload("foo", uploadR, nil)
+	err = remote.Upload(ctx, "foo", uploadR, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -104,7 +104,7 @@ func TestCommunicatorRPC(t *testing.T) {
 	dirDst := "foo"
 	dirSrc := "bar"
 	dirExcl := []string{"foo"}
-	err = remote.UploadDir(dirDst, dirSrc, dirExcl)
+	err = remote.UploadDir(ctx, dirDst, dirSrc, dirExcl)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -134,7 +134,7 @@ func TestCommunicatorRPC(t *testing.T) {
 	}()
 
 	c.DownloadData = "download\n"
-	err = remote.Download("bar", downloadW)
+	err = remote.Download(ctx, "bar", downloadW)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

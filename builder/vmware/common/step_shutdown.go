@@ -34,7 +34,7 @@ type StepShutdown struct {
 	Testing bool
 }
 
-func (s *StepShutdown) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepShutdown) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	dir := state.Get("dir").(OutputDir)
 	driver := state.Get("driver").(Driver)
@@ -62,7 +62,7 @@ func (s *StepShutdown) Run(_ context.Context, state multistep.StateBag) multiste
 		log.Printf("Waiting max %s for shutdown to complete", s.Timeout)
 		shutdownTimer := time.After(s.Timeout)
 		for {
-			running, _ := driver.IsRunning(vmxPath)
+			running, _ := driver.IsRunning(ctx, vmxPath)
 			if !running {
 				break
 			}

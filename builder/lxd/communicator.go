@@ -55,7 +55,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	return nil
 }
 
-func (c *Communicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, dst string, r io.Reader, fi *os.FileInfo) error {
 	fileDestination := filepath.Join(c.ContainerName, dst)
 	// find out if the place we are pushing to is a directory
 	testDirectoryCommand := fmt.Sprintf(`test -d "%s"`, dst)
@@ -79,13 +79,13 @@ func (c *Communicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
 	}
 
 	log.Printf("Running copy command: %s", cpCmd)
-	command := ShellCommand(cpCmd)
+	command := ShellCommand(ctx, cpCmd)
 	command.Stdin = r
 
 	return command.Run()
 }
 
-func (c *Communicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	// NOTE:lxc file push doesn't yet support directory uploads.
 	// As a work around, we tar up the folder, upload it as a file, then extract it
 
@@ -102,8 +102,8 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 		return err
 	}
 
-	tarCmd := ShellCommand(tar)
-	cpCmd := ShellCommand(cp)
+	tarCmd := ShellCommand(ctx, tar)
+	cpCmd := ShellCommand(ctx, cp)
 
 	cpCmd.Stdin, _ = tarCmd.StdoutPipe()
 	log.Printf("Starting tar command: %s", tar)
@@ -128,20 +128,20 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 	return nil
 }
 
-func (c *Communicator) Download(src string, w io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, src string, w io.Writer) error {
 	cpCmd, err := c.CmdWrapper(fmt.Sprintf("lxc file pull %s -", filepath.Join(c.ContainerName, src)))
 	if err != nil {
 		return err
 	}
 
 	log.Printf("Running copy command: %s", cpCmd)
-	command := ShellCommand(cpCmd)
+	command := ShellCommand(ctx, cpCmd)
 	command.Stdout = w
 
 	return command.Run()
 }
 
-func (c *Communicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	// TODO This could probably be "lxc exec <container> -- cd <src> && tar -czf - | tar -xzf - -C <dst>"
 	return fmt.Errorf("DownloadDir is not implemented for lxc")
 }
@@ -154,7 +154,7 @@ func (c *Communicator) Execute(commandString string) (*exec.Cmd, error) {
 		return nil, err
 	}
 
-	localCmd := ShellCommand(command)
+	localCmd := ShellCommand(ctx, command)
 	log.Printf("Executing lxc exec: %s %#v", localCmd.Path, localCmd.Args)
 
 	return localCmd, nil

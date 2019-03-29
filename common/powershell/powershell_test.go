@@ -16,7 +16,7 @@ func TestOutput(t *testing.T) {
 		return
 	}
 
-	cmdOut, err := ps.Output("")
+	cmdOut, err := ps.Output(ctx, "")
 	if err != nil {
 		t.Fatalf("should not have error: %s", err)
 	}
@@ -25,7 +25,7 @@ func TestOutput(t *testing.T) {
 		t.Fatalf("output '%v' is not ''", cmdOut)
 	}
 
-	trueOutput, err := ps.Output("$True")
+	trueOutput, err := ps.Output(ctx, "$True")
 	if err != nil {
 		t.Fatalf("should not have error: %s", err)
 	}
@@ -34,7 +34,7 @@ func TestOutput(t *testing.T) {
 		t.Fatalf("output '%v' is not 'True'", trueOutput)
 	}
 
-	falseOutput, err := ps.Output("$False")
+	falseOutput, err := ps.Output(ctx, "$False")
 	if err != nil {
 		t.Fatalf("should not have error: %s", err)
 	}
@@ -57,7 +57,7 @@ func TestRunFile(t *testing.T) {
 	var blockBuffer bytes.Buffer
 	blockBuffer.WriteString(`param([string]$a, [string]$b, [int]$x, [int]$y) if (Test-Path variable:global:ProgressPreference){$ProgressPreference="SilentlyContinue"}; $n = $x + $y; Write-Output "$a $b $n";`)
 
-	cmdOut, err := ps.Output(blockBuffer.String(), "a", "b", "5", "10")
+	cmdOut, err := ps.Output(ctx, blockBuffer.String(), "a", "b", "5", "10")
 
 	if err != nil {
 		t.Fatalf("should not have error: %s", err)

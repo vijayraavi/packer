@@ -21,7 +21,7 @@ func formatOpenAPIError(err error) string {
 	return fmt.Sprintf("%s (body: %s)", openAPIError.Error(), openAPIError.Body())
 }
 
-func runCommands(commands []string, ctx interpolate.Context, state multistep.StateBag) error {
+func runCommands(ctx, commands []string, ctx interpolate.Context, state multistep.StateBag) error {
 	ui := state.Get("ui").(packer.Ui)
 	wrappedCommand := state.Get("wrappedCommand").(CommandWrapper)
 	comm := state.Get("communicator").(packer.Communicator)

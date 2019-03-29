@@ -19,20 +19,20 @@ func (c *communicatorMock) Start(ctx context.Context, cmd *packer.RemoteCmd) err
 	return nil
 }
 
-func (c *communicatorMock) Upload(dst string, _ io.Reader, _ *os.FileInfo) error {
+func (c *communicatorMock) Upload(ctx context.Context, dst string, _ io.Reader, _ *os.FileInfo) error {
 	c.uploadDestination = append(c.uploadDestination, dst)
 	return nil
 }
 
-func (c *communicatorMock) UploadDir(dst, src string, exclude []string) error {
+func (c *communicatorMock) UploadDir(ctx context.Context, dst, src string, exclude []string) error {
 	return nil
 }
 
-func (c *communicatorMock) Download(src string, dst io.Writer) error {
+func (c *communicatorMock) Download(ctx context.Context, src string, dst io.Writer) error {
 	return nil
 }
 
-func (c *communicatorMock) DownloadDir(src, dst string, exclude []string) error {
+func (c *communicatorMock) DownloadDir(ctx context.Context, src, dst string, exclude []string) error {
 	return nil
 }
 

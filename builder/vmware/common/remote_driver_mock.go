@@ -61,7 +61,7 @@ func (d *RemoteDriverMock) upload(dst, src string) error {
 	return d.UploadErr
 }
 
-func (d *RemoteDriverMock) Download(src, dst string) error {
+func (d *RemoteDriverMock) Download(ctx context.Context, src, dst string) error {
 	return d.DownloadErr
 }
 

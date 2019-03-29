@@ -15,7 +15,7 @@ type StepRun struct {
 	vmName        string
 }
 
-func (s *StepRun) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepRun) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 	vmName := state.Get("vmName").(string)
@@ -55,7 +55,7 @@ func (s *StepRun) Cleanup(state multistep.StateBag) {
 		s.GuiCancelFunc()
 	}
 
-	if running, _ := driver.IsRunning(s.vmName); running {
+	if running, _ := driver.IsRunning(ctx, s.vmName); running {
 		if err := driver.Stop(s.vmName); err != nil {
 			ui.Error(fmt.Sprintf("Error shutting down VM: %s", err))
 		}

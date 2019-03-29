@@ -11,7 +11,7 @@ import (
 
 type StepUploadX509Cert struct{}
 
-func (s *StepUploadX509Cert) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepUploadX509Cert) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	config := state.Get("config").(*Config)
 	ui := state.Get("ui").(packer.Ui)
@@ -47,5 +47,5 @@ func (s *StepUploadX509Cert) uploadSingle(comm packer.Communicator, dst, src str
 	}
 	defer f.Close()
 
-	return comm.Upload(dst, f, nil)
+	return comm.Upload(ctx, dst, f, nil)
 }

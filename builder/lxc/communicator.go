@@ -33,7 +33,7 @@ func (c *LxcAttachCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func (c *LxcAttachCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd
 	return nil
 }
 
-func (c *LxcAttachCommunicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
+func (c *LxcAttachCommunicator) Upload(ctx context.Context, dst string, r io.Reader, fi *os.FileInfo) error {
 	log.Printf("Uploading to rootfs: %s", dst)
 	tf, err := tmp.File("packer-lxc-attach")
 	if err != nil {
@@ -88,7 +88,7 @@ func (c *LxcAttachCommunicator) Upload(dst string, r io.Reader, fi *os.FileInfo)
 			return err
 		}
 		defer os.Remove(adjustedTempName)
-		ShellCommand(mvCmd).Run()
+		ShellCommand(ctx, mvCmd).Run()
 		// change cpCmd to use new file name as source
 		cpCmd, err = c.CmdWrapper(fmt.Sprintf(strings.Join(attachCommand, " "), adjustedTempName, c.ContainerName, dst))
 		if err != nil {
@@ -98,10 +98,10 @@ func (c *LxcAttachCommunicator) Upload(dst string, r io.Reader, fi *os.FileInfo)
 
 	log.Printf("Running copy command: %s", dst)
 
-	return ShellCommand(cpCmd).Run()
+	return ShellCommand(ctx, cpCmd).Run()
 }
 
-func (c *LxcAttachCommunicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *LxcAttachCommunicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	// TODO: remove any file copied if it appears in `exclude`
 	dest := filepath.Join(c.RootFs, dst)
 	log.Printf("Uploading directory '%s' to rootfs '%s'", src, dest)
@@ -110,10 +110,10 @@ func (c *LxcAttachCommunicator) UploadDir(dst string, src string, exclude []stri
 		return err
 	}
 
-	return ShellCommand(cpCmd).Run()
+	return ShellCommand(ctx, cpCmd).Run()
 }
 
-func (c *LxcAttachCommunicator) Download(src string, w io.Writer) error {
+func (c *LxcAttachCommunicator) Download(ctx context.Context, src string, w io.Writer) error {
 	src = filepath.Join(c.RootFs, src)
 	log.Printf("Downloading from rootfs dir: %s", src)
 	f, err := os.Open(src)
@@ -129,11 +129,11 @@ func (c *LxcAttachCommunicator) Download(src string, w io.Writer) error {
 	return nil
 }
 
-func (c *LxcAttachCommunicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *LxcAttachCommunicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	return fmt.Errorf("DownloadDir is not implemented for lxc")
 }
 
-func (c *LxcAttachCommunicator) Execute(commandString string) (*exec.Cmd, error) {
+func (c *LxcAttachCommunicator) Execute(ctx context.Context, commandString string) (*exec.Cmd, error) {
 	log.Printf("Executing with lxc-attach in container: %s %s %s", c.ContainerName, c.RootFs, commandString)
 
 	attachCommand := []string{"lxc-attach"}
@@ -146,7 +146,7 @@ func (c *LxcAttachCommunicator) Execute(commandString string) (*exec.Cmd, error)
 		return nil, err
 	}
 
-	localCmd := ShellCommand(command)
+	localCmd := ShellCommand(ctx, command)
 	log.Printf("Executing lxc-attach: %s %#v", localCmd.Path, localCmd.Args)
 
 	return localCmd, nil
@@ -161,7 +161,7 @@ func (c *LxcAttachCommunicator) CheckInit() (string, error) {
 	}
 
 	pr, _ := localCmd.StdoutPipe()
-	if err = localCmd.Start(ctx); err != nil {
+	if err = localCmd.Start(); err != nil {
 		return "", err
 	}
 

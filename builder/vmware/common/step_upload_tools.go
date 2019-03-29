@@ -21,7 +21,7 @@ type StepUploadTools struct {
 	Ctx               interpolate.Context
 }
 
-func (c *StepUploadTools) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (c *StepUploadTools) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	driver := state.Get("driver").(Driver)
 
 	if c.ToolsUploadFlavor == "" {
@@ -58,7 +58,7 @@ func (c *StepUploadTools) Run(_ context.Context, state multistep.StateBag) multi
 		return multistep.ActionHalt
 	}
 
-	if err := comm.Upload(c.ToolsUploadPath, f, nil); err != nil {
+	if err := comm.Upload(ctx, c.ToolsUploadPath, f, nil); err != nil {
 		err := fmt.Errorf("Error uploading VMware Tools: %s", err)
 		state.Put("error", err)
 		ui.Error(err.Error())

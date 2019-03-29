@@ -29,7 +29,7 @@ type scriptOptions struct {
 	FixedVHD           bool
 }
 
-func GetHostAdapterIpAddressForSwitch(switchName string) (string, error) {
+func GetHostAdapterIpAddressForSwitch(ctx context.Context, switchName string) (string, error) {
 	var script = `
 param([string]$switchName, [int]$addressIndex)
 
@@ -47,12 +47,12 @@ return $false
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, switchName, "0")
+	cmdOut, err := ps.Output(ctx, script, switchName, "0")
 
 	return cmdOut, err
 }
 
-func GetVirtualMachineNetworkAdapterAddress(vmName string) (string, error) {
+func GetVirtualMachineNetworkAdapterAddress(ctx context.Context, vmName string) (string, error) {
 
 	var script = `
 param([string]$vmName, [int]$addressIndex)
@@ -78,12 +78,12 @@ $ip
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName, "0")
+	cmdOut, err := ps.Output(ctx, script, vmName, "0")
 
 	return cmdOut, err
 }
 
-func CreateDvdDrive(vmName string, isoPath string, generation uint) (uint, uint, error) {
+func CreateDvdDrive(ctx context.Context, vmName string, isoPath string, generation uint) (uint, uint, error) {
 	var ps powershell.PowerShellCmd
 	var script string
 
@@ -95,7 +95,7 @@ $result = "$($dvdController.ControllerNumber),$($dvdController.ControllerLocatio
 $result
 `
 
-	cmdOut, err := ps.Output(script, vmName, isoPath)
+	cmdOut, err := ps.Output(ctx, script, vmName, isoPath)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -120,7 +120,7 @@ $result
 	return controllerNumber, controllerLocation, err
 }
 
-func MountDvdDrive(vmName string, path string, controllerNumber uint, controllerLocation uint) error {
+func MountDvdDrive(ctx context.Context, vmName string, path string, controllerNumber uint, controllerLocation uint) error {
 
 	var script = `
 param([string]$vmName,[string]$path,[string]$controllerNumber,[string]$controllerLocation)
@@ -130,12 +130,12 @@ Hyper-V\Set-VMDvdDrive -VMName $vmName -ControllerNumber $controllerNumber -Cont
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, path, strconv.FormatInt(int64(controllerNumber), 10),
+	err := ps.Run(ctx, script, vmName, path, strconv.FormatInt(int64(controllerNumber), 10),
 		strconv.FormatInt(int64(controllerLocation), 10))
 	return err
 }
 
-func UnmountDvdDrive(vmName string, controllerNumber uint, controllerLocation uint) error {
+func UnmountDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint) error {
 	var script = `
 param([string]$vmName,[int]$controllerNumber,[int]$controllerLocation)
 $vmDvdDrive = Hyper-V\Get-VMDvdDrive -VMName $vmName -ControllerNumber $controllerNumber -ControllerLocation $controllerLocation
@@ -144,12 +144,12 @@ Hyper-V\Set-VMDvdDrive -VMName $vmName -ControllerNumber $controllerNumber -Cont
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
+	err := ps.Run(ctx, script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
 		strconv.FormatInt(int64(controllerLocation), 10))
 	return err
 }
 
-func SetBootDvdDrive(vmName string, controllerNumber uint, controllerLocation uint, generation uint) error {
+func SetBootDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint, generation uint) error {
 
 	if generation < 2 {
 		script := `
@@ -157,7 +157,7 @@ param([string]$vmName)
 Hyper-V\Set-VMBios -VMName $vmName -StartupOrder @("IDE","CD","LegacyNetworkAdapter","Floppy")
 `
 		var ps powershell.PowerShellCmd
-		err := ps.Run(script, vmName)
+		err := ps.Run(ctx, script, vmName)
 		return err
 	} else {
 		script := `
@@ -167,13 +167,13 @@ if (!$vmDvdDrive) {throw 'unable to find dvd drive'}
 Hyper-V\Set-VMFirmware -VMName $vmName -FirstBootDevice $vmDvdDrive -ErrorAction SilentlyContinue
 `
 		var ps powershell.PowerShellCmd
-		err := ps.Run(script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
+		err := ps.Run(ctx, script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
 			strconv.FormatInt(int64(controllerLocation), 10))
 		return err
 	}
 }
 
-func DeleteDvdDrive(vmName string, controllerNumber uint, controllerLocation uint) error {
+func DeleteDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint) error {
 	var script = `
 param([string]$vmName,[int]$controllerNumber,[int]$controllerLocation)
 $vmDvdDrive = Hyper-V\Get-VMDvdDrive -VMName $vmName -ControllerNumber $controllerNumber -ControllerLocation $controllerLocation
@@ -182,34 +182,34 @@ Hyper-V\Remove-VMDvdDrive -VMName $vmName -ControllerNumber $controllerNumber -C
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
+	err := ps.Run(ctx, script, vmName, strconv.FormatInt(int64(controllerNumber), 10),
 		strconv.FormatInt(int64(controllerLocation), 10))
 	return err
 }
 
-func DeleteAllDvdDrives(vmName string) error {
+func DeleteAllDvdDrives(ctx context.Context, vmName string) error {
 	var script = `
 param([string]$vmName)
 Hyper-V\Get-VMDvdDrive -VMName $vmName | Hyper-V\Remove-VMDvdDrive
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func MountFloppyDrive(vmName string, path string) error {
+func MountFloppyDrive(ctx context.Context, vmName string, path string) error {
 	var script = `
 param([string]$vmName, [string]$path)
 Hyper-V\Set-VMFloppyDiskDrive -VMName $vmName -Path $path
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, path)
+	err := ps.Run(ctx, script, vmName, path)
 	return err
 }
 
-func UnmountFloppyDrive(vmName string) error {
+func UnmountFloppyDrive(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -217,7 +217,7 @@ Hyper-V\Set-VMFloppyDiskDrive -VMName $vmName -Path $null
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
@@ -230,7 +230,7 @@ Hyper-V\Set-VMFloppyDiskDrive -VMName $vmName -Path $null
 // For examples of what this template will generate, you can look at the
 // test cases in ./hyperv_test.go
 //
-func getCreateVMScript(opts *scriptOptions) (string, error) {
+func getCreateVMScript(ctx context.Context, opts *scriptOptions) (string, error) {
 
 	if opts.FixedVHD && opts.Generation == 2 {
 		return "", fmt.Errorf("Generation 2 VMs don't support fixed disks.")
@@ -281,7 +281,7 @@ Hyper-V\New-VM -Name "{{ .VMName }}" -Path "{{ .Path }}" -MemoryStartupBytes {{ 
 	return final, nil
 }
 
-func CreateVirtualMachine(vmName string, path string, harddrivePath string, ram int64,
+func CreateVirtualMachine(ctx context.Context, vmName string, path string, harddrivePath string, ram int64,
 	diskSize int64, diskBlockSize int64, switchName string, generation uint,
 	diffDisks bool, fixedVHD bool, version string) error {
 
@@ -299,37 +299,37 @@ func CreateVirtualMachine(vmName string, path string, harddrivePath string, ram 
 		FixedVHD:           fixedVHD,
 	}
 
-	script, err := getCreateVMScript(&opts)
+	script, err := getCreateVMScript(ctx, &opts)
 	if err != nil {
 		return err
 	}
 
 	var ps powershell.PowerShellCmd
-	if err = ps.Run(script); err != nil {
+	if err = ps.Run(ctx, script); err != nil {
 		return err
 	}
 
-	if err := DisableAutomaticCheckpoints(vmName); err != nil {
+	if err := DisableAutomaticCheckpoints(ctx, vmName); err != nil {
 		return err
 	}
 	if generation != 2 {
-		return DeleteAllDvdDrives(vmName)
+		return DeleteAllDvdDrives(ctx, vmName)
 	}
 	return nil
 }
 
-func DisableAutomaticCheckpoints(vmName string) error {
+func DisableAutomaticCheckpoints(ctx context.Context, vmName string) error {
 	var script = `
 param([string]$vmName)
 if ((Get-Command Hyper-V\Set-Vm).Parameters["AutomaticCheckpointsEnabled"]) {
 	Hyper-V\Set-Vm -Name $vmName -AutomaticCheckpointsEnabled $false }
 `
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func ExportVmcxVirtualMachine(exportPath string, vmName string, snapshotName string, allSnapshots bool) error {
+func ExportVmcxVirtualMachine(ctx context.Context, exportPath string, vmName string, snapshotName string, allSnapshots bool) error {
 	var script = `
 param([string]$exportPath, [string]$vmName, [string]$snapshotName, [string]$allSnapshotsString)
 
@@ -371,12 +371,12 @@ $result = Remove-Item -Path $WorkingPath
 	}
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, exportPath, vmName, snapshotName, allSnapshotsString)
+	err := ps.Run(ctx, script, exportPath, vmName, snapshotName, allSnapshotsString)
 
 	return err
 }
 
-func CopyVmcxVirtualMachine(exportPath string, cloneFromVmcxPath string) error {
+func CopyVmcxVirtualMachine(ctx context.Context, exportPath string, cloneFromVmcxPath string) error {
 	var script = `
 param([string]$exportPath, [string]$cloneFromVmcxPath)
 if (!(Test-Path $cloneFromVmcxPath)){
@@ -391,24 +391,24 @@ Copy-Item $cloneFromVmcxPath $exportPath -Recurse -Force
 	`
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, exportPath, cloneFromVmcxPath)
+	err := ps.Run(ctx, script, exportPath, cloneFromVmcxPath)
 
 	return err
 }
 
-func SetVmNetworkAdapterMacAddress(vmName string, mac string) error {
+func SetVmNetworkAdapterMacAddress(ctx context.Context, vmName string, mac string) error {
 	var script = `
 param([string]$vmName, [string]$mac)
 Hyper-V\Set-VMNetworkAdapter $vmName -staticmacaddress $mac
 	`
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, mac)
+	err := ps.Run(ctx, script, vmName, mac)
 
 	return err
 }
 
-func ImportVmcxVirtualMachine(importPath string, vmName string, harddrivePath string,
+func ImportVmcxVirtualMachine(ctx context.Context, importPath string, vmName string, harddrivePath string,
 	ram int64, switchName string, copyTF bool) error {
 
 	var script = `
@@ -465,36 +465,36 @@ if ($vm) {
 }
 	`
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, importPath, vmName, harddrivePath, strconv.FormatInt(ram, 10), switchName, strconv.FormatBool(copyTF))
+	err := ps.Run(ctx, script, importPath, vmName, harddrivePath, strconv.FormatInt(ram, 10), switchName, strconv.FormatBool(copyTF))
 
 	return err
 }
 
-func CloneVirtualMachine(cloneFromVmcxPath string, cloneFromVmName string,
+func CloneVirtualMachine(ctx context.Context, cloneFromVmcxPath string, cloneFromVmName string,
 	cloneFromSnapshotName string, cloneAllSnapshots bool, vmName string,
 	path string, harddrivePath string, ram int64, switchName string, copyTF bool) error {
 
 	if cloneFromVmName != "" {
-		if err := ExportVmcxVirtualMachine(path, cloneFromVmName,
+		if err := ExportVmcxVirtualMachine(ctx, path, cloneFromVmName,
 			cloneFromSnapshotName, cloneAllSnapshots); err != nil {
 			return err
 		}
 	}
 
 	if cloneFromVmcxPath != "" {
-		if err := CopyVmcxVirtualMachine(path, cloneFromVmcxPath); err != nil {
+		if err := CopyVmcxVirtualMachine(ctx, path, cloneFromVmcxPath); err != nil {
 			return err
 		}
 	}
 
-	if err := ImportVmcxVirtualMachine(path, vmName, harddrivePath, ram, switchName, copyTF); err != nil {
+	if err := ImportVmcxVirtualMachine(ctx, path, vmName, harddrivePath, ram, switchName, copyTF); err != nil {
 		return err
 	}
 
-	return DeleteAllDvdDrives(vmName)
+	return DeleteAllDvdDrives(ctx, vmName)
 }
 
-func GetVirtualMachineGeneration(vmName string) (uint, error) {
+func GetVirtualMachineGeneration(ctx context.Context, vmName string) (uint, error) {
 	var script = `
 param([string]$vmName)
 $generation = Hyper-V\Get-Vm -Name $vmName | %{$_.Generation}
@@ -504,7 +504,7 @@ if (!$generation){
 return $generation
 `
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName)
+	cmdOut, err := ps.Output(ctx, script, vmName)
 
 	if err != nil {
 		return 0, err
@@ -521,18 +521,18 @@ return $generation
 	return generation, err
 }
 
-func SetVirtualMachineCpuCount(vmName string, cpu uint) error {
+func SetVirtualMachineCpuCount(ctx context.Context, vmName string, cpu uint) error {
 
 	var script = `
 param([string]$vmName, [int]$cpu)
 Hyper-V\Set-VMProcessor -VMName $vmName -Count $cpu
 `
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, strconv.FormatInt(int64(cpu), 10))
+	err := ps.Run(ctx, script, vmName, strconv.FormatInt(int64(cpu), 10))
 	return err
 }
 
-func SetVirtualMachineVirtualizationExtensions(vmName string, enableVirtualizationExtensions bool) error {
+func SetVirtualMachineVirtualizationExtensions(ctx context.Context, vmName string, enableVirtualizationExtensions bool) error {
 
 	var script = `
 param([string]$vmName, [string]$exposeVirtualizationExtensionsString)
@@ -544,11 +544,11 @@ Hyper-V\Set-VMProcessor -VMName $vmName -ExposeVirtualizationExtensions $exposeV
 		exposeVirtualizationExtensionsString = "True"
 	}
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, exposeVirtualizationExtensionsString)
+	err := ps.Run(ctx, script, vmName, exposeVirtualizationExtensionsString)
 	return err
 }
 
-func SetVirtualMachineDynamicMemory(vmName string, enableDynamicMemory bool) error {
+func SetVirtualMachineDynamicMemory(ctx context.Context, vmName string, enableDynamicMemory bool) error {
 
 	var script = `
 param([string]$vmName, [string]$enableDynamicMemoryString)
@@ -560,11 +560,11 @@ Hyper-V\Set-VMMemory -VMName $vmName -DynamicMemoryEnabled $enableDynamicMemory
 		enableDynamicMemoryString = "True"
 	}
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, enableDynamicMemoryString)
+	err := ps.Run(ctx, script, vmName, enableDynamicMemoryString)
 	return err
 }
 
-func SetVirtualMachineMacSpoofing(vmName string, enableMacSpoofing bool) error {
+func SetVirtualMachineMacSpoofing(ctx context.Context, vmName string, enableMacSpoofing bool) error {
 	var script = `
 param([string]$vmName, $enableMacSpoofing)
 Hyper-V\Set-VMNetworkAdapter -VMName $vmName -MacAddressSpoofing $enableMacSpoofing
@@ -577,11 +577,11 @@ Hyper-V\Set-VMNetworkAdapter -VMName $vmName -MacAddressSpoofing $enableMacSpoof
 		enableMacSpoofingString = "On"
 	}
 
-	err := ps.Run(script, vmName, enableMacSpoofingString)
+	err := ps.Run(ctx, script, vmName, enableMacSpoofingString)
 	return err
 }
 
-func SetVirtualMachineSecureBoot(vmName string, enableSecureBoot bool, templateName string) error {
+func SetVirtualMachineSecureBoot(ctx context.Context, vmName string, enableSecureBoot bool, templateName string) error {
 	var script = `
 param([string]$vmName, [string]$enableSecureBootString, [string]$templateName)
 $cmdlet = Get-Command Hyper-V\Set-VMFirmware
@@ -604,11 +604,11 @@ if ($cmdlet.Parameters.SecureBootTemplate) {
 		templateName = "MicrosoftWindows"
 	}
 
-	err := ps.Run(script, vmName, enableSecureBootString, templateName)
+	err := ps.Run(ctx, script, vmName, enableSecureBootString, templateName)
 	return err
 }
 
-func DeleteVirtualMachine(vmName string) error {
+func DeleteVirtualMachine(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -622,11 +622,11 @@ Hyper-V\Remove-VM -Name $vmName -Force -Confirm:$false
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func ExportVirtualMachine(vmName string, path string) error {
+func ExportVirtualMachine(ctx context.Context, vmName string, path string) error {
 
 	var script = `
 param([string]$vmName, [string]$path)
@@ -726,11 +726,11 @@ if (Test-Path -Path ([IO.Path]::Combine($path, $vmName, 'Virtual Machines', '*.V
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, path)
+	err := ps.Run(ctx, script, vmName, path)
 	return err
 }
 
-func PreserveLegacyExportBehaviour(srcPath, dstPath string) error {
+func PreserveLegacyExportBehaviour(ctx context.Context, srcPath, dstPath string) error {
 
 	var script = `
 param([string]$srcPath, [string]$dstPath)
@@ -781,12 +781,12 @@ if ( $((Get-Item $srcPath).GetFileSystemInfos().Count) -eq 0 ) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, srcPath, dstPath)
+	err := ps.Run(ctx, script, srcPath, dstPath)
 
 	return err
 }
 
-func MoveCreatedVHDsToOutputDir(srcPath, dstPath string) error {
+func MoveCreatedVHDsToOutputDir(ctx context.Context, srcPath, dstPath string) error {
 
 	var script = `
 param([string]$srcPath, [string]$dstPath)
@@ -829,12 +829,12 @@ foreach ($disk in $disks) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, srcPath, dstPath)
+	err := ps.Run(ctx, script, srcPath, dstPath)
 
 	return err
 }
 
-func CompactDisks(path string) (result string, err error) {
+func CompactDisks(ctx context.Context, path string) (result string, err error) {
 	var script = `
 param([string]$srcPath)
 
@@ -866,11 +866,11 @@ foreach ($disk in $disks) {
 `
 
 	var ps powershell.PowerShellCmd
-	result, err = ps.Output(script, path)
+	result, err = ps.Output(ctx, script, path)
 	return
 }
 
-func CreateVirtualSwitch(switchName string, switchType string) (bool, error) {
+func CreateVirtualSwitch(ctx context.Context, switchName string, switchType string) (bool, error) {
 
 	var script = `
 param([string]$switchName,[string]$switchType)
@@ -883,12 +883,12 @@ return $false
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, switchName, switchType)
+	cmdOut, err := ps.Output(ctx, script, switchName, switchType)
 	var created = strings.TrimSpace(cmdOut) == "True"
 	return created, err
 }
 
-func DeleteVirtualSwitch(switchName string) error {
+func DeleteVirtualSwitch(ctx context.Context, switchName string) error {
 
 	var script = `
 param([string]$switchName)
@@ -899,11 +899,11 @@ if ($switch -ne $null) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, switchName)
+	err := ps.Run(ctx, script, switchName)
 	return err
 }
 
-func StartVirtualMachine(vmName string) error {
+func StartVirtualMachine(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -914,11 +914,11 @@ if ($vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Off) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func RestartVirtualMachine(vmName string) error {
+func RestartVirtualMachine(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -926,11 +926,11 @@ Hyper-V\Restart-VM $vmName -Force -Confirm:$false
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func StopVirtualMachine(vmName string) error {
+func StopVirtualMachine(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -941,11 +941,11 @@ if ($vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func EnableVirtualMachineIntegrationService(vmName string, integrationServiceName string) error {
+func EnableVirtualMachineIntegrationService(ctx context.Context, vmName string, integrationServiceName string) error {
 
 	integrationServiceId := ""
 	switch integrationServiceName {
@@ -971,11 +971,11 @@ Hyper-V\Get-VMIntegrationService -VmName $vmName | ?{$_.Id -match $integrationSe
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, integrationServiceId)
+	err := ps.Run(ctx, script, vmName, integrationServiceId)
 	return err
 }
 
-func SetNetworkAdapterVlanId(switchName string, vlanId string) error {
+func SetNetworkAdapterVlanId(ctx context.Context, switchName string, vlanId string) error {
 
 	var script = `
 param([string]$networkAdapterName,[string]$vlanId)
@@ -983,22 +983,22 @@ Hyper-V\Set-VMNetworkAdapterVlan -ManagementOS -VMNetworkAdapterName $networkAda
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, switchName, vlanId)
+	err := ps.Run(ctx, script, switchName, vlanId)
 	return err
 }
 
-func SetVirtualMachineVlanId(vmName string, vlanId string) error {
+func SetVirtualMachineVlanId(ctx context.Context, vmName string, vlanId string) error {
 
 	var script = `
 param([string]$vmName,[string]$vlanId)
 Hyper-V\Set-VMNetworkAdapterVlan -VMName $vmName -Access -VlanId $vlanId
 `
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, vlanId)
+	err := ps.Run(ctx, script, vmName, vlanId)
 	return err
 }
 
-func ReplaceVirtualMachineNetworkAdapter(vmName string, legacy bool) error {
+func ReplaceVirtualMachineNetworkAdapter(ctx context.Context, vmName string, legacy bool) error {
 
 	var script = `
 param([string]$vmName,[string]$legacyString)
@@ -1012,11 +1012,11 @@ Add-VMNetworkAdapter -VMName $vmName -SwitchName $switch -Name $vmName -IsLegacy
 		legacyString = "True"
 	}
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, legacyString)
+	err := ps.Run(ctx, script, vmName, legacyString)
 	return err
 }
 
-func GetExternalOnlineVirtualSwitch() (string, error) {
+func GetExternalOnlineVirtualSwitch(ctx context.Context) (string, error) {
 
 	var script = `
 $adapters = Get-NetAdapter -Physical -ErrorAction SilentlyContinue | Where-Object { $_.Status -eq 'Up' } | Sort-Object -Descending -Property Speed
@@ -1031,7 +1031,7 @@ foreach ($adapter in $adapters) {
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script)
+	cmdOut, err := ps.Output(ctx, script)
 	if err != nil {
 		return "", err
 	}
@@ -1040,7 +1040,7 @@ foreach ($adapter in $adapters) {
 	return switchName, nil
 }
 
-func CreateExternalVirtualSwitch(vmName string, switchName string) error {
+func CreateExternalVirtualSwitch(ctx context.Context, vmName string, switchName string) error {
 
 	var script = `
 param([string]$vmName,[string]$switchName)
@@ -1069,11 +1069,11 @@ if($switch -ne $null) {
 }
 `
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, switchName)
+	err := ps.Run(ctx, script, vmName, switchName)
 	return err
 }
 
-func GetVirtualMachineSwitchName(vmName string) (string, error) {
+func GetVirtualMachineSwitchName(ctx context.Context, vmName string) (string, error) {
 
 	var script = `
 param([string]$vmName)
@@ -1081,7 +1081,7 @@ param([string]$vmName)
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName)
+	cmdOut, err := ps.Output(ctx, script, vmName)
 	if err != nil {
 		return "", err
 	}
@@ -1089,7 +1089,7 @@ param([string]$vmName)
 	return strings.TrimSpace(cmdOut), nil
 }
 
-func ConnectVirtualMachineNetworkAdapterToSwitch(vmName string, switchName string) error {
+func ConnectVirtualMachineNetworkAdapterToSwitch(ctx context.Context, vmName string, switchName string) error {
 
 	var script = `
 param([string]$vmName,[string]$switchName)
@@ -1097,11 +1097,11 @@ Hyper-V\Get-VMNetworkAdapter -VMName $vmName | Hyper-V\Connect-VMNetworkAdapter 
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, switchName)
+	err := ps.Run(ctx, script, vmName, switchName)
 	return err
 }
 
-func AddVirtualMachineHardDiskDrive(vmName string, vhdRoot string, vhdName string, vhdSizeBytes int64,
+func AddVirtualMachineHardDiskDrive(ctx context.Context, vmName string, vhdRoot string, vhdName string, vhdSizeBytes int64,
 	vhdBlockSize int64, controllerType string) error {
 
 	var script = `
@@ -1111,11 +1111,11 @@ Hyper-V\New-VHD -path $vhdPath -SizeBytes $vhdSizeInBytes -BlockSizeBytes $vhdBl
 Hyper-V\Add-VMHardDiskDrive -VMName $vmName -path $vhdPath -controllerType $controllerType
 `
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, vhdRoot, vhdName, strconv.FormatInt(vhdSizeBytes, 10), strconv.FormatInt(vhdBlockSize, 10), controllerType)
+	err := ps.Run(ctx, script, vmName, vhdRoot, vhdName, strconv.FormatInt(vhdSizeBytes, 10), strconv.FormatInt(vhdBlockSize, 10), controllerType)
 	return err
 }
 
-func UntagVirtualMachineNetworkAdapterVlan(vmName string, switchName string) error {
+func UntagVirtualMachineNetworkAdapterVlan(ctx context.Context, vmName string, switchName string) error {
 
 	var script = `
 param([string]$vmName,[string]$switchName)
@@ -1124,11 +1124,11 @@ Hyper-V\Set-VMNetworkAdapterVlan -ManagementOS -VMNetworkAdapterName $switchName
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, switchName)
+	err := ps.Run(ctx, script, vmName, switchName)
 	return err
 }
 
-func IsRunning(vmName string) (bool, error) {
+func IsRunning(ctx context.Context, vmName string) (bool, error) {
 
 	var script = `
 param([string]$vmName)
@@ -1137,7 +1137,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName)
+	cmdOut, err := ps.Output(ctx, script, vmName)
 
 	if err != nil {
 		return false, err
@@ -1147,7 +1147,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running
 	return isRunning, err
 }
 
-func IsOff(vmName string) (bool, error) {
+func IsOff(ctx context.Context, vmName string) (bool, error) {
 
 	var script = `
 param([string]$vmName)
@@ -1156,7 +1156,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Off
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName)
+	cmdOut, err := ps.Output(ctx, script, vmName)
 
 	if err != nil {
 		return false, err
@@ -1166,7 +1166,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Off
 	return isRunning, err
 }
 
-func Uptime(vmName string) (uint64, error) {
+func Uptime(ctx context.Context, vmName string) (uint64, error) {
 
 	var script = `
 param([string]$vmName)
@@ -1174,7 +1174,7 @@ $vm = Hyper-V\Get-VM -Name $vmName -ErrorAction SilentlyContinue
 $vm.Uptime.TotalSeconds
 `
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName)
+	cmdOut, err := ps.Output(ctx, script, vmName)
 
 	if err != nil {
 		return 0, err
@@ -1185,7 +1185,7 @@ $vm.Uptime.TotalSeconds
 	return uptime, err
 }
 
-func Mac(vmName string) (string, error) {
+func Mac(ctx context.Context, vmName string) (string, error) {
 	var script = `
 param([string]$vmName, [int]$adapterIndex)
 try {
@@ -1201,12 +1201,12 @@ $mac
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, vmName, "0")
+	cmdOut, err := ps.Output(ctx, script, vmName, "0")
 
 	return cmdOut, err
 }
 
-func IpAddress(mac string) (string, error) {
+func IpAddress(ctx context.Context, mac string) (string, error) {
 	var script = `
 param([string]$mac, [int]$addressIndex)
 try {
@@ -1235,12 +1235,12 @@ $ip
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(script, mac, "0")
+	cmdOut, err := ps.Output(ctx, script, mac, "0")
 
 	return cmdOut, err
 }
 
-func TurnOff(vmName string) error {
+func TurnOff(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -1251,11 +1251,11 @@ if ($vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func ShutDown(vmName string) error {
+func ShutDown(ctx context.Context, vmName string) error {
 
 	var script = `
 param([string]$vmName)
@@ -1266,11 +1266,11 @@ if ($vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running) {
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName)
+	err := ps.Run(ctx, script, vmName)
 	return err
 }
 
-func TypeScanCodes(vmName string, scanCodes string) error {
+func TypeScanCodes(ctx context.Context, vmName string, scanCodes string) error {
 	if len(scanCodes) == 0 {
 		return nil
 	}
@@ -1450,11 +1450,11 @@ param([string]$vmName, [string]$scanCodes)
 `
 
 	var ps powershell.PowerShellCmd
-	err := ps.Run(script, vmName, scanCodes)
+	err := ps.Run(ctx, script, vmName, scanCodes)
 	return err
 }
 
-func ConnectVirtualMachine(vmName string) (context.CancelFunc, error) {
+func ConnectVirtualMachine(ctx context.Context, vmName string) (context.CancelFunc, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := exec.CommandContext(ctx, "vmconnect.exe", "localhost", vmName)
 	err := cmd.Start()
@@ -1465,6 +1465,6 @@ func ConnectVirtualMachine(vmName string) (context.CancelFunc, error) {
 	return cancel, err
 }
 
-func DisconnectVirtualMachine(cancel context.CancelFunc) {
+func DisconnectVirtualMachine(ctx context.Context, cancel context.CancelFunc) {
 	cancel()
 }

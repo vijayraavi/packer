@@ -29,18 +29,18 @@ func (c *comm) Start(ctx context.Context, cmd *packer.RemoteCmd) (err error) {
 	return
 }
 
-func (c *comm) Upload(path string, input io.Reader, fi *os.FileInfo) error {
+func (c *comm) Upload(ctx context.Context, path string, input io.Reader, fi *os.FileInfo) error {
 	return errors.New("Upload is not implemented when communicator = 'none'")
 }
 
-func (c *comm) UploadDir(dst string, src string, excl []string) error {
+func (c *comm) UploadDir(ctx context.Context, dst string, src string, excl []string) error {
 	return errors.New("UploadDir is not implemented when communicator = 'none'")
 }
 
-func (c *comm) Download(path string, output io.Writer) error {
+func (c *comm) Download(ctx context.Context, path string, output io.Writer) error {
 	return errors.New("Download is not implemented when communicator = 'none'")
 }
 
-func (c *comm) DownloadDir(dst string, src string, excl []string) error {
+func (c *comm) DownloadDir(ctx context.Context, dst string, src string, excl []string) error {
 	return errors.New("DownloadDir is not implemented when communicator = 'none'")
 }

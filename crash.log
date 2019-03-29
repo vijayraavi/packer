@@ -1,0 +1,231 @@
+2019/03/29 12:03:25 [INFO] Packer version: 1.4.0-dev
+2019/03/29 12:03:25 Packer Target OS/Arch: darwin amd64
+2019/03/29 12:03:25 Built with Go Version: go1.12.1
+2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 Using internal plugin for hcloud
+2019/03/29 12:03:25 Using internal plugin for hyperv-vmcx
+2019/03/29 12:03:25 Using internal plugin for null
+2019/03/29 12:03:25 Using internal plugin for scaleway
+2019/03/29 12:03:25 Using internal plugin for digitalocean
+2019/03/29 12:03:25 Using internal plugin for lxc
+2019/03/29 12:03:25 Using internal plugin for tencentcloud-cvm
+2019/03/29 12:03:25 Using internal plugin for triton
+2019/03/29 12:03:25 Using internal plugin for virtualbox-ovf
+2019/03/29 12:03:25 Using internal plugin for amazon-ebssurrogate
+2019/03/29 12:03:25 Using internal plugin for parallels-pvm
+2019/03/29 12:03:25 Using internal plugin for amazon-instance
+2019/03/29 12:03:25 Using internal plugin for cloudstack
+2019/03/29 12:03:25 Using internal plugin for hyperone
+2019/03/29 12:03:25 Using internal plugin for oneandone
+2019/03/29 12:03:25 Using internal plugin for openstack
+2019/03/29 12:03:25 Using internal plugin for virtualbox-iso
+2019/03/29 12:03:25 Using internal plugin for vmware-iso
+2019/03/29 12:03:25 Using internal plugin for amazon-chroot
+2019/03/29 12:03:25 Using internal plugin for amazon-ebsvolume
+2019/03/29 12:03:25 Using internal plugin for googlecompute
+2019/03/29 12:03:25 Using internal plugin for hyperv-iso
+2019/03/29 12:03:25 Using internal plugin for oracle-oci
+2019/03/29 12:03:25 Using internal plugin for alicloud-ecs
+2019/03/29 12:03:25 Using internal plugin for azure-arm
+2019/03/29 12:03:25 Using internal plugin for lxd
+2019/03/29 12:03:25 Using internal plugin for file
+2019/03/29 12:03:25 Using internal plugin for oracle-classic
+2019/03/29 12:03:25 Using internal plugin for vmware-vmx
+2019/03/29 12:03:25 Using internal plugin for qemu
+2019/03/29 12:03:25 Using internal plugin for vagrant
+2019/03/29 12:03:25 Using internal plugin for amazon-ebs
+2019/03/29 12:03:25 Using internal plugin for docker
+2019/03/29 12:03:25 Using internal plugin for ncloud
+2019/03/29 12:03:25 Using internal plugin for parallels-iso
+2019/03/29 12:03:25 Using internal plugin for profitbricks
+2019/03/29 12:03:25 Using internal plugin for file
+2019/03/29 12:03:25 Using internal plugin for puppet-masterless
+2019/03/29 12:03:25 Using internal plugin for puppet-server
+2019/03/29 12:03:25 Using internal plugin for converge
+2019/03/29 12:03:25 Using internal plugin for inspec
+2019/03/29 12:03:25 Using internal plugin for windows-shell
+2019/03/29 12:03:25 Using internal plugin for chef-client
+2019/03/29 12:03:25 Using internal plugin for chef-solo
+2019/03/29 12:03:25 Using internal plugin for salt-masterless
+2019/03/29 12:03:25 Using internal plugin for windows-restart
+2019/03/29 12:03:25 Using internal plugin for ansible
+2019/03/29 12:03:25 Using internal plugin for ansible-local
+2019/03/29 12:03:25 Using internal plugin for breakpoint
+2019/03/29 12:03:25 Using internal plugin for powershell
+2019/03/29 12:03:25 Using internal plugin for shell
+2019/03/29 12:03:25 Using internal plugin for shell-local
+2019/03/29 12:03:25 Using internal plugin for checksum
+2019/03/29 12:03:25 Using internal plugin for digitalocean-import
+2019/03/29 12:03:25 Using internal plugin for googlecompute-export
+2019/03/29 12:03:25 Using internal plugin for manifest
+2019/03/29 12:03:25 Using internal plugin for vsphere-template
+2019/03/29 12:03:25 Using internal plugin for alicloud-import
+2019/03/29 12:03:25 Using internal plugin for amazon-import
+2019/03/29 12:03:25 Using internal plugin for docker-save
+2019/03/29 12:03:25 Using internal plugin for docker-tag
+2019/03/29 12:03:25 Using internal plugin for shell-local
+2019/03/29 12:03:25 Using internal plugin for vagrant
+2019/03/29 12:03:25 Using internal plugin for vsphere
+2019/03/29 12:03:25 Using internal plugin for artifice
+2019/03/29 12:03:25 Using internal plugin for compress
+2019/03/29 12:03:25 Using internal plugin for docker-import
+2019/03/29 12:03:25 Using internal plugin for docker-push
+2019/03/29 12:03:25 Using internal plugin for googlecompute-import
+2019/03/29 12:03:25 Using internal plugin for vagrant-cloud
+2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 Attempting to open config file: /Users/azr/.packerconfig
+2019/03/29 12:03:25 [WARN] Config file doesn't exist: /Users/azr/.packerconfig
+2019/03/29 12:03:25 Packer config: &{DisableCheckpoint:false DisableCheckpointSignature:false PluginMinPort:10000 PluginMaxPort:25000 Builders:map[alicloud-ecs:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-alicloud-ecs amazon-chroot:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-amazon-chroot amazon-ebs:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-amazon-ebs amazon-ebssurrogate:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-amazon-ebssurrogate amazon-ebsvolume:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-amazon-ebsvolume amazon-instance:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-amazon-instance azure-arm:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-azure-arm cloudstack:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-cloudstack digitalocean:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-digitalocean docker:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-docker file:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-file googlecompute:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-googlecompute hcloud:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-hcloud hyperone:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-hyperone hyperv-iso:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-hyperv-iso hyperv-vmcx:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-hyperv-vmcx lxc:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-lxc lxd:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-lxd ncloud:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-ncloud null:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-null oneandone:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-oneandone openstack:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-openstack oracle-classic:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-oracle-classic oracle-oci:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-oracle-oci parallels-iso:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-parallels-iso parallels-pvm:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-parallels-pvm profitbricks:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-profitbricks qemu:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-qemu scaleway:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-scaleway tencentcloud-cvm:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-tencentcloud-cvm triton:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-triton vagrant:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-vagrant virtualbox-iso:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-virtualbox-iso virtualbox-ovf:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-virtualbox-ovf vmware-iso:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-vmware-iso vmware-vmx:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-builder-vmware-vmx] PostProcessors:map[alicloud-import:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-alicloud-import amazon-import:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-amazon-import artifice:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-artifice checksum:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-checksum compress:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-compress digitalocean-import:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-digitalocean-import docker-import:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-docker-import docker-push:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-docker-push docker-save:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-docker-save docker-tag:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-docker-tag googlecompute-export:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-googlecompute-export googlecompute-import:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-googlecompute-import manifest:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-manifest shell-local:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-shell-local vagrant:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-vagrant vagrant-cloud:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-vagrant-cloud vsphere:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-vsphere vsphere-template:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-post-processor-vsphere-template] Provisioners:map[ansible:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-ansible ansible-local:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-ansible-local breakpoint:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-breakpoint chef-client:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-chef-client chef-solo:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-chef-solo converge:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-converge file:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-file inspec:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-inspec powershell:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-powershell puppet-masterless:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-puppet-masterless puppet-server:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-puppet-server salt-masterless:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-salt-masterless shell:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-shell shell-local:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-shell-local windows-restart:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-windows-restart windows-shell:/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint-PACKERSPACE-plugin-PACKERSPACE-packer-provisioner-windows-shell]}
+2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 Setting cache directory: /Users/azr/packer_cache
+2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 Loading builder: null
+2019/03/29 12:03:25 Plugin could not be found. Checking same directory as executable.
+2019/03/29 12:03:25 Current exe path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Creating plugin client for path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Starting plugin: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint []string{"/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint", "plugin", "packer-builder-null"}
+2019/03/29 12:03:25 Waiting for RPC address for: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] Packer version: 1.4.0-dev
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer Target OS/Arch: darwin amd64
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Built with Go Version: go1.12.1
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Attempting to open config file: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [WARN] Config file doesn't exist: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer config: &{DisableCheckpoint:false DisableCheckpointSignature:false PluginMinPort:10000 PluginMaxPort:25000 Builders:map[] PostProcessors:map[] Provisioners:map[]}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Setting cache directory: /Users/azr/packer_cache
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 args: []string{"packer-builder-null"}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin minimum port: 10000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin maximum port: 25000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin address: unix /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-plugin329389628
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Waiting for connection...
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Serving a plugin connection...
+2019/03/29 12:03:25 Loading provisioner: shell-local
+2019/03/29 12:03:25 Plugin could not be found. Checking same directory as executable.
+2019/03/29 12:03:25 Current exe path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Creating plugin client for path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Starting plugin: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint []string{"/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint", "plugin", "packer-provisioner-shell-local"}
+2019/03/29 12:03:25 Waiting for RPC address for: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] Packer version: 1.4.0-dev
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer Target OS/Arch: darwin amd64
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Built with Go Version: go1.12.1
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Attempting to open config file: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [WARN] Config file doesn't exist: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer config: &{DisableCheckpoint:false DisableCheckpointSignature:false PluginMinPort:10000 PluginMaxPort:25000 Builders:map[] PostProcessors:map[] Provisioners:map[]}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Setting cache directory: /Users/azr/packer_cache
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 args: []string{"packer-provisioner-shell-local"}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin minimum port: 10000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin maximum port: 25000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin address: unix /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-plugin904876208
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Waiting for connection...
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Serving a plugin connection...
+2019/03/29 12:03:25 Loading builder: null
+2019/03/29 12:03:25 Plugin could not be found. Checking same directory as executable.
+2019/03/29 12:03:25 Current exe path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Creating plugin client for path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Starting plugin: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint []string{"/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint", "plugin", "packer-builder-null"}
+2019/03/29 12:03:25 Waiting for RPC address for: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] Packer version: 1.4.0-dev
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer Target OS/Arch: darwin amd64
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Built with Go Version: go1.12.1
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Attempting to open config file: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [WARN] Config file doesn't exist: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer config: &{DisableCheckpoint:false DisableCheckpointSignature:false PluginMinPort:10000 PluginMaxPort:25000 Builders:map[] PostProcessors:map[] Provisioners:map[]}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Setting cache directory: /Users/azr/packer_cache
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 args: []string{"packer-builder-null"}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin minimum port: 10000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin maximum port: 25000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin address: unix /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-plugin730368860
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Waiting for connection...
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Serving a plugin connection...
+2019/03/29 12:03:25 Loading provisioner: shell-local
+2019/03/29 12:03:25 Plugin could not be found. Checking same directory as executable.
+2019/03/29 12:03:25 Current exe path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Creating plugin client for path: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 Starting plugin: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint []string{"/var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint", "plugin", "packer-provisioner-shell-local"}
+2019/03/29 12:03:25 Waiting for RPC address for: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/go-build088571384/b001/exe/checkpoint
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] Packer version: 1.4.0-dev
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer Target OS/Arch: darwin amd64
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Built with Go Version: go1.12.1
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Attempting to open config file: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [WARN] Config file doesn't exist: /Users/azr/.packerconfig
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Packer config: &{DisableCheckpoint:false DisableCheckpointSignature:false PluginMinPort:10000 PluginMaxPort:25000 Builders:map[] PostProcessors:map[] Provisioners:map[]}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Setting cache directory: /Users/azr/packer_cache
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Detected home directory from env var: /Users/azr
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 args: []string{"packer-provisioner-shell-local"}
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin minimum port: 10000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin maximum port: 25000
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Plugin address: unix /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-plugin306605040
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Waiting for connection...
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Serving a plugin connection...
+2019/03/29 12:03:25 ui: [1;32mnull output will be in this color.[0m
+2019/03/29 12:03:25 ui: [1;36mpotato output will be in this color.[0m
+2019/03/29 12:03:25 ui: 
+2019/03/29 12:03:25 Build debug mode: false
+2019/03/29 12:03:25 Force build: true
+2019/03/29 12:03:25 On error: 
+2019/03/29 12:03:25 Preparing build: null
+2019/03/29 12:03:25 Preparing build: potato
+2019/03/29 12:03:25 Waiting on builds to complete...
+2019/03/29 12:03:25 Starting build run: null
+2019/03/29 12:03:25 Starting build run: potato
+2019/03/29 12:03:25 Running builder: null
+2019/03/29 12:03:25 [INFO] (telemetry) Starting builder null
+2019/03/29 12:03:25 Running builder: null
+2019/03/29 12:03:25 [INFO] (telemetry) Starting builder null
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Running the provision hook
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 Running the provision hook
+2019/03/29 12:03:25 [INFO] (telemetry) Starting provisioner shell-local
+2019/03/29 12:03:25 [INFO] (telemetry) Starting provisioner shell-local
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local): Prepending inline script with #!/bin/sh -e
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local): Prepending inline script with #!/bin/sh -e
+2019/03/29 12:03:25 ui: [1;32m==> null: Running local shell script: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell261926991[0m
+2019/03/29 12:03:25 ui: [1;36m==> potato: Running local shell script: /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell818696335[0m
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local): starting local command: /bin/sh -c PACKER_BUILDER_TYPE='null' PACKER_BUILD_NAME='potato'  /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell818696335
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local): starting local command: /bin/sh -c PACKER_BUILDER_TYPE='null' PACKER_BUILD_NAME='null'  /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell261926991
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local communicator): Executing local shell command [/bin/sh -c PACKER_BUILDER_TYPE='null' PACKER_BUILD_NAME='potato'  /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell818696335]
+2019/03/29 12:03:25 checkpoint: 2019/03/29 12:03:25 [INFO] (shell-local communicator): Executing local shell command [/bin/sh -c PACKER_BUILDER_TYPE='null' PACKER_BUILD_NAME='null'  /var/folders/3k/2gb5ct4s7cncr52_jh2kz6cw0000gq/T/packer-shell261926991]
+2019/03/29 12:03:30 Cancelling provisioner after context cancellation context deadline exceeded
+2019/03/29 12:03:30 Cancelling provisioner after context cancellation context deadline exceeded
+2019/03/29 12:04:00 Stopping build: potato after receiving interrupt
+2019/03/29 12:04:00 Build cancelled: potato
+2019/03/29 12:04:00 Cancelling builder after context cancellation context canceled
+2019/03/29 12:04:00 Stopping build: null after receiving interrupt
+2019/03/29 12:04:00 Build cancelled: null
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Received interrupt signal (count: 1). Ignoring.
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Received interrupt signal (count: 1). Ignoring.
+2019/03/29 12:04:00 Cancelling builder after context cancellation context canceled
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Received interrupt signal (count: 1). Ignoring.
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Received interrupt signal (count: 1). Ignoring.
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Cancelling provisioning due to context cancellation: context canceled
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Cancelling hook after context cancellation context canceled
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Error cancelling builder: connection is shut down
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Cancelling provisioning due to context cancellation: context canceled
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Cancelling hook after context cancellation context canceled
+2019/03/29 12:04:00 [INFO] (telemetry) ending shell-local
+2019/03/29 12:04:00 checkpoint: 2019/03/29 12:04:00 Error cancelling builder: connection is shut down
+2019/03/29 12:04:00 [INFO] (telemetry) ending null
+2019/03/29 12:04:00 ui: [1;36mBuild 'potato' finished.[0m
+2019/03/29 12:04:00 [INFO] (telemetry) ending null
+2019/03/29 12:04:00 ui: [1;32mBuild 'null' finished.[0m
+2019/03/29 12:04:00 Builds completed. Waiting on interrupt barrier...
+2019/03/29 12:04:00 ui: Cleanly cancelled builds after being interrupted.
+2019/03/29 12:04:00 [INFO] (telemetry) ending shell-local
+2019/03/29 12:04:00 [INFO] (telemetry) Finalizing.
+2019/03/29 12:04:00 waiting for all plugin processes to complete...
+panic: send on closed channel
+
+goroutine 59 [running]:
+github.com/hashicorp/packer/vendor/github.com/mattn/go-tty.open.func1(0xc000159340)
+	/Users/azr/go/src/github.com/hashicorp/packer/vendor/github.com/mattn/go-tty/tty_unix.go:59 +0xe0
+created by github.com/hashicorp/packer/vendor/github.com/mattn/go-tty.open
+	/Users/azr/go/src/github.com/hashicorp/packer/vendor/github.com/mattn/go-tty/tty_unix.go:54 +0x440

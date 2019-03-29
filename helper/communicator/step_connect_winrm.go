@@ -33,7 +33,7 @@ type StepConnectWinRM struct {
 	WinRMPort   func(multistep.StateBag) (int, error)
 }
 
-func (s *StepConnectWinRM) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepConnectWinRM) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 
 	var comm packer.Communicator
@@ -164,7 +164,7 @@ func (s *StepConnectWinRM) waitForWinRM(state multistep.StateBag, cancel <-chan 
 
 		log.Printf("Checking that WinRM is connected with: '%s'", connectCheckCommand)
 		ui := state.Get("ui").(packer.Ui)
-		err := cmd.StartWithUi(comm, ui)
+		err := cmd.StartWithUi(context.TODO(), comm, ui)
 
 		if err != nil {
 			log.Printf("Communication connection err: %s", err)

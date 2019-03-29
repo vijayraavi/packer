@@ -365,7 +365,7 @@ func (p *Provisioner) uploadDirectory(ui packer.Ui, comm packer.Communicator, ds
 		src = src + "/"
 	}
 
-	return comm.UploadDir(dst, src, nil)
+	return comm.UploadDir(ctx, dst, src, nil)
 }
 
 func getWinRMPassword(buildName string) string {

@@ -89,7 +89,7 @@ func scpDownloadSession(opts []byte, rest string, in io.Reader, out io.Writer, c
 	}
 	defer f.Close()
 
-	err = comm.Download(rest, f)
+	err = comm.Download(ctx, rest, f)
 	if err != nil {
 		fmt.Fprintf(out, scpEmptyError)
 		return err
@@ -187,7 +187,7 @@ func (state *scpUploadState) FileProtocol(in *bufio.Reader, out io.Writer) error
 		dest = filepath.Join(dest, fi.Name())
 	}
 
-	err = state.comm.Upload(dest, io.LimitReader(in, fi.Size()), &fi)
+	err = state.comm.Upload(ctx, dest, io.LimitReader(in, fi.Size()), &fi)
 	if err != nil {
 		fmt.Fprintf(out, scpEmptyError)
 		return err
@@ -242,7 +242,7 @@ func (state *scpUploadState) DirProtocol(in *bufio.Reader, out io.Writer) error 
 		return err
 	}
 
-	if err := state.comm.UploadDir(filepath.Dir(state.DestPath()), state.SrcPath(), nil); err != nil {
+	if err := state.comm.UploadDir(ctx, filepath.Dir(state.DestPath()), state.SrcPath(), nil); err != nil {
 		return err
 	}
 

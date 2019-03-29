@@ -247,7 +247,7 @@ func uploadImageToSpaces(source string, p *PostProcessor, s *session.Session) (e
 	}
 
 	uploader := s3manager.NewUploader(s)
-	_, err = uploader.Upload(&s3manager.UploadInput{
+	_, err = uploader.Upload(ctx, &s3manager.UploadInput{
 		Body:   file,
 		Bucket: &p.config.SpaceName,
 		Key:    &p.config.ObjectName,

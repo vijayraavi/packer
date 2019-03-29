@@ -34,22 +34,22 @@ func (c *ChrootCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd) e
 	return c.Wrapped.Start(ctx, cmd)
 }
 
-func (c *ChrootCommunicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
+func (c *ChrootCommunicator) Upload(ctx context.Context, dst string, r io.Reader, fi *os.FileInfo) error {
 	dst = filepath.Join(c.Chroot, dst)
-	return c.Wrapped.Upload(dst, r, fi)
+	return c.Wrapped.Upload(ctx, dst, r, fi)
 }
 
-func (c *ChrootCommunicator) UploadDir(dst string, src string, exclude []string) error {
+func (c *ChrootCommunicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
 	dst = filepath.Join(c.Chroot, dst)
-	return c.Wrapped.UploadDir(dst, src, exclude)
+	return c.Wrapped.UploadDir(ctx, dst, src, exclude)
 }
 
-func (c *ChrootCommunicator) Download(src string, w io.Writer) error {
+func (c *ChrootCommunicator) Download(ctx context.Context, src string, w io.Writer) error {
 	src = filepath.Join(c.Chroot, src)
-	return c.Wrapped.Download(src, w)
+	return c.Wrapped.Download(ctx, src, w)
 }
 
-func (c *ChrootCommunicator) DownloadDir(src string, dst string, exclude []string) error {
+func (c *ChrootCommunicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
 	src = filepath.Join(c.Chroot, src)
-	return c.Wrapped.DownloadDir(src, dst, exclude)
+	return c.Wrapped.DownloadDir(ctx.Context, src, dst, exclude)
 }

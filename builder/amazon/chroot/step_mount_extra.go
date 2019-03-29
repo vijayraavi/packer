@@ -20,7 +20,7 @@ type StepMountExtra struct {
 	mounts []string
 }
 
-func (s *StepMountExtra) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepMountExtra) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	mountPath := state.Get("mount_path").(string)
 	ui := state.Get("ui").(packer.Ui)
@@ -58,7 +58,7 @@ func (s *StepMountExtra) Run(_ context.Context, state multistep.StateBag) multis
 			return multistep.ActionHalt
 		}
 
-		cmd := ShellCommand(mountCommand)
+		cmd := ShellCommand(ctx, mountCommand)
 		cmd.Stderr = stderr
 		if err := cmd.Run(); err != nil {
 			err := fmt.Errorf(
@@ -103,7 +103,7 @@ func (s *StepMountExtra) CleanupFunc(state multistep.StateBag) error {
 		// Before attempting to unmount,
 		// check to see if path is already unmounted
 		stderr := new(bytes.Buffer)
-		cmd := ShellCommand(grepCommand)
+		cmd := ShellCommand(ctx, grepCommand)
 		cmd.Stderr = stderr
 		if err := cmd.Run(); err != nil {
 			if exitError, ok := err.(*exec.ExitError); ok {
@@ -124,7 +124,7 @@ func (s *StepMountExtra) CleanupFunc(state multistep.StateBag) error {
 		}
 
 		stderr = new(bytes.Buffer)
-		cmd = ShellCommand(unmountCommand)
+		cmd = ShellCommand(ctx, unmountCommand)
 		cmd.Stderr = stderr
 		if err := cmd.Run(); err != nil {
 			return fmt.Errorf(

@@ -257,7 +257,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			if _, err := f.Seek(0, 0); err != nil {
 				return err
 			}
-			if err := comm.Upload(p.config.RemotePath, f, nil); err != nil {
+			if err := comm.Upload(ctx, p.config.RemotePath, f, nil); err != nil {
 				return fmt.Errorf("Error uploading script: %s", err)
 			}
 
@@ -394,7 +394,7 @@ func (p *Provisioner) uploadEnvVars(flattenedEnvVars string) (err error) {
 	envVarReader := strings.NewReader(flattenedEnvVars)
 	log.Printf("Uploading env vars to %s", p.config.RemoteEnvVarPath)
 	err = p.retryable(func() error {
-		if err := p.communicator.Upload(p.config.RemoteEnvVarPath, envVarReader, nil); err != nil {
+		if err := p.communicator.Upload(ctx, p.config.RemoteEnvVarPath, envVarReader, nil); err != nil {
 			return fmt.Errorf("Error uploading ps script containing env vars: %s", err)
 		}
 		return err

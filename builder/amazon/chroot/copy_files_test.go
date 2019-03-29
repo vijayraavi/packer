@@ -26,7 +26,7 @@ func TestCopyFile(t *testing.T) {
 	}
 	first.Sync()
 
-	cmd := ShellCommand(fmt.Sprintf("cp %s %s", first.Name(), newName))
+	cmd := ShellCommand(ctx, fmt.Sprintf("cp %s %s", first.Name(), newName))
 	if err := cmd.Run(); err != nil {
 		t.Fatalf("Couldn't copy file")
 	}
