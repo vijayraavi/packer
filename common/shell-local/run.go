@@ -28,8 +28,7 @@ type EnvVarsTemplate struct {
 	WinRMPassword string
 }
 
-func Run(ui packer.Ui, config *Config) (bool, error) {
-	ctx := context.TODO()
+func Run(ctx context.Context, ui packer.Ui, config *Config) (bool, error) {
 	// Check if shell-local can even execute against this runtime OS
 	if len(config.OnlyOn) > 0 {
 		runCommand := false

@@ -148,6 +148,8 @@ OutputLoop:
 			if output != "" {
 				ui.Message(r.cleanOutputLine(output))
 			}
+		case <-ctx.Done():
+			break OutputLoop
 		case <-exitCh:
 			break OutputLoop
 		}

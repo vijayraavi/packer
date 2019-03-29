@@ -23,7 +23,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 
 	// Build the local command to execute
 	log.Printf("[INFO] (shell-local communicator): Executing local shell command %s", c.ExecuteCommand)
-	localCmd := exec.Command(c.ExecuteCommand[0], c.ExecuteCommand[1:]...)
+	localCmd := exec.CommandContext(ctx, c.ExecuteCommand[0], c.ExecuteCommand[1:]...)
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
