@@ -687,6 +687,7 @@ func (d *ESX5Driver) VerifyChecksum(ctype string, hash string, file string) bool
 }
 
 func (d *ESX5Driver) ssh(command string, stdin io.Reader) (*bytes.Buffer, error) {
+	ctx := context.TODO()
 	var stdout, stderr bytes.Buffer
 
 	cmd := &packer.RemoteCmd{
@@ -696,7 +697,7 @@ func (d *ESX5Driver) ssh(command string, stdin io.Reader) (*bytes.Buffer, error)
 		Stdin:   stdin,
 	}
 
-	err := d.comm.Start(cmd)
+	err := d.comm.Start(ctx, cmd)
 	if err != nil {
 		return nil, err
 	}

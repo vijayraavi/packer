@@ -128,6 +128,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 }
 
 func (p *Provisioner) maybeBootstrap(ui packer.Ui, comm packer.Communicator) error {
+	ctx := context.TODO()
 	if !p.config.Bootstrap {
 		return nil
 	}
@@ -153,7 +154,7 @@ func (p *Provisioner) maybeBootstrap(ui packer.Ui, comm packer.Communicator) err
 		Stderr:  &outErr,
 	}
 
-	if err = comm.Start(cmd); err != nil {
+	if err = comm.Start(ctx, cmd); err != nil {
 		return fmt.Errorf("Error bootstrapping converge: %s", err)
 	}
 
@@ -180,6 +181,7 @@ func (p *Provisioner) sendModuleDirectories(ui packer.Ui, comm packer.Communicat
 }
 
 func (p *Provisioner) applyModules(ui packer.Ui, comm packer.Communicator) error {
+	ctx := context.TODO()
 	// create params JSON file
 	params, err := json.Marshal(p.config.Params)
 	if err != nil {
@@ -208,7 +210,7 @@ func (p *Provisioner) applyModules(ui packer.Ui, comm packer.Communicator) error
 		Stdout:  &runOut,
 		Stderr:  &runErr,
 	}
-	if err := comm.Start(cmd); err != nil {
+	if err := comm.Start(ctx, cmd); err != nil {
 		return fmt.Errorf("Error applying %q: %s", p.config.Module, err)
 	}
 

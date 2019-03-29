@@ -262,7 +262,7 @@ var waitForCommunicator = func(ctx context.Context, p *Provisioner) error {
 				cmdKeyCheck.Stdout = &buf
 				cmdKeyCheck.Stdout = io.MultiWriter(cmdKeyCheck.Stdout, &buf2)
 
-				err := p.comm.Start(cmdKeyCheck)
+				err := p.comm.Start(ctx, cmdKeyCheck)
 				if err != nil {
 					log.Printf("Communication connection err: %s", err)
 					shouldContinue = true

@@ -256,7 +256,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			cmd = &packer.RemoteCmd{
 				Command: fmt.Sprintf("chmod 0600 %s", remoteVFName),
 			}
-			if err := comm.Start(cmd); err != nil {
+			if err := comm.Start(ctx, cmd); err != nil {
 				return fmt.Errorf(
 					"Error chmodding script file to 0600 in remote "+
 						"machine: %s", err)
@@ -314,7 +314,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			cmd = &packer.RemoteCmd{
 				Command: fmt.Sprintf("chmod 0755 %s", p.config.RemotePath),
 			}
-			if err := comm.Start(cmd); err != nil {
+			if err := comm.Start(ctx, cmd); err != nil {
 				return fmt.Errorf(
 					"Error chmodding script file to 0755 in remote "+
 						"machine: %s", err)
@@ -371,11 +371,12 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 }
 
 func (p *Provisioner) cleanupRemoteFile(path string, comm packer.Communicator) error {
+	ctx := context.TODO()
 	err := p.retryable(func() error {
 		cmd := &packer.RemoteCmd{
 			Command: fmt.Sprintf("rm -f %s", path),
 		}
-		if err := comm.Start(cmd); err != nil {
+		if err := comm.Start(ctx, cmd); err != nil {
 			return fmt.Errorf(
 				"Error removing temporary script at %s: %s",
 				path, err)

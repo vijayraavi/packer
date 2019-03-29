@@ -61,6 +61,7 @@ func runCommands(commands []string, ictx interpolate.Context, state multistep.St
 }
 
 func captureOutput(command string, state multistep.StateBag) (string, error) {
+	ctx := context.TODO()
 	comm := state.Get("communicator").(packer.Communicator)
 
 	var stdout bytes.Buffer
@@ -71,7 +72,7 @@ func captureOutput(command string, state multistep.StateBag) (string, error) {
 
 	log.Println(fmt.Sprintf("Executing command: %s", command))
 
-	err := comm.Start(remoteCmd)
+	err := comm.Start(ctx, remoteCmd)
 	if err != nil {
 		return "", fmt.Errorf("error running remote cmd: %s", err)
 	}

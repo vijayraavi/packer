@@ -60,7 +60,7 @@ type Communicator interface {
 	// Start again. The Start method returns immediately once the command
 	// is started. It does not wait for the command to complete. The
 	// RemoteCmd.Exited field should be used for this.
-	Start(*RemoteCmd) error
+	Start(context.Context, *RemoteCmd) error
 
 	// Upload uploads a file to the machine to the given path with the
 	// contents coming from the given reader. This method will block until
@@ -119,7 +119,7 @@ func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) erro
 	}
 
 	// Start the command
-	if err := c.Start(r); err != nil {
+	if err := c.Start(ctx, r); err != nil {
 		return err
 	}
 
