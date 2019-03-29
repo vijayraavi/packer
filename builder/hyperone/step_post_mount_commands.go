@@ -14,7 +14,7 @@ type postMountCommandsData struct {
 
 type stepPostMountCommands struct{}
 
-func (s *stepPostMountCommands) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *stepPostMountCommands) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	ui := state.Get("ui").(packer.Ui)
 	device := state.Get("device").(string)

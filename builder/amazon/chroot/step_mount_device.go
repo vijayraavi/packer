@@ -31,7 +31,7 @@ type StepMountDevice struct {
 	mountPath string
 }
 
-func (s *StepMountDevice) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepMountDevice) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	ui := state.Get("ui").(packer.Ui)
 	device := state.Get("device").(string)
