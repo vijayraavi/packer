@@ -164,7 +164,7 @@ func (s *StepConnectWinRM) waitForWinRM(state multistep.StateBag, cancel <-chan 
 
 		log.Printf("Checking that WinRM is connected with: '%s'", connectCheckCommand)
 		ui := state.Get("ui").(packer.Ui)
-		err := cmd.RunWithUi(context.TODO(), comm, ui)
+		err := cmd.StartWithUi(context.TODO(), comm, ui)
 
 		if err != nil {
 			log.Printf("Communication connection err: %s", err)

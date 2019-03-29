@@ -26,7 +26,7 @@ func (s *StepConfigureVlan) Run(ctx context.Context, state multistep.StateBag) m
 	ui.Say("Configuring vlan...")
 
 	if switchVlanId != "" {
-		err := driver.SetNetworkAdapterVlanId(ctx, switchName, vlanId)
+		err := driver.SetNetworkAdapterVlanId(switchName, vlanId)
 		if err != nil {
 			err := fmt.Errorf(errorMsg, err)
 			state.Put("error", err)
@@ -36,7 +36,7 @@ func (s *StepConfigureVlan) Run(ctx context.Context, state multistep.StateBag) m
 	}
 
 	if vlanId != "" {
-		err := driver.SetVirtualMachineVlanId(ctx, vmName, vlanId)
+		err := driver.SetVirtualMachineVlanId(vmName, vlanId)
 		if err != nil {
 			err := fmt.Errorf(errorMsg, err)
 			state.Put("error", err)

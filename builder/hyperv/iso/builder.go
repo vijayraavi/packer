@@ -359,7 +359,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 // a Hyperv appliance.
 func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (packer.Artifact, error) {
 	// Create the driver that we'll use to communicate with Hyperv
-	driver, err := hypervcommon.NewHypervPS4Driver(ctx)
+	driver, err := hypervcommon.NewHypervPS4Driver()
 	if err != nil {
 		return nil, fmt.Errorf("Failed creating Hyper-V driver: %s", err)
 	}

@@ -19,7 +19,7 @@ type Communicator struct {
 }
 
 func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
-	localCmd, err := c.Execute(ctx, cmd.Command)
+	localCmd, err := c.Execute(cmd.Command)
 
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
-	if err := localCmd.Start(); err != nil {
+	if err := localCmd.Start(ctx); err != nil {
 		return err
 	}
 
@@ -66,6 +66,7 @@ func (c *Communicator) Upload(ctx context.Context, dst string, r io.Reader, fi *
 		log.Printf("Unable to check whether remote path is a dir: %s", err)
 		return err
 	}
+	cmd.Wait()
 
 	if cmd.ExitStatus == 0 {
 		log.Printf("path is a directory; copying file into directory.")
@@ -106,7 +107,7 @@ func (c *Communicator) UploadDir(ctx context.Context, dst string, src string, ex
 
 	cpCmd.Stdin, _ = tarCmd.StdoutPipe()
 	log.Printf("Starting tar command: %s", tar)
-	err = tarCmd.Start()
+	err = tarCmd.Start(ctx)
 	if err != nil {
 		return err
 	}
@@ -145,7 +146,7 @@ func (c *Communicator) DownloadDir(ctx context.Context, src string, dst string, 
 	return fmt.Errorf("DownloadDir is not implemented for lxc")
 }
 
-func (c *Communicator) Execute(ctx context.Context, commandString string) (*exec.Cmd, error) {
+func (c *Communicator) Execute(commandString string) (*exec.Cmd, error) {
 	log.Printf("Executing with lxc exec in container: %s %s", c.ContainerName, commandString)
 	command, err := c.CmdWrapper(
 		fmt.Sprintf("lxc exec %s -- /bin/sh -c \"%s\"", c.ContainerName, commandString))

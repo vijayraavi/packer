@@ -106,7 +106,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	command := p.config.RestartCommand
 	err := p.retryable(func() error {
 		cmd = &packer.RemoteCmd{Command: command}
-		return cmd.RunWithUi(ctx, comm, ui)
+		return cmd.StartWithUi(ctx, comm, ui)
 	})
 
 	if err != nil {
@@ -141,7 +141,7 @@ var waitForRestart = func(ctx context.Context, p *Provisioner, comm packer.Commu
 	for {
 		log.Printf("Check if machine is rebooting...")
 		cmd = &packer.RemoteCmd{Command: trycommand}
-		err = cmd.RunWithUi(ctx, comm, ui)
+		err = cmd.StartWithUi(ctx, comm, ui)
 		if err != nil {
 			// Couldn't execute, we assume machine is rebooting already
 			break
@@ -159,7 +159,7 @@ var waitForRestart = func(ctx context.Context, p *Provisioner, comm packer.Commu
 		if cmd.ExitStatus == 0 {
 			// Cancel reboot we created to test if machine was already rebooting
 			cmd = &packer.RemoteCmd{Command: abortcommand}
-			cmd.RunWithUi(ctx, comm, ui)
+			cmd.StartWithUi(ctx, comm, ui)
 			break
 		}
 	}
@@ -221,7 +221,7 @@ var waitForCommunicator = func(ctx context.Context, p *Provisioner) error {
 		}
 		if runCustomRestartCheck {
 			// run user-configured restart check
-			err := cmdRestartCheck.RunWithUi(ctx, p.comm, p.ui)
+			err := cmdRestartCheck.StartWithUi(ctx, p.comm, p.ui)
 			if err != nil {
 				log.Printf("Communication connection err: %s", err)
 				continue
@@ -243,7 +243,7 @@ var waitForCommunicator = func(ctx context.Context, p *Provisioner) error {
 		cmdModuleLoad.Stdout = &buf
 		cmdModuleLoad.Stdout = io.MultiWriter(cmdModuleLoad.Stdout, &buf2)
 
-		cmdModuleLoad.RunWithUi(ctx, p.comm, p.ui)
+		cmdModuleLoad.StartWithUi(ctx, p.comm, p.ui)
 		stdoutToRead := buf2.String()
 
 		if !strings.Contains(stdoutToRead, "restarted.") {

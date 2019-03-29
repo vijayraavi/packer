@@ -29,7 +29,7 @@ func (s *StepUnmountDvdDrive) Run(ctx context.Context, state multistep.StateBag)
 	if dvdController.Existing {
 		ui.Say(fmt.Sprintf("Unmounting os dvd drives controller %d location %d ...",
 			dvdController.ControllerNumber, dvdController.ControllerLocation))
-		err := driver.UnmountDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.UnmountDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			err := fmt.Errorf("Error unmounting os dvd drive: %s", err)
 			state.Put("error", err)
@@ -39,7 +39,7 @@ func (s *StepUnmountDvdDrive) Run(ctx context.Context, state multistep.StateBag)
 	} else {
 		ui.Say(fmt.Sprintf("Delete os dvd drives controller %d location %d ...",
 			dvdController.ControllerNumber, dvdController.ControllerLocation))
-		err := driver.DeleteDvdDrive(ctx, vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
+		err := driver.DeleteDvdDrive(vmName, dvdController.ControllerNumber, dvdController.ControllerLocation)
 		if err != nil {
 			err := fmt.Errorf("Error deleting os dvd drive: %s", err)
 			state.Put("error", err)

@@ -29,7 +29,7 @@ func (s *StepConfigureIp) Run(ctx context.Context, state multistep.StateBag) mul
 	var ip string
 
 	for count != 0 {
-		cmdOut, err := driver.GetVirtualMachineNetworkAdapterAddress(ctx, vmName)
+		cmdOut, err := driver.GetVirtualMachineNetworkAdapterAddress(vmName)
 		if err != nil {
 			err := fmt.Errorf(errorMsg, err)
 			state.Put("error", err)
@@ -57,7 +57,7 @@ func (s *StepConfigureIp) Run(ctx context.Context, state multistep.StateBag) mul
 
 	ui.Say("ip address is " + ip)
 
-	hostName, err := driver.GetHostName(ctx, ip)
+	hostName, err := driver.GetHostName(ip)
 	if err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())

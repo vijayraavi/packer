@@ -25,7 +25,7 @@ func (s *stepPrepareDevice) Run(ctx context.Context, state multistep.StateBag) m
 	cmd := fmt.Sprintf("find %s/%s/ -path *:%d/block -exec ls {} \\;",
 		vmBusPath, controllerNumber, controllerLocation)
 
-	block, err := captureOutput(ctx, cmd, state)
+	block, err := captureOutput(cmd, state)
 	if err != nil {
 		err := fmt.Errorf("error finding available device: %s", err)
 		state.Put("error", err)

@@ -1,7 +1,6 @@
 package common
 
 import (
-	"context"
 	"log"
 
 	"github.com/hashicorp/packer/helper/multistep"
@@ -9,7 +8,6 @@ import (
 
 func CommHost(host string) func(multistep.StateBag) (string, error) {
 	return func(state multistep.StateBag) (string, error) {
-		ctx := context.TODO()
 
 		// Skip IP auto detection if the configuration has an ssh host configured.
 		if host != "" {
@@ -20,12 +18,12 @@ func CommHost(host string) func(multistep.StateBag) (string, error) {
 		vmName := state.Get("vmName").(string)
 		driver := state.Get("driver").(Driver)
 
-		mac, err := driver.Mac(ctx, vmName)
+		mac, err := driver.Mac(vmName)
 		if err != nil {
 			return "", err
 		}
 
-		ip, err := driver.IpAddress(ctx, mac)
+		ip, err := driver.IpAddress(mac)
 		if err != nil {
 			return "", err
 		}

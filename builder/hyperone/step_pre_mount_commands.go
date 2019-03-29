@@ -19,14 +19,14 @@ func (s *stepPreMountCommands) Run(ctx context.Context, state multistep.StateBag
 	ui := state.Get("ui").(packer.Ui)
 	device := state.Get("device").(string)
 
-	ictx := config.ctx
-	ictx.Data = &preMountCommandsData{
+	ctx := config.ctx
+	ctx.Data = &preMountCommandsData{
 		Device:    device,
 		MountPath: config.ChrootMountPath,
 	}
 
 	ui.Say("Running pre-mount commands...")
-	if err := runCommands(ctx, config.PreMountCommands, ictx, state); err != nil {
+	if err := runCommands(ctx, config.PreMountCommands, ctx, state); err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())
 		return multistep.ActionHalt

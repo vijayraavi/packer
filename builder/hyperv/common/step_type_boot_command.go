@@ -45,7 +45,7 @@ func (s *StepTypeBootCommand) Run(ctx context.Context, state multistep.StateBag)
 		}
 	}
 
-	hostIp, err := driver.GetHostAdapterIpAddressForSwitch(ctx, s.SwitchName)
+	hostIp, err := driver.GetHostAdapterIpAddressForSwitch(s.SwitchName)
 
 	if err != nil {
 		err := fmt.Errorf("Error getting host adapter ip address: %s", err)
@@ -65,7 +65,7 @@ func (s *StepTypeBootCommand) Run(ctx context.Context, state multistep.StateBag)
 
 	sendCodes := func(codes []string) error {
 		scanCodesToSendString := strings.Join(codes, " ")
-		return driver.TypeScanCodes(ctx, vmName, scanCodesToSendString)
+		return driver.TypeScanCodes(vmName, scanCodesToSendString)
 	}
 	d := bootcommand.NewPCXTDriver(sendCodes, -1, s.GroupInterval)
 

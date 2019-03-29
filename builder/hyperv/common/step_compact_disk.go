@@ -33,7 +33,7 @@ func (s *StepCompactDisk) Run(ctx context.Context, state multistep.StateBag) mul
 	// path and runs the compacting process on each of them. If no disks
 	// are found under the supplied path this is treated as a 'soft' error
 	// and a warning message is printed. All other errors halt the build.
-	result, err := driver.CompactDisks(ctx, buildDir)
+	result, err := driver.CompactDisks(buildDir)
 	if err != nil {
 		err := fmt.Errorf("Error compacting disks: %s", err)
 		state.Put("error", err)

@@ -43,7 +43,7 @@ func (s *StepCreateSwitch) Run(ctx context.Context, state multistep.StateBag) mu
 
 	ui.Say(fmt.Sprintf("Creating switch '%v' if required...", s.SwitchName))
 
-	createdSwitch, err := driver.CreateVirtualSwitch(ctx, s.SwitchName, s.SwitchType)
+	createdSwitch, err := driver.CreateVirtualSwitch(s.SwitchName, s.SwitchType)
 	if err != nil {
 		err := fmt.Errorf("Error creating switch: %s", err)
 		state.Put("error", err)
@@ -73,9 +73,7 @@ func (s *StepCreateSwitch) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packer.Ui)
 	ui.Say("Unregistering and deleting switch...")
 
-	ctx := context.TODO()
-
-	err := driver.DeleteVirtualSwitch(ctx, s.SwitchName)
+	err := driver.DeleteVirtualSwitch(s.SwitchName)
 	if err != nil {
 		ui.Error(fmt.Sprintf("Error deleting switch: %s", err))
 	}

@@ -21,7 +21,7 @@ func (s *StepRebootVm) Run(ctx context.Context, state multistep.StateBag) multis
 
 	ui.Say("Rebooting vm...")
 
-	err := driver.RestartVirtualMachine(ctx, vmName)
+	err := driver.RestartVirtualMachine(vmName)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)

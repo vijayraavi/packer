@@ -56,7 +56,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 	// convert the MB to bytes
 	ramSize := int64(s.RamSize * 1024 * 1024)
 
-	err := driver.CloneVirtualMachine(ctx, s.CloneFromVMCXPath, s.CloneFromVMName,
+	err := driver.CloneVirtualMachine(s.CloneFromVMCXPath, s.CloneFromVMName,
 		s.CloneFromSnapshotName, s.CloneAllSnapshots, s.VMName, path,
 		harddrivePath, ramSize, s.SwitchName, s.CompareCopy)
 	if err != nil {
@@ -66,7 +66,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 		return multistep.ActionHalt
 	}
 
-	err = driver.SetVirtualMachineCpuCount(ctx, s.VMName, s.Cpu)
+	err = driver.SetVirtualMachineCpuCount(s.VMName, s.Cpu)
 	if err != nil {
 		err := fmt.Errorf("Error creating setting virtual machine cpu: %s", err)
 		state.Put("error", err)
@@ -75,7 +75,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 	}
 
 	if s.EnableDynamicMemory {
-		err = driver.SetVirtualMachineDynamicMemory(ctx, s.VMName, s.EnableDynamicMemory)
+		err = driver.SetVirtualMachineDynamicMemory(s.VMName, s.EnableDynamicMemory)
 		if err != nil {
 			err := fmt.Errorf("Error creating setting virtual machine dynamic memory: %s", err)
 			state.Put("error", err)
@@ -85,7 +85,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 	}
 
 	if s.EnableMacSpoofing {
-		err = driver.SetVirtualMachineMacSpoofing(ctx, s.VMName, s.EnableMacSpoofing)
+		err = driver.SetVirtualMachineMacSpoofing(s.VMName, s.EnableMacSpoofing)
 		if err != nil {
 			err := fmt.Errorf("Error creating setting virtual machine mac spoofing: %s", err)
 			state.Put("error", err)
@@ -94,7 +94,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 		}
 	}
 
-	generation, err := driver.GetVirtualMachineGeneration(ctx, s.VMName)
+	generation, err := driver.GetVirtualMachineGeneration(s.VMName)
 	if err != nil {
 		err := fmt.Errorf("Error detecting vm generation: %s", err)
 		state.Put("error", err)
@@ -104,7 +104,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 
 	if generation == 2 {
 
-		err = driver.SetVirtualMachineSecureBoot(ctx, s.VMName, s.EnableSecureBoot, s.SecureBootTemplate)
+		err = driver.SetVirtualMachineSecureBoot(s.VMName, s.EnableSecureBoot, s.SecureBootTemplate)
 		if err != nil {
 			err := fmt.Errorf("Error setting secure boot: %s", err)
 			state.Put("error", err)
@@ -115,7 +115,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 
 	if s.EnableVirtualizationExtensions {
 		//This is only supported on Windows 10 and Windows Server 2016 onwards
-		err = driver.SetVirtualMachineVirtualizationExtensions(ctx, s.VMName, s.EnableVirtualizationExtensions)
+		err = driver.SetVirtualMachineVirtualizationExtensions(s.VMName, s.EnableVirtualizationExtensions)
 		if err != nil {
 			err := fmt.Errorf("Error creating setting virtual machine virtualization extensions: %s", err)
 			state.Put("error", err)
@@ -125,7 +125,7 @@ func (s *StepCloneVM) Run(ctx context.Context, state multistep.StateBag) multist
 	}
 
 	if s.MacAddress != "" {
-		err = driver.SetVmNetworkAdapterMacAddress(ctx, s.VMName, s.MacAddress)
+		err = driver.SetVmNetworkAdapterMacAddress(s.VMName, s.MacAddress)
 		if err != nil {
 			err := fmt.Errorf("Error setting MAC address: %s", err)
 			state.Put("error", err)
@@ -149,8 +149,7 @@ func (s *StepCloneVM) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packer.Ui)
 	ui.Say("Unregistering and deleting virtual machine...")
 
-	ctx := context.TODO()
-	err := driver.DeleteVirtualMachine(ctx, s.VMName)
+	err := driver.DeleteVirtualMachine(s.VMName)
 	if err != nil {
 		ui.Error(fmt.Sprintf("Error deleting virtual machine: %s", err))
 	}

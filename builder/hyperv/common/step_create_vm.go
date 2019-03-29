@@ -65,7 +65,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 	diskSize := int64(s.DiskSize) * 1024 * 1024
 	diskBlockSize := int64(s.DiskBlockSize) * 1024 * 1024
 
-	err := driver.CreateVirtualMachine(ctx, s.VMName, path, harddrivePath, ramSize, diskSize, diskBlockSize,
+	err := driver.CreateVirtualMachine(s.VMName, path, harddrivePath, ramSize, diskSize, diskBlockSize,
 		s.SwitchName, s.Generation, s.DifferencingDisk, s.FixedVHD, s.Version)
 	if err != nil {
 		err := fmt.Errorf("Error creating virtual machine: %s", err)
@@ -75,7 +75,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 	}
 
 	if s.UseLegacyNetworkAdapter {
-		err := driver.ReplaceVirtualMachineNetworkAdapter(ctx, s.VMName, true)
+		err := driver.ReplaceVirtualMachineNetworkAdapter(s.VMName, true)
 		if err != nil {
 			err := fmt.Errorf("Error creating legacy network adapter: %s", err)
 			state.Put("error", err)
@@ -84,7 +84,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 		}
 	}
 
-	err = driver.SetVirtualMachineCpuCount(ctx, s.VMName, s.Cpu)
+	err = driver.SetVirtualMachineCpuCount(s.VMName, s.Cpu)
 	if err != nil {
 		err := fmt.Errorf("Error setting virtual machine cpu count: %s", err)
 		state.Put("error", err)
@@ -92,7 +92,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 		return multistep.ActionHalt
 	}
 
-	err = driver.SetVirtualMachineDynamicMemory(ctx, s.VMName, s.EnableDynamicMemory)
+	err = driver.SetVirtualMachineDynamicMemory(s.VMName, s.EnableDynamicMemory)
 	if err != nil {
 		err := fmt.Errorf("Error setting virtual machine dynamic memory: %s", err)
 		state.Put("error", err)
@@ -101,7 +101,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 	}
 
 	if s.EnableMacSpoofing {
-		err = driver.SetVirtualMachineMacSpoofing(ctx, s.VMName, s.EnableMacSpoofing)
+		err = driver.SetVirtualMachineMacSpoofing(s.VMName, s.EnableMacSpoofing)
 		if err != nil {
 			err := fmt.Errorf("Error setting virtual machine mac spoofing: %s", err)
 			state.Put("error", err)
@@ -111,7 +111,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 	}
 
 	if s.Generation == 2 {
-		err = driver.SetVirtualMachineSecureBoot(ctx, s.VMName, s.EnableSecureBoot, s.SecureBootTemplate)
+		err = driver.SetVirtualMachineSecureBoot(s.VMName, s.EnableSecureBoot, s.SecureBootTemplate)
 		if err != nil {
 			err := fmt.Errorf("Error setting secure boot: %s", err)
 			state.Put("error", err)
@@ -122,7 +122,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 
 	if s.EnableVirtualizationExtensions {
 		//This is only supported on Windows 10 and Windows Server 2016 onwards
-		err = driver.SetVirtualMachineVirtualizationExtensions(ctx, s.VMName, s.EnableVirtualizationExtensions)
+		err = driver.SetVirtualMachineVirtualizationExtensions(s.VMName, s.EnableVirtualizationExtensions)
 		if err != nil {
 			err := fmt.Errorf("Error setting virtual machine virtualization extensions: %s", err)
 			state.Put("error", err)
@@ -135,7 +135,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 		for index, size := range s.AdditionalDiskSize {
 			diskSize := int64(size * 1024 * 1024)
 			diskFile := fmt.Sprintf("%s-%d.vhdx", s.VMName, index)
-			err = driver.AddVirtualMachineHardDrive(ctx, s.VMName, path, diskFile, diskSize, diskBlockSize, "SCSI")
+			err = driver.AddVirtualMachineHardDrive(s.VMName, path, diskFile, diskSize, diskBlockSize, "SCSI")
 			if err != nil {
 				err := fmt.Errorf("Error creating and attaching additional disk drive: %s", err)
 				state.Put("error", err)
@@ -146,7 +146,7 @@ func (s *StepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 	}
 
 	if s.MacAddress != "" {
-		err = driver.SetVmNetworkAdapterMacAddress(ctx, s.VMName, s.MacAddress)
+		err = driver.SetVmNetworkAdapterMacAddress(s.VMName, s.MacAddress)
 		if err != nil {
 			err := fmt.Errorf("Error setting MAC address: %s", err)
 			state.Put("error", err)
@@ -170,8 +170,7 @@ func (s *StepCreateVM) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packer.Ui)
 	ui.Say("Unregistering and deleting virtual machine...")
 
-	ctx := context.TODO()
-	err := driver.DeleteVirtualMachine(ctx, s.VMName)
+	err := driver.DeleteVirtualMachine(s.VMName)
 	if err != nil {
 		ui.Error(fmt.Sprintf("Error deleting virtual machine: %s", err))
 	}

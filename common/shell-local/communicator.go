@@ -56,18 +56,18 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	return nil
 }
 
-func (c *Communicator) Upload(context.Context, string, io.Reader, *os.FileInfo) error {
+func (c *Communicator) Upload(ctx context.Context, string, io.Reader, *os.FileInfo) error {
 	return fmt.Errorf("upload not supported")
 }
 
-func (c *Communicator) UploadDir(context.Context, string, string, []string) error {
+func (c *Communicator) UploadDir(ctx context.Context, string, string, []string) error {
 	return fmt.Errorf("uploadDir not supported")
 }
 
-func (c *Communicator) Download(context.Context, string, io.Writer) error {
+func (c *Communicator) Download(ctx context.Context, string, io.Writer) error {
 	return fmt.Errorf("download not supported")
 }
 
-func (c *Communicator) DownloadDir(context.Context, string, string, []string) error {
+func (c *Communicator) DownloadDir(ctx context.Context, string, string, []string) error {
 	return fmt.Errorf("downloadDir not supported")
 }

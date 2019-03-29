@@ -15,7 +15,7 @@ import (
 type HypervPS4Driver struct {
 }
 
-func NewHypervPS4Driver(ctx context.Context) (Driver, error) {
+func NewHypervPS4Driver() (Driver, error) {
 	appliesTo := "Applies to Windows 8.1, Windows PowerShell 4.0, Windows Server 2012 R2 only"
 
 	// Check this is Windows
@@ -26,22 +26,22 @@ func NewHypervPS4Driver(ctx context.Context) (Driver, error) {
 
 	ps4Driver := &HypervPS4Driver{}
 
-	if err := ps4Driver.Verify(ctx); err != nil {
+	if err := ps4Driver.Verify(); err != nil {
 		return nil, err
 	}
 
 	return ps4Driver, nil
 }
 
-func (d *HypervPS4Driver) IsRunning(ctx context.Context, vmName string) (bool, error) {
+func (d *HypervPS4Driver) IsRunning(vmName string) (bool, error) {
 	return hyperv.IsRunning(ctx, vmName)
 }
 
-func (d *HypervPS4Driver) IsOff(ctx context.Context, vmName string) (bool, error) {
+func (d *HypervPS4Driver) IsOff(vmName string) (bool, error) {
 	return hyperv.IsOff(ctx, vmName)
 }
 
-func (d *HypervPS4Driver) Uptime(ctx context.Context, vmName string) (uint64, error) {
+func (d *HypervPS4Driver) Uptime(vmName string) (uint64, error) {
 	return hyperv.Uptime(ctx, vmName)
 }
 
@@ -51,21 +51,21 @@ func (d *HypervPS4Driver) Start(ctx context.Context, vmName string) error {
 }
 
 // Stop stops a VM specified by the name given.
-func (d *HypervPS4Driver) Stop(ctx context.Context, vmName string) error {
+func (d *HypervPS4Driver) Stop(vmName string) error {
 	return hyperv.StopVirtualMachine(ctx, vmName)
 }
 
-func (d *HypervPS4Driver) Verify(ctx context.Context) error {
+func (d *HypervPS4Driver) Verify() error {
 
-	if err := d.verifyPSVersion(ctx); err != nil {
+	if err := d.verifyPSVersion(); err != nil {
 		return err
 	}
 
-	if err := d.verifyPSHypervModule(ctx); err != nil {
+	if err := d.verifyPSHypervModule(); err != nil {
 		return err
 	}
 
-	if err := d.verifyHypervPermissions(ctx); err != nil {
+	if err := d.verifyHypervPermissions(); err != nil {
 		return err
 	}
 
@@ -73,8 +73,8 @@ func (d *HypervPS4Driver) Verify(ctx context.Context) error {
 }
 
 // Get mac address for VM.
-func (d *HypervPS4Driver) Mac(ctx context.Context, vmName string) (string, error) {
-	res, err := hyperv.Mac(ctx, vmName)
+func (d *HypervPS4Driver) Mac(vmName string) (string, error) {
+	res, err := hyperv.Mac(vmName)
 
 	if err != nil {
 		return res, err
@@ -89,8 +89,8 @@ func (d *HypervPS4Driver) Mac(ctx context.Context, vmName string) (string, error
 }
 
 // Get ip address for mac address.
-func (d *HypervPS4Driver) IpAddress(ctx context.Context, mac string) (string, error) {
-	res, err := hyperv.IpAddress(ctx, mac)
+func (d *HypervPS4Driver) IpAddress(mac string) (string, error) {
+	res, err := hyperv.IpAddress(mac)
 
 	if err != nil {
 		return res, err
@@ -104,17 +104,17 @@ func (d *HypervPS4Driver) IpAddress(ctx context.Context, mac string) (string, er
 }
 
 // Get host name from ip address
-func (d *HypervPS4Driver) GetHostName(ctx context.Context, ip string) (string, error) {
-	return powershell.GetHostName(ctx, ip)
+func (d *HypervPS4Driver) GetHostName(ip string) (string, error) {
+	return powershell.GetHostName(ip)
 }
 
-func (d *HypervPS4Driver) GetVirtualMachineGeneration(ctx context.Context, vmName string) (uint, error) {
-	return hyperv.GetVirtualMachineGeneration(ctx, vmName)
+func (d *HypervPS4Driver) GetVirtualMachineGeneration(vmName string) (uint, error) {
+	return hyperv.GetVirtualMachineGeneration(vmName)
 }
 
 // Finds the IP address of a host adapter connected to switch
-func (d *HypervPS4Driver) GetHostAdapterIpAddressForSwitch(ctx context.Context, switchName string) (string, error) {
-	res, err := hyperv.GetHostAdapterIpAddressForSwitch(ctx, switchName)
+func (d *HypervPS4Driver) GetHostAdapterIpAddressForSwitch(switchName string) (string, error) {
+	res, err := hyperv.GetHostAdapterIpAddressForSwitch(switchName)
 
 	if err != nil {
 		return res, err
@@ -128,158 +128,158 @@ func (d *HypervPS4Driver) GetHostAdapterIpAddressForSwitch(ctx context.Context, 
 }
 
 // Type scan codes to virtual keyboard of vm
-func (d *HypervPS4Driver) TypeScanCodes(ctx context.Context, vmName string, scanCodes string) error {
-	return hyperv.TypeScanCodes(ctx, vmName, scanCodes)
+func (d *HypervPS4Driver) TypeScanCodes(vmName string, scanCodes string) error {
+	return hyperv.TypeScanCodes(vmName, scanCodes)
 }
 
 // Get network adapter address
-func (d *HypervPS4Driver) GetVirtualMachineNetworkAdapterAddress(ctx context.Context, vmName string) (string, error) {
-	return hyperv.GetVirtualMachineNetworkAdapterAddress(ctx, vmName)
+func (d *HypervPS4Driver) GetVirtualMachineNetworkAdapterAddress(vmName string) (string, error) {
+	return hyperv.GetVirtualMachineNetworkAdapterAddress(vmName)
 }
 
 //Set the vlan to use for switch
-func (d *HypervPS4Driver) SetNetworkAdapterVlanId(ctx context.Context, switchName string, vlanId string) error {
-	return hyperv.SetNetworkAdapterVlanId(ctx, switchName, vlanId)
+func (d *HypervPS4Driver) SetNetworkAdapterVlanId(switchName string, vlanId string) error {
+	return hyperv.SetNetworkAdapterVlanId(switchName, vlanId)
 }
 
 //Set the vlan to use for machine
-func (d *HypervPS4Driver) SetVirtualMachineVlanId(ctx context.Context, vmName string, vlanId string) error {
-	return hyperv.SetVirtualMachineVlanId(ctx, vmName, vlanId)
+func (d *HypervPS4Driver) SetVirtualMachineVlanId(vmName string, vlanId string) error {
+	return hyperv.SetVirtualMachineVlanId(vmName, vlanId)
 }
 
-func (d *HypervPS4Driver) SetVmNetworkAdapterMacAddress(ctx context.Context, vmName string, mac string) error {
-	return hyperv.SetVmNetworkAdapterMacAddress(ctx, vmName, mac)
+func (d *HypervPS4Driver) SetVmNetworkAdapterMacAddress(vmName string, mac string) error {
+	return hyperv.SetVmNetworkAdapterMacAddress(vmName, mac)
 }
 
 //Replace the network adapter with a (non-)legacy adapter
-func (d *HypervPS4Driver) ReplaceVirtualMachineNetworkAdapter(ctx context.Context, vmName string, virtual bool) error {
-	return hyperv.ReplaceVirtualMachineNetworkAdapter(ctx, vmName, virtual)
+func (d *HypervPS4Driver) ReplaceVirtualMachineNetworkAdapter(vmName string, virtual bool) error {
+	return hyperv.ReplaceVirtualMachineNetworkAdapter(vmName, virtual)
 }
 
-func (d *HypervPS4Driver) UntagVirtualMachineNetworkAdapterVlan(ctx context.Context, vmName string, switchName string) error {
-	return hyperv.UntagVirtualMachineNetworkAdapterVlan(ctx, vmName, switchName)
+func (d *HypervPS4Driver) UntagVirtualMachineNetworkAdapterVlan(vmName string, switchName string) error {
+	return hyperv.UntagVirtualMachineNetworkAdapterVlan(vmName, switchName)
 }
 
-func (d *HypervPS4Driver) CreateExternalVirtualSwitch(ctx context.Context, vmName string, switchName string) error {
-	return hyperv.CreateExternalVirtualSwitch(ctx, vmName, switchName)
+func (d *HypervPS4Driver) CreateExternalVirtualSwitch(vmName string, switchName string) error {
+	return hyperv.CreateExternalVirtualSwitch(vmName, switchName)
 }
 
-func (d *HypervPS4Driver) GetVirtualMachineSwitchName(ctx context.Context, vmName string) (string, error) {
-	return hyperv.GetVirtualMachineSwitchName(ctx, vmName)
+func (d *HypervPS4Driver) GetVirtualMachineSwitchName(vmName string) (string, error) {
+	return hyperv.GetVirtualMachineSwitchName(vmName)
 }
 
-func (d *HypervPS4Driver) ConnectVirtualMachineNetworkAdapterToSwitch(ctx context.Context, vmName string, switchName string) error {
-	return hyperv.ConnectVirtualMachineNetworkAdapterToSwitch(ctx, vmName, switchName)
+func (d *HypervPS4Driver) ConnectVirtualMachineNetworkAdapterToSwitch(vmName string, switchName string) error {
+	return hyperv.ConnectVirtualMachineNetworkAdapterToSwitch(vmName, switchName)
 }
 
-func (d *HypervPS4Driver) DeleteVirtualSwitch(ctx context.Context, switchName string) error {
-	return hyperv.DeleteVirtualSwitch(ctx, switchName)
+func (d *HypervPS4Driver) DeleteVirtualSwitch(switchName string) error {
+	return hyperv.DeleteVirtualSwitch(switchName)
 }
 
-func (d *HypervPS4Driver) CreateVirtualSwitch(ctx context.Context, switchName string, switchType string) (bool, error) {
-	return hyperv.CreateVirtualSwitch(ctx, switchName, switchType)
+func (d *HypervPS4Driver) CreateVirtualSwitch(switchName string, switchType string) (bool, error) {
+	return hyperv.CreateVirtualSwitch(switchName, switchType)
 }
 
-func (d *HypervPS4Driver) AddVirtualMachineHardDrive(ctx context.Context, vmName string, vhdFile string, vhdName string,
+func (d *HypervPS4Driver) AddVirtualMachineHardDrive(vmName string, vhdFile string, vhdName string,
 	vhdSizeBytes int64, diskBlockSize int64, controllerType string) error {
-	return hyperv.AddVirtualMachineHardDiskDrive(ctx, vmName, vhdFile, vhdName, vhdSizeBytes,
+	return hyperv.AddVirtualMachineHardDiskDrive(vmName, vhdFile, vhdName, vhdSizeBytes,
 		diskBlockSize, controllerType)
 }
 
-func (d *HypervPS4Driver) CreateVirtualMachine(ctx context.Context, vmName string, path string, harddrivePath string, ram int64,
+func (d *HypervPS4Driver) CreateVirtualMachine(vmName string, path string, harddrivePath string, ram int64,
 	diskSize int64, diskBlockSize int64, switchName string, generation uint, diffDisks bool,
 	fixedVHD bool, version string) error {
-	return hyperv.CreateVirtualMachine(ctx, vmName, path, harddrivePath, ram, diskSize, diskBlockSize, switchName,
+	return hyperv.CreateVirtualMachine(vmName, path, harddrivePath, ram, diskSize, diskBlockSize, switchName,
 		generation, diffDisks, fixedVHD, version)
 }
 
-func (d *HypervPS4Driver) CloneVirtualMachine(ctx context.Context, cloneFromVmcxPath string, cloneFromVmName string,
+func (d *HypervPS4Driver) CloneVirtualMachine(cloneFromVmcxPath string, cloneFromVmName string,
 	cloneFromSnapshotName string, cloneAllSnapshots bool, vmName string, path string, harddrivePath string,
 	ram int64, switchName string, copyTF bool) error {
-	return hyperv.CloneVirtualMachine(ctx, cloneFromVmcxPath, cloneFromVmName, cloneFromSnapshotName,
+	return hyperv.CloneVirtualMachine(cloneFromVmcxPath, cloneFromVmName, cloneFromSnapshotName,
 		cloneAllSnapshots, vmName, path, harddrivePath, ram, switchName, copyTF)
 }
 
-func (d *HypervPS4Driver) DeleteVirtualMachine(ctx context.Context, vmName string) error {
-	return hyperv.DeleteVirtualMachine(ctx, vmName)
+func (d *HypervPS4Driver) DeleteVirtualMachine(vmName string) error {
+	return hyperv.DeleteVirtualMachine(vmName)
 }
 
-func (d *HypervPS4Driver) SetVirtualMachineCpuCount(ctx context.Context, vmName string, cpu uint) error {
-	return hyperv.SetVirtualMachineCpuCount(ctx, vmName, cpu)
+func (d *HypervPS4Driver) SetVirtualMachineCpuCount(vmName string, cpu uint) error {
+	return hyperv.SetVirtualMachineCpuCount(vmName, cpu)
 }
 
-func (d *HypervPS4Driver) SetVirtualMachineMacSpoofing(ctx context.Context, vmName string, enable bool) error {
-	return hyperv.SetVirtualMachineMacSpoofing(ctx, vmName, enable)
+func (d *HypervPS4Driver) SetVirtualMachineMacSpoofing(vmName string, enable bool) error {
+	return hyperv.SetVirtualMachineMacSpoofing(vmName, enable)
 }
 
-func (d *HypervPS4Driver) SetVirtualMachineDynamicMemory(ctx context.Context, vmName string, enable bool) error {
-	return hyperv.SetVirtualMachineDynamicMemory(ctx, vmName, enable)
+func (d *HypervPS4Driver) SetVirtualMachineDynamicMemory(vmName string, enable bool) error {
+	return hyperv.SetVirtualMachineDynamicMemory(vmName, enable)
 }
 
-func (d *HypervPS4Driver) SetVirtualMachineSecureBoot(ctx context.Context, vmName string, enable bool, templateName string) error {
-	return hyperv.SetVirtualMachineSecureBoot(ctx, vmName, enable, templateName)
+func (d *HypervPS4Driver) SetVirtualMachineSecureBoot(vmName string, enable bool, templateName string) error {
+	return hyperv.SetVirtualMachineSecureBoot(vmName, enable, templateName)
 }
 
-func (d *HypervPS4Driver) SetVirtualMachineVirtualizationExtensions(ctx context.Context, vmName string, enable bool) error {
-	return hyperv.SetVirtualMachineVirtualizationExtensions(ctx, vmName, enable)
+func (d *HypervPS4Driver) SetVirtualMachineVirtualizationExtensions(vmName string, enable bool) error {
+	return hyperv.SetVirtualMachineVirtualizationExtensions(vmName, enable)
 }
 
-func (d *HypervPS4Driver) EnableVirtualMachineIntegrationService(ctx context.Context, vmName string,
+func (d *HypervPS4Driver) EnableVirtualMachineIntegrationService(vmName string,
 	integrationServiceName string) error {
-	return hyperv.EnableVirtualMachineIntegrationService(ctx, vmName, integrationServiceName)
+	return hyperv.EnableVirtualMachineIntegrationService(vmName, integrationServiceName)
 }
 
-func (d *HypervPS4Driver) ExportVirtualMachine(ctx context.Context, vmName string, path string) error {
-	return hyperv.ExportVirtualMachine(ctx, vmName, path)
+func (d *HypervPS4Driver) ExportVirtualMachine(vmName string, path string) error {
+	return hyperv.ExportVirtualMachine(vmName, path)
 }
 
-func (d *HypervPS4Driver) PreserveLegacyExportBehaviour(ctx context.Context, srcPath string, dstPath string) error {
-	return hyperv.PreserveLegacyExportBehaviour(ctx, srcPath, dstPath)
+func (d *HypervPS4Driver) PreserveLegacyExportBehaviour(srcPath string, dstPath string) error {
+	return hyperv.PreserveLegacyExportBehaviour(srcPath, dstPath)
 }
 
-func (d *HypervPS4Driver) MoveCreatedVHDsToOutputDir(ctx context.Context, srcPath string, dstPath string) error {
-	return hyperv.MoveCreatedVHDsToOutputDir(ctx, srcPath, dstPath)
+func (d *HypervPS4Driver) MoveCreatedVHDsToOutputDir(srcPath string, dstPath string) error {
+	return hyperv.MoveCreatedVHDsToOutputDir(srcPath, dstPath)
 }
 
-func (d *HypervPS4Driver) CompactDisks(ctx context.Context, path string) (result string, err error) {
-	return hyperv.CompactDisks(ctx, path)
+func (d *HypervPS4Driver) CompactDisks(path string) (result string, err error) {
+	return hyperv.CompactDisks(path)
 }
 
-func (d *HypervPS4Driver) RestartVirtualMachine(ctx context.Context, vmName string) error {
-	return hyperv.RestartVirtualMachine(ctx, vmName)
+func (d *HypervPS4Driver) RestartVirtualMachine(vmName string) error {
+	return hyperv.RestartVirtualMachine(vmName)
 }
 
-func (d *HypervPS4Driver) CreateDvdDrive(ctx context.Context, vmName string, isoPath string, generation uint) (uint, uint, error) {
-	return hyperv.CreateDvdDrive(ctx, vmName, isoPath, generation)
+func (d *HypervPS4Driver) CreateDvdDrive(vmName string, isoPath string, generation uint) (uint, uint, error) {
+	return hyperv.CreateDvdDrive(vmName, isoPath, generation)
 }
 
-func (d *HypervPS4Driver) MountDvdDrive(ctx context.Context, vmName string, path string, controllerNumber uint,
+func (d *HypervPS4Driver) MountDvdDrive(vmName string, path string, controllerNumber uint,
 	controllerLocation uint) error {
-	return hyperv.MountDvdDrive(ctx, vmName, path, controllerNumber, controllerLocation)
+	return hyperv.MountDvdDrive(vmName, path, controllerNumber, controllerLocation)
 }
 
-func (d *HypervPS4Driver) SetBootDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint,
+func (d *HypervPS4Driver) SetBootDvdDrive(vmName string, controllerNumber uint, controllerLocation uint,
 	generation uint) error {
-	return hyperv.SetBootDvdDrive(ctx, vmName, controllerNumber, controllerLocation, generation)
+	return hyperv.SetBootDvdDrive(vmName, controllerNumber, controllerLocation, generation)
 }
 
-func (d *HypervPS4Driver) UnmountDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint) error {
-	return hyperv.UnmountDvdDrive(ctx, vmName, controllerNumber, controllerLocation)
+func (d *HypervPS4Driver) UnmountDvdDrive(vmName string, controllerNumber uint, controllerLocation uint) error {
+	return hyperv.UnmountDvdDrive(vmName, controllerNumber, controllerLocation)
 }
 
-func (d *HypervPS4Driver) DeleteDvdDrive(ctx context.Context, vmName string, controllerNumber uint, controllerLocation uint) error {
-	return hyperv.DeleteDvdDrive(ctx, vmName, controllerNumber, controllerLocation)
+func (d *HypervPS4Driver) DeleteDvdDrive(vmName string, controllerNumber uint, controllerLocation uint) error {
+	return hyperv.DeleteDvdDrive(vmName, controllerNumber, controllerLocation)
 }
 
-func (d *HypervPS4Driver) MountFloppyDrive(ctx context.Context, vmName string, path string) error {
-	return hyperv.MountFloppyDrive(ctx, vmName, path)
+func (d *HypervPS4Driver) MountFloppyDrive(vmName string, path string) error {
+	return hyperv.MountFloppyDrive(vmName, path)
 }
 
-func (d *HypervPS4Driver) UnmountFloppyDrive(ctx context.Context, vmName string) error {
-	return hyperv.UnmountFloppyDrive(ctx, vmName)
+func (d *HypervPS4Driver) UnmountFloppyDrive(vmName string) error {
+	return hyperv.UnmountFloppyDrive(vmName)
 }
 
-func (d *HypervPS4Driver) verifyPSVersion(ctx context.Context) error {
+func (d *HypervPS4Driver) verifyPSVersion() error {
 
 	log.Printf("Enter method: %s", "verifyPSVersion")
 	// check PS is available and is of proper version
@@ -308,7 +308,7 @@ func (d *HypervPS4Driver) verifyPSVersion(ctx context.Context) error {
 	return nil
 }
 
-func (d *HypervPS4Driver) verifyPSHypervModule(ctx context.Context) error {
+func (d *HypervPS4Driver) verifyPSHypervModule() error {
 
 	log.Printf("Enter method: %s", "verifyPSHypervModule")
 
@@ -328,7 +328,7 @@ func (d *HypervPS4Driver) verifyPSHypervModule(ctx context.Context) error {
 	return nil
 }
 
-func (d *HypervPS4Driver) isCurrentUserAHyperVAdministrator(ctx context.Context) (bool, error) {
+func (d *HypervPS4Driver) isCurrentUserAHyperVAdministrator() (bool, error) {
 	//SID:S-1-5-32-578 = 'BUILTIN\Hyper-V Administrators'
 	//https://support.microsoft.com/en-us/help/243330/well-known-security-identifiers-in-windows-operating-systems
 
@@ -348,17 +348,17 @@ return $principal.IsInRole($hypervrole)
 	return powershell.IsTrue(cmdOut), nil
 }
 
-func (d *HypervPS4Driver) verifyHypervPermissions(ctx context.Context) error {
+func (d *HypervPS4Driver) verifyHypervPermissions() error {
 
 	log.Printf("Enter method: %s", "verifyHypervPermissions")
 
-	hyperVAdmin, err := d.isCurrentUserAHyperVAdministrator(ctx)
+	hyperVAdmin, err := d.isCurrentUserAHyperVAdministrator()
 	if err != nil {
 		log.Printf("Error discovering if current is is a Hyper-V Admin: %s", err)
 	}
 	if !hyperVAdmin {
 
-		isAdmin, _ := powershell.IsCurrentUserAnAdministrator(ctx)
+		isAdmin, _ := powershell.IsCurrentUserAnAdministrator()
 
 		if !isAdmin {
 			err := fmt.Errorf("%s", "Current user is not a member of 'Hyper-V Administrators' or 'Administrators' group")
@@ -370,8 +370,8 @@ func (d *HypervPS4Driver) verifyHypervPermissions(ctx context.Context) error {
 }
 
 // Connect connects to a VM specified by the name given.
-func (d *HypervPS4Driver) Connect(ctx context.Context, vmName string) (context.CancelFunc, error) {
-	return hyperv.ConnectVirtualMachine(ctx, vmName)
+func (d *HypervPS4Driver) Connect(vmName string) (context.CancelFunc, error) {
+	return hyperv.ConnectVirtualMachine(vmName)
 }
 
 // Disconnect disconnects to a VM specified by calling the context cancel function returned

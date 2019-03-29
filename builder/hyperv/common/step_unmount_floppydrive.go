@@ -25,7 +25,7 @@ func (s *StepUnmountFloppyDrive) Run(ctx context.Context, state multistep.StateB
 
 	errorMsg := "Error Unmounting floppy drive: %s"
 
-	err := driver.UnmountFloppyDrive(ctx, vmName)
+	err := driver.UnmountFloppyDrive(vmName)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)

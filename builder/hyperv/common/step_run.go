@@ -34,7 +34,7 @@ func (s *StepRun) Run(ctx context.Context, state multistep.StateBag) multistep.S
 
 	if !s.Headless {
 		ui.Say("Attempting to connect with vmconnect...")
-		s.GuiCancelFunc, err = driver.Connect(ctx, vmName)
+		s.GuiCancelFunc, err = driver.Connect(vmName)
 		if err != nil {
 			log.Printf(fmt.Sprintf("Non-fatal error starting vmconnect: %s. continuing...", err))
 		}
@@ -55,10 +55,8 @@ func (s *StepRun) Cleanup(state multistep.StateBag) {
 		s.GuiCancelFunc()
 	}
 
-	ctx := context.Background()
-
 	if running, _ := driver.IsRunning(ctx, s.vmName); running {
-		if err := driver.Stop(ctx, s.vmName); err != nil {
+		if err := driver.Stop(s.vmName); err != nil {
 			ui.Error(fmt.Sprintf("Error shutting down VM: %s", err))
 		}
 	}

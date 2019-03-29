@@ -21,7 +21,7 @@ func (s *StepDisableVlan) Run(ctx context.Context, state multistep.StateBag) mul
 
 	ui.Say("Disabling vlan...")
 
-	err := driver.UntagVirtualMachineNetworkAdapterVlan(ctx, vmName, switchName)
+	err := driver.UntagVirtualMachineNetworkAdapterVlan(vmName, switchName)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)

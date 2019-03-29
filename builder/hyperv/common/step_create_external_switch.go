@@ -35,7 +35,7 @@ func (s *StepCreateExternalSwitch) Run(ctx context.Context, state multistep.Stat
 
 	// CreateExternalVirtualSwitch checks for an existing external switch,
 	// creating one if required, and connects the VM to it
-	err = driver.CreateExternalVirtualSwitch(ctx, vmName, packerExternalSwitchName)
+	err = driver.CreateExternalVirtualSwitch(vmName, packerExternalSwitchName)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)
@@ -44,7 +44,7 @@ func (s *StepCreateExternalSwitch) Run(ctx context.Context, state multistep.Stat
 		return multistep.ActionHalt
 	}
 
-	switchName, err := driver.GetVirtualMachineSwitchName(ctx, vmName)
+	switchName, err := driver.GetVirtualMachineSwitchName(vmName)
 	if err != nil {
 		err := fmt.Errorf(errorMsg, err)
 		state.Put("error", err)
@@ -93,9 +93,8 @@ func (s *StepCreateExternalSwitch) Cleanup(state multistep.StateBag) {
 		ui.Error(fmt.Sprintf(errMsg, "the old switch name is empty"))
 		return
 	}
-	ctx := context.TODO()
 
-	err = driver.ConnectVirtualMachineNetworkAdapterToSwitch(ctx, vmName, s.oldSwitchName)
+	err = driver.ConnectVirtualMachineNetworkAdapterToSwitch(vmName, s.oldSwitchName)
 	if err != nil {
 		ui.Error(fmt.Sprintf(errMsg, err))
 		return
@@ -103,7 +102,7 @@ func (s *StepCreateExternalSwitch) Cleanup(state multistep.StateBag) {
 
 	state.Put("SwitchName", s.oldSwitchName)
 
-	err = driver.DeleteVirtualSwitch(ctx, s.SwitchName)
+	err = driver.DeleteVirtualSwitch(s.SwitchName)
 	if err != nil {
 		ui.Error(fmt.Sprintf(errMsg, err))
 	}
