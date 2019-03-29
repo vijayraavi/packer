@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os/exec"
@@ -17,48 +18,48 @@ import (
 // extremely specific.
 type Driver interface {
 	// Compact a virtual disk image.
-	CompactDisk(string) error
+	CompactDisk(context.Context, string) error
 
 	// Adds new CD/DVD drive to the VM and returns name of this device
-	DeviceAddCDROM(string, string) (string, error)
+	DeviceAddCDROM(context.Context, string, string) (string, error)
 
 	// Get path to the first virtual disk image
-	DiskPath(string) (string, error)
+	DiskPath(context.Context, string) (string, error)
 
 	// Import a VM
-	Import(string, string, string, bool) error
+	Import(context.Context, string, string, string, bool) error
 
 	// Checks if the VM with the given name is running.
-	IsRunning(string) (bool, error)
+	IsRunning(context.Context, string) (bool, error)
 
 	// Stop stops a running machine, forcefully.
-	Stop(string) error
+	Stop(context.Context, string) error
 
 	// Prlctl executes the given Prlctl command
-	Prlctl(...string) error
+	Prlctl(context.Context, ...string) error
 
 	// Get the path to the Parallels Tools ISO for the given flavor.
-	ToolsISOPath(string) (string, error)
+	ToolsISOPath(context.Context, string) (string, error)
 
 	// Verify checks to make sure that this driver should function
 	// properly. If there is any indication the driver can't function,
 	// this will return an error.
-	Verify() error
+	Verify(context.Context) error
 
 	// Version reads the version of Parallels that is installed.
 	Version() (string, error)
 
 	// Send scancodes to the vm using the prltype python script.
-	SendKeyScanCodes(string, ...string) error
+	SendKeyScanCodes(context.Context, string, ...string) error
 
 	// Apply default configuration settings to the virtual machine
-	SetDefaultConfiguration(string) error
+	SetDefaultConfiguration(context.Context, string) error
 
 	// Finds the MAC address of the NIC nic0
-	MAC(string) (string, error)
+	MAC(context.Context, string) (string, error)
 
 	// Finds the IP address of a VM connected that uses DHCP by its MAC address
-	IPAddress(string) (string, error)
+	IPAddress(context.Context, string) (string, error)
 }
 
 // NewDriver returns a new driver implementation for this version of Parallels

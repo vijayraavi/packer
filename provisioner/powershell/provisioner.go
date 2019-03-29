@@ -386,7 +386,7 @@ func (p *Provisioner) createFlattenedEnvVars(elevated bool) (flattened string) {
 	return
 }
 
-func (p *Provisioner) uploadEnvVars(flattenedEnvVars string) (err error) {
+func (p *Provisioner) uploadEnvVars(ctx context.Context, flattenedEnvVars string) (err error) {
 	// Upload all env vars to a powershell script on the target build file
 	// system. Do this in the context of a single retryable function so that
 	// we gracefully handle any errors created by transient conditions such as

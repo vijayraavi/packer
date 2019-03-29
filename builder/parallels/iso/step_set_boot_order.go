@@ -31,7 +31,7 @@ func (s *stepSetBootOrder) Run(ctx context.Context, state multistep.StateBag) mu
 		"--device-bootorder", fmt.Sprintf("hdd0 cdrom0 net0"),
 	}
 
-	if err := driver.Prlctl(command...); err != nil {
+	if err := driver.Prlctl(ctx, command...); err != nil {
 		err := fmt.Errorf("Error setting the boot order: %s", err)
 		state.Put("error", err)
 		ui.Error(err.Error())

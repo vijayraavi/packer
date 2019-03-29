@@ -44,7 +44,7 @@ func (s *StepImport) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packer.Ui)
 
 	ui.Say("Unregistering virtual machine...")
-	if err := driver.Prlctl("unregister", s.vmName); err != nil {
+	if err := driver.Prlctl(ctx, "unregister", s.vmName); err != nil {
 		ui.Error(fmt.Sprintf("Error unregistering virtual machine: %s", err))
 	}
 }

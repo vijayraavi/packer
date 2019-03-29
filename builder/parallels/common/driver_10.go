@@ -1,5 +1,7 @@
 package common
 
+import "context"
+
 // Parallels10Driver are inherited from Parallels9Driver.
 type Parallels10Driver struct {
 	Parallels9Driver
@@ -7,6 +9,7 @@ type Parallels10Driver struct {
 
 // SetDefaultConfiguration applies pre-defined default settings to the VM config.
 func (d *Parallels10Driver) SetDefaultConfiguration(vmName string) error {
+	ctx := context.TODO()
 	commands := make([][]string, 10)
 	commands[0] = []string{"set", vmName, "--startup-view", "same"}
 	commands[1] = []string{"set", vmName, "--on-shutdown", "close"}
@@ -20,7 +23,7 @@ func (d *Parallels10Driver) SetDefaultConfiguration(vmName string) error {
 	commands[9] = []string{"set", vmName, "--sh-app-host-to-guest", "off"}
 
 	for _, command := range commands {
-		err := d.Prlctl(command...)
+		err := d.Prlctl(ctx, command...)
 		if err != nil {
 			return err
 		}

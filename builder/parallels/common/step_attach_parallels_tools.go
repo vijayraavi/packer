@@ -75,7 +75,7 @@ func (s *StepAttachParallelsTools) Cleanup(state multistep.StateBag) {
 		"--device-del", s.cdromDevice,
 	}
 
-	if err := driver.Prlctl(command...); err != nil {
+	if err := driver.Prlctl(ctx, command...); err != nil {
 		ui.Error(fmt.Sprintf("Error detaching Parallels Tools ISO: %s", err))
 	}
 }

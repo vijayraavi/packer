@@ -2,6 +2,7 @@ package vagrantcloud
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"

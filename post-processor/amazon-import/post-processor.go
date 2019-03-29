@@ -181,7 +181,7 @@ func (p *PostProcessor) PostProcess(ctx context.Context, ui packer.Ui, artifact 
 
 	// Copy the image file into the S3 bucket specified
 	uploader := s3manager.NewUploader(session)
-	if _, err = uploader.Upload(ctx, updata); err != nil {
+	if _, err = uploader.UploadWithContext(ctx, updata); err != nil {
 		return nil, false, fmt.Errorf("Failed to upload %s: %s", source, err)
 	}
 
