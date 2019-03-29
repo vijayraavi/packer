@@ -1,7 +1,6 @@
 package lxc
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -23,7 +22,7 @@ type LxcAttachCommunicator struct {
 	CmdWrapper    CommandWrapper
 }
 
-func (c *LxcAttachCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
+func (c *LxcAttachCommunicator) Start(cmd *packer.RemoteCmd) error {
 	localCmd, err := c.Execute(cmd.Command)
 
 	if err != nil {
@@ -33,7 +32,7 @@ func (c *LxcAttachCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 
@@ -161,7 +160,7 @@ func (c *LxcAttachCommunicator) CheckInit() (string, error) {
 	}
 
 	pr, _ := localCmd.StdoutPipe()
-	if err = localCmd.Start(ctx); err != nil {
+	if err = localCmd.Start(); err != nil {
 		return "", err
 	}
 

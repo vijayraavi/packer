@@ -1,7 +1,6 @@
 package hyperone
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"os"
@@ -21,7 +20,7 @@ type ChrootCommunicator struct {
 	Wrapped    packer.Communicator
 }
 
-func (c *ChrootCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
+func (c *ChrootCommunicator) Start(cmd *packer.RemoteCmd) error {
 	command := strconv.Quote(cmd.Command)
 	chrootCommand, err := c.CmdWrapper(
 		fmt.Sprintf("sudo chroot %s /bin/sh -c %s", c.Chroot, command))
@@ -31,7 +30,7 @@ func (c *ChrootCommunicator) Start(ctx context.Context, cmd *packer.RemoteCmd) e
 
 	cmd.Command = chrootCommand
 
-	return c.Wrapped.Start(ctx, cmd)
+	return c.Wrapped.Start(cmd)
 }
 
 func (c *ChrootCommunicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {

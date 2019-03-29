@@ -34,7 +34,7 @@ func runAndStream(cmd *exec.Cmd, ui packer.Ui) error {
 	log.Printf("Executing: %s %v", cmd.Path, args)
 	cmd.Stdout = stdout_w
 	cmd.Stderr = stderr_w
-	if err := cmd.Start(ctx); err != nil {
+	if err := cmd.Start(); err != nil {
 		return err
 	}
 

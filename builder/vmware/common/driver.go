@@ -35,7 +35,7 @@ type Driver interface {
 	IsRunning(string) (bool, error)
 
 	// Start starts a VM specified by the path to the VMX given.
-	Start(ctx, string, bool) error
+	Start(string, bool) error
 
 	// Stop stops a VM specified by the path to the VMX given.
 	Stop(string) error

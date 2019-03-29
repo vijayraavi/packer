@@ -37,7 +37,7 @@ func TestCommunicatorRPC(t *testing.T) {
 	c.StartExitStatus = 42
 
 	// Test Start
-	err := remote.Start(ctx, &cmd)
+	err := remote.Start(&cmd)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

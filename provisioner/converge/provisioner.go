@@ -153,7 +153,7 @@ func (p *Provisioner) maybeBootstrap(ui packer.Ui, comm packer.Communicator) err
 		Stderr:  &outErr,
 	}
 
-	if err = comm.Start(ctx, cmd); err != nil {
+	if err = comm.Start(cmd); err != nil {
 		return fmt.Errorf("Error bootstrapping converge: %s", err)
 	}
 
@@ -208,7 +208,7 @@ func (p *Provisioner) applyModules(ui packer.Ui, comm packer.Communicator) error
 		Stdout:  &runOut,
 		Stderr:  &runErr,
 	}
-	if err := comm.Start(ctx, cmd); err != nil {
+	if err := comm.Start(cmd); err != nil {
 		return fmt.Errorf("Error applying %q: %s", p.config.Module, err)
 	}
 

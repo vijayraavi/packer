@@ -429,7 +429,7 @@ func (p *Provisioner) executeAnsible(ui packer.Ui, comm packer.Communicator, pri
 	}
 	ui.Say(fmt.Sprintf("Executing Ansible: %s", sanitized))
 
-	if err := cmd.Start(ctx); err != nil {
+	if err := cmd.Start(); err != nil {
 		return err
 	}
 	wg.Wait()

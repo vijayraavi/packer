@@ -46,7 +46,7 @@ func (d *HypervPS4Driver) Uptime(vmName string) (uint64, error) {
 }
 
 // Start starts a VM specified by the name given.
-func (d *HypervPS4Driver) Start(ctx context.Context, vmName string) error {
+func (d *HypervPS4Driver) Start(vmName string) error {
 	return hyperv.StartVirtualMachine(vmName)
 }
 

@@ -390,7 +390,7 @@ func (p *Provisioner) executeInspec(ui packer.Ui, comm packer.Communicator, priv
 	go repeat(stderr)
 
 	ui.Say(fmt.Sprintf("Executing Inspec: %s", strings.Join(cmd.Args, " ")))
-	if err := cmd.Start(ctx); err != nil {
+	if err := cmd.Start(); err != nil {
 		return err
 	}
 	wg.Wait()

@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"context"
 	"encoding/gob"
 	"io"
 	"log"
@@ -65,7 +64,7 @@ func Communicator(client *rpc.Client) *communicator {
 	return &communicator{client: client}
 }
 
-func (c *communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) (err error) {
+func (c *communicator) Start(cmd *packer.RemoteCmd) (err error) {
 	var args CommunicatorStartArgs
 	args.Command = cmd.Command
 
@@ -201,7 +200,7 @@ func (c *communicator) Download(path string, w io.Writer) (err error) {
 	return
 }
 
-func (c *CommunicatorServer) Start(ctx context.Context, args *CommunicatorStartArgs, reply *interface{}) error {
+func (c *CommunicatorServer) Start(args *CommunicatorStartArgs, reply *interface{}) error {
 	// Build the RemoteCmd on this side so that it all pipes over
 	// to the remote side.
 	var cmd packer.RemoteCmd
@@ -261,7 +260,7 @@ func (c *CommunicatorServer) Start(ctx context.Context, args *CommunicatorStartA
 	responseWriter := gob.NewEncoder(responseC)
 
 	// Start the actual command
-	err = c.c.Start(ctx, &cmd)
+	err = c.c.Start(&cmd)
 	if err != nil {
 		close(doneCh)
 		return NewBasicError(err)

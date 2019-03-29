@@ -1,7 +1,6 @@
 package common
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -77,7 +76,7 @@ func (d *Fusion5Driver) CommHost(state multistep.StateBag) (string, error) {
 	return CommHost(d.SSHConfig)(state)
 }
 
-func (d *Fusion5Driver) Start(ctx context.Context, vmxPath string, headless bool) error {
+func (d *Fusion5Driver) Start(vmxPath string, headless bool) error {
 	guiArgument := "gui"
 	if headless == true {
 		guiArgument = "nogui"

@@ -1,7 +1,6 @@
 package packer
 
 import (
-	"context"
 	"io"
 	"os"
 	"strings"
@@ -60,7 +59,7 @@ type Communicator interface {
 	// Start again. The Start method returns immediately once the command
 	// is started. It does not wait for the command to complete. The
 	// RemoteCmd.Exited field should be used for this.
-	Start(context.Context, *RemoteCmd) error
+	Start(*RemoteCmd) error
 
 	// Upload uploads a file to the machine to the given path with the
 	// contents coming from the given reader. This method will block until
@@ -88,7 +87,7 @@ type Communicator interface {
 // StartWithUi runs the remote command and streams the output to any
 // configured Writers for stdout/stderr, while also writing each line
 // as it comes to a Ui.
-func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) error {
+func (r *RemoteCmd) StartWithUi(c Communicator, ui Ui) error {
 	stdout_r, stdout_w := io.Pipe()
 	stderr_r, stderr_w := io.Pipe()
 	defer stdout_w.Close()
@@ -119,7 +118,7 @@ func (r *RemoteCmd) StartWithUi(ctx context.Context, c Communicator, ui Ui) erro
 	}
 
 	// Start the command
-	if err := c.Start(ctx, r); err != nil {
+	if err := c.Start(r); err != nil {
 		return err
 	}
 

@@ -1,7 +1,6 @@
 package lxd
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -18,7 +17,7 @@ type Communicator struct {
 	CmdWrapper    CommandWrapper
 }
 
-func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
+func (c *Communicator) Start(cmd *packer.RemoteCmd) error {
 	localCmd, err := c.Execute(cmd.Command)
 
 	if err != nil {
@@ -28,7 +27,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	localCmd.Stdin = cmd.Stdin
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 
@@ -60,7 +59,7 @@ func (c *Communicator) Upload(dst string, r io.Reader, fi *os.FileInfo) error {
 	// find out if the place we are pushing to is a directory
 	testDirectoryCommand := fmt.Sprintf(`test -d "%s"`, dst)
 	cmd := &packer.RemoteCmd{Command: testDirectoryCommand}
-	err := c.Start(ctx, cmd)
+	err := c.Start(cmd)
 
 	if err != nil {
 		log.Printf("Unable to check whether remote path is a dir: %s", err)
@@ -107,7 +106,7 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 
 	cpCmd.Stdin, _ = tarCmd.StdoutPipe()
 	log.Printf("Starting tar command: %s", tar)
-	err = tarCmd.Start(ctx)
+	err = tarCmd.Start()
 	if err != nil {
 		return err
 	}

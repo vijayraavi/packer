@@ -69,7 +69,7 @@ func (s *StepUploadBundle) Run(_ context.Context, state multistep.StateBag) mult
 		ui.Say(fmt.Sprintf("Running: %s", config.BundleUploadCommand))
 	}
 
-	if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+	if err := cmd.StartWithUi(comm, ui); err != nil {
 		state.Put("error", fmt.Errorf("Error uploading volume: %s", err))
 		ui.Error(state.Get("error").(error).Error())
 		return multistep.ActionHalt

@@ -43,7 +43,7 @@ func runCommands(commands []string, ctx interpolate.Context, state multistep.Sta
 
 		ui.Say(fmt.Sprintf("Executing command: %s", command))
 
-		err = remoteCmd.StartWithUi(ctx, comm, ui)
+		err = remoteCmd.StartWithUi(comm, ui)
 		if err != nil {
 			return fmt.Errorf("error running remote cmd: %s", err)
 		}
@@ -69,7 +69,7 @@ func captureOutput(command string, state multistep.StateBag) (string, error) {
 
 	log.Println(fmt.Sprintf("Executing command: %s", command))
 
-	err := comm.Start(ctx, remoteCmd)
+	err := comm.Start(remoteCmd)
 	if err != nil {
 		return "", fmt.Errorf("error running remote cmd: %s", err)
 	}

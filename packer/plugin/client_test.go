@@ -15,7 +15,7 @@ func TestClient(t *testing.T) {
 	defer c.Kill()
 
 	// Test that it parses the proper address
-	addr, err := c.Start(ctx)
+	addr, err := c.Start()
 	if err != nil {
 		t.Fatalf("err should be nil, got %s", err)
 	}
@@ -50,7 +50,7 @@ func TestClientStart_badVersion(t *testing.T) {
 	c := NewClient(config)
 	defer c.Kill()
 
-	_, err := c.Start(ctx)
+	_, err := c.Start()
 	if err == nil {
 		t.Fatal("err should not be nil")
 	}
@@ -65,7 +65,7 @@ func TestClient_Start_Timeout(t *testing.T) {
 	c := NewClient(config)
 	defer c.Kill()
 
-	_, err := c.Start(ctx)
+	_, err := c.Start()
 	if err == nil {
 		t.Fatal("err should not be nil")
 	}
@@ -80,7 +80,7 @@ func TestClient_Stderr(t *testing.T) {
 	})
 	defer c.Kill()
 
-	if _, err := c.Start(ctx); err != nil {
+	if _, err := c.Start(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 
@@ -126,7 +126,7 @@ func TestClient_Stdin(t *testing.T) {
 	c := NewClient(&ClientConfig{Cmd: process})
 	defer c.Kill()
 
-	_, err = c.Start(ctx)
+	_, err = c.Start()
 	if err != nil {
 		t.Fatalf("error: %s", err)
 	}

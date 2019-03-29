@@ -1,7 +1,6 @@
 package shell_local
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -16,7 +15,7 @@ type Communicator struct {
 	ExecuteCommand []string
 }
 
-func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
+func (c *Communicator) Start(cmd *packer.RemoteCmd) error {
 	if len(c.ExecuteCommand) == 0 {
 		return fmt.Errorf("Error launching command via shell-local communicator: No ExecuteCommand provided")
 	}
@@ -29,7 +28,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	localCmd.Stderr = cmd.Stderr
 
 	// Start it. If it doesn't work, then error right away.
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 

@@ -2,7 +2,6 @@ package docker
 
 import (
 	"archive/tar"
-	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -28,7 +27,7 @@ type Communicator struct {
 	lock          sync.Mutex
 }
 
-func (c *Communicator) Start(ctx context.Context, remote *packer.RemoteCmd) error {
+func (c *Communicator) Start(remote *packer.RemoteCmd) error {
 	dockerArgs := []string{
 		"exec",
 		"-i",
@@ -122,7 +121,7 @@ func (c *Communicator) uploadFile(dst string, src io.Reader, fi *os.FileInfo) er
 		return fmt.Errorf("Failed to open pipe: %s", err)
 	}
 
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return err
 	}
 
@@ -199,7 +198,7 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 	if err != nil {
 		return fmt.Errorf("Failed to open pipe: %s", err)
 	}
-	if err := localCmd.Start(ctx); err != nil {
+	if err := localCmd.Start(); err != nil {
 		return fmt.Errorf("Failed to copy: %s", err)
 	}
 	stderrOut, err := ioutil.ReadAll(stderrP)
@@ -231,7 +230,7 @@ func (c *Communicator) Download(src string, dst io.Writer) error {
 		return fmt.Errorf("Failed to open pipe: %s", err)
 	}
 
-	if err = localCmd.Start(ctx); err != nil {
+	if err = localCmd.Start(); err != nil {
 		return fmt.Errorf("Failed to start download: %s", err)
 	}
 
@@ -287,7 +286,7 @@ func (c *Communicator) run(cmd *exec.Cmd, remote *packer.RemoteCmd, stdin io.Wri
 
 	// Start the command
 	log.Printf("Executing %s:", strings.Join(cmd.Args, " "))
-	if err := cmd.Start(ctx); err != nil {
+	if err := cmd.Start(); err != nil {
 		log.Printf("Error executing: %s", err)
 		remote.SetExited(254)
 		return

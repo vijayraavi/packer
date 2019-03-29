@@ -2,7 +2,6 @@ package shell_local
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -28,7 +27,7 @@ type EnvVarsTemplate struct {
 	WinRMPassword string
 }
 
-func Run(ctx context.Context, ui packer.Ui, config *Config) (bool, error) {
+func Run(ui packer.Ui, config *Config) (bool, error) {
 	// Check if shell-local can even execute against this runtime OS
 	if len(config.OnlyOn) > 0 {
 		runCommand := false
@@ -89,7 +88,7 @@ func Run(ctx context.Context, ui packer.Ui, config *Config) (bool, error) {
 		flattenedCmd := strings.Join(interpolatedCmds, " ")
 		cmd := &packer.RemoteCmd{Command: flattenedCmd}
 		log.Printf("[INFO] (shell-local): starting local command: %s", flattenedCmd)
-		if err := cmd.StartWithUi(ctx, comm, ui); err != nil {
+		if err := cmd.StartWithUi(comm, ui); err != nil {
 			return false, fmt.Errorf(
 				"Error executing script: %s\n\n"+
 					"Please see output above for more information.",
