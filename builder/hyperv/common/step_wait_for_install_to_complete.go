@@ -16,14 +16,14 @@ const (
 type StepWaitForPowerOff struct {
 }
 
-func (s *StepWaitForPowerOff) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepWaitForPowerOff) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 	vmName := state.Get("vmName").(string)
 	ui.Say("Waiting for vm to be powered down...")
 
 	for {
-		isOff, err := driver.IsOff(ctx, vmName)
+		isOff, err := driver.IsOff(vmName)
 
 		if err != nil {
 			err := fmt.Errorf("Error checking if vm is off: %s", err)
@@ -50,7 +50,7 @@ type StepWaitForInstallToComplete struct {
 	ActionName          string
 }
 
-func (s *StepWaitForInstallToComplete) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepWaitForInstallToComplete) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 	vmName := state.Get("vmName").(string)
@@ -63,7 +63,7 @@ func (s *StepWaitForInstallToComplete) Run(ctx context.Context, state multistep.
 	var lastUptime uint64
 
 	for rebootCount < s.ExpectedRebootCount {
-		uptime, err := driver.Uptime(ctx, vmName)
+		uptime, err := driver.Uptime(vmName)
 
 		if err != nil {
 			err := fmt.Errorf("Error checking uptime: %s", err)

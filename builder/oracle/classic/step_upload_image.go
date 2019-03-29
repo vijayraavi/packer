@@ -24,7 +24,7 @@ type uploadCmdData struct {
 	SegmentPath string
 }
 
-func (s *stepUploadImage) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *stepUploadImage) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	comm := state.Get("communicator").(packer.Communicator)
 	config := state.Get("config").(*Config)
@@ -62,7 +62,7 @@ func (s *stepUploadImage) Run(ctx context.Context, state multistep.StateBag) mul
 	%s`, uploadImageCmd)
 
 	dest := "/tmp/create-packer-diskimage.sh"
-	comm.Upload(ctx, dest, strings.NewReader(command), nil)
+	comm.Upload(dest, strings.NewReader(command), nil)
 	cmd := &packer.RemoteCmd{
 		Command: fmt.Sprintf("sudo /bin/sh %s", dest),
 	}

@@ -2,7 +2,6 @@ package powershell
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -32,13 +31,13 @@ type PowerShellCmd struct {
 	Stderr io.Writer
 }
 
-func (ps *PowerShellCmd) Run(ctx context.Context, fileContents string, params ...string) error {
-	_, err := ps.Output(ctx, fileContents, params...)
+func (ps *PowerShellCmd) Run(fileContents string, params ...string) error {
+	_, err := ps.Output(fileContents, params...)
 	return err
 }
 
 // Output runs the PowerShell command and returns its standard output.
-func (ps *PowerShellCmd) Output(ctx context.Context, fileContents string, params ...string) (string, error) {
+func (ps *PowerShellCmd) Output(fileContents string, params ...string) (string, error) {
 	path, err := ps.getPowerShellPath()
 	if err != nil {
 		return "", fmt.Errorf("Cannot find PowerShell in the path")
@@ -63,7 +62,7 @@ func (ps *PowerShellCmd) Output(ctx context.Context, fileContents string, params
 	}
 
 	var stdout, stderr bytes.Buffer
-	command := exec.CommandContext(ctx, path, args...)
+	command := exec.Command(path, args...)
 	command.Stdout = &stdout
 	command.Stderr = &stderr
 
@@ -164,19 +163,19 @@ func createArgs(filename string, params ...string) []string {
 	return args
 }
 
-func GetHostAvailableMemory(ctx context.Context) float64 {
+func GetHostAvailableMemory() float64 {
 
 	var script = "(Get-WmiObject Win32_OperatingSystem).FreePhysicalMemory / 1024"
 
 	var ps PowerShellCmd
-	output, _ := ps.Output(ctx, script)
+	output, _ := ps.Output(script)
 
 	freeMB, _ := strconv.ParseFloat(output, 64)
 
 	return freeMB
 }
 
-func GetHostName(ctx context.Context, ip string) (string, error) {
+func GetHostName(ip string) (string, error) {
 
 	var script = `
 param([string]$ip)
@@ -191,7 +190,7 @@ try {
 
 	//
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script, ip)
+	cmdOut, err := ps.Output(script, ip)
 	if err != nil {
 		return "", err
 	}
@@ -199,7 +198,7 @@ try {
 	return cmdOut, nil
 }
 
-func IsCurrentUserAnAdministrator(ctx context.Context) (bool, error) {
+func IsCurrentUserAnAdministrator() (bool, error) {
 	var script = `
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = new-object System.Security.Principal.WindowsPrincipal($identity)
@@ -208,7 +207,7 @@ return $principal.IsInRole($administratorRole)
 `
 
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script)
+	cmdOut, err := ps.Output(script)
 	if err != nil {
 		return false, err
 	}
@@ -217,14 +216,14 @@ return $principal.IsInRole($administratorRole)
 	return res == powerShellTrue, nil
 }
 
-func ModuleExists(ctx context.Context, moduleName string) (bool, error) {
+func ModuleExists(moduleName string) (bool, error) {
 
 	var script = `
 param([string]$moduleName)
 (Get-Module -Name $moduleName) -ne $null
 `
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script)
+	cmdOut, err := ps.Output(script)
 	if err != nil {
 		return false, err
 	}
@@ -239,14 +238,14 @@ param([string]$moduleName)
 	return true, nil
 }
 
-func HasVirtualMachineVirtualizationExtensions(ctx context.Context) (bool, error) {
+func HasVirtualMachineVirtualizationExtensions() (bool, error) {
 
 	var script = `
 (GET-Command Hyper-V\Set-VMProcessor).parameters.keys -contains "ExposeVirtualizationExtensions"
 `
 
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script)
+	cmdOut, err := ps.Output(script)
 
 	if err != nil {
 		return false, err
@@ -256,7 +255,7 @@ func HasVirtualMachineVirtualizationExtensions(ctx context.Context) (bool, error
 	return hasVirtualMachineVirtualizationExtensions, err
 }
 
-func DoesVirtualMachineExist(ctx context.Context, vmName string) (bool, error) {
+func DoesVirtualMachineExist(vmName string) (bool, error) {
 
 	var script = `
 param([string]$vmName)
@@ -264,7 +263,7 @@ return (Hyper-V\Get-VM | ?{$_.Name -eq $vmName}) -ne $null
 `
 
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script, vmName)
+	cmdOut, err := ps.Output(script, vmName)
 
 	if err != nil {
 		return false, err
@@ -274,7 +273,7 @@ return (Hyper-V\Get-VM | ?{$_.Name -eq $vmName}) -ne $null
 	return exists, err
 }
 
-func DoesVirtualMachineSnapshotExist(ctx context.Context, vmName string, snapshotName string) (bool, error) {
+func DoesVirtualMachineSnapshotExist(vmName string, snapshotName string) (bool, error) {
 
 	var script = `
 param([string]$vmName, [string]$snapshotName)
@@ -282,7 +281,7 @@ return (Hyper-V\Get-VMSnapshot -VMName $vmName | ?{$_.Name -eq $snapshotName}) -
 `
 
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script, vmName, snapshotName)
+	cmdOut, err := ps.Output(script, vmName, snapshotName)
 
 	if err != nil {
 		return false, err
@@ -292,7 +291,7 @@ return (Hyper-V\Get-VMSnapshot -VMName $vmName | ?{$_.Name -eq $snapshotName}) -
 	return exists, err
 }
 
-func IsVirtualMachineOn(ctx context.Context, vmName string) (bool, error) {
+func IsVirtualMachineOn(vmName string) (bool, error) {
 
 	var script = `
 param([string]$vmName)
@@ -301,7 +300,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running
 `
 
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script, vmName)
+	cmdOut, err := ps.Output(script, vmName)
 
 	if err != nil {
 		return false, err
@@ -311,7 +310,7 @@ $vm.State -eq [Microsoft.HyperV.PowerShell.VMState]::Running
 	return isRunning, err
 }
 
-func GetVirtualMachineGeneration(ctx context.Context, vmName string) (uint, error) {
+func GetVirtualMachineGeneration(vmName string) (uint, error) {
 	var script = `
 param([string]$vmName)
 $generation = Hyper-V\Get-Vm -Name $vmName | %{$_.Generation}
@@ -321,7 +320,7 @@ if (!$generation){
 return $generation
 `
 	var ps PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script, vmName)
+	cmdOut, err := ps.Output(script, vmName)
 
 	if err != nil {
 		return 0, err
@@ -338,7 +337,7 @@ return $generation
 	return generation, err
 }
 
-func SetUnattendedProductKey(ctx context.Context, path string, productKey string) error {
+func SetUnattendedProductKey(path string, productKey string) error {
 
 	var script = `
 param([string]$path,[string]$productKey)
@@ -365,6 +364,6 @@ $unattend.Save($path)
 `
 
 	var ps PowerShellCmd
-	err := ps.Run(ctx, script, path, productKey)
+	err := ps.Run(script, path, productKey)
 	return err
 }

@@ -100,18 +100,18 @@ func (c communicator) Start(context.Context, *packer.RemoteCmd) error {
 	return errors.New("communicator not supported")
 }
 
-func (c communicator) Upload(ctx context.Context, string, io.Reader, *os.FileInfo) error {
+func (c communicator) Upload(string, io.Reader, *os.FileInfo) error {
 	return errors.New("communicator not supported")
 }
 
-func (c communicator) UploadDir(ctx context.Context, dst string, src string, exclude []string) error {
+func (c communicator) UploadDir(dst string, src string, exclude []string) error {
 	return errors.New("communicator not supported")
 }
 
-func (c communicator) Download(ctx context.Context, string, io.Writer) error {
+func (c communicator) Download(string, io.Writer) error {
 	return errors.New("communicator not supported")
 }
 
-func (c communicator) DownloadDir(ctx context.Context, src string, dst string, exclude []string) error {
+func (c communicator) DownloadDir(src string, dst string, exclude []string) error {
 	return errors.New("communicator not supported")
 }

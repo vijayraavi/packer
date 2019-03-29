@@ -281,40 +281,6 @@ func TestCoreBuild_provSkip(t *testing.T) {
 	}
 }
 
-func TestCoreBuild_provTimeout(t *testing.T) {
-	config := TestCoreConfig(t)
-	testCoreTemplate(t, config, fixtureDir("build-prov-timeout.json"))
-	b := TestBuilder(t, config, "test")
-	p := TestProvisioner(t, config, "test")
-	core := TestCore(t, config)
-
-	b.ArtifactId = "hello"
-
-	build, err := core.Build("test")
-	if err != nil {
-		t.Fatalf("err: %s", err)
-	}
-
-	if _, err := build.Prepare(); err != nil {
-		t.Fatalf("err: %s", err)
-	}
-
-	artifact, err := build.Run(context.Background(), nil)
-	if err != nil {
-		t.Fatalf("err: %s", err)
-	}
-	if len(artifact) != 1 {
-		t.Fatalf("bad: %#v", artifact)
-	}
-
-	if artifact[0].Id() != b.ArtifactId {
-		t.Fatalf("bad: %s", artifact[0].Id())
-	}
-	if !p.ProvCalled {
-		t.Fatal("provisioner not called")
-	}
-}
-
 func TestCoreBuild_provSkipInclude(t *testing.T) {
 	config := TestCoreConfig(t)
 	testCoreTemplate(t, config, fixtureDir("build-prov-skip-include.json"))

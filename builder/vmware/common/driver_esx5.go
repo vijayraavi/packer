@@ -135,7 +135,7 @@ func (d *ESX5Driver) Start(ctx context.Context, vmxPathLocal string, headless bo
 		//intentionally not checking for error since poweron may fail specially after initial VM registration
 		d.sh("vim-cmd", "vmsvc/power.on", d.vmId)
 		time.Sleep((time.Duration(i) * time.Second) + 1)
-		running, err := d.IsRunning(ctx, vmxPathLocal)
+		running, err := d.IsRunning(vmxPathLocal)
 		if err != nil {
 			return err
 		}
@@ -658,16 +658,16 @@ func (d *ESX5Driver) upload(dst, src string) error {
 		return err
 	}
 	defer f.Close()
-	return d.comm.Upload(ctx, dst, f, nil)
+	return d.comm.Upload(dst, f, nil)
 }
 
-func (d *ESX5Driver) Download(ctx context.Context, src, dst string) error {
+func (d *ESX5Driver) Download(src, dst string) error {
 	file, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	return d.comm.Download(ctx, d.datastorePath(src), file)
+	return d.comm.Download(d.datastorePath(src), file)
 }
 
 func (d *ESX5Driver) VerifyChecksum(ctype string, hash string, file string) bool {

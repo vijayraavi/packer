@@ -10,7 +10,7 @@ import (
 
 type stepMountExtra struct{}
 
-func (s *stepMountExtra) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *stepMountExtra) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	mountPath := state.Get("mount_path").(string)
 	ui := state.Get("ui").(packer.Ui)
@@ -31,7 +31,7 @@ func (s *stepMountExtra) Run(ctx context.Context, state multistep.StateBag) mult
 			fmt.Sprintf("mount %s %s %s", flags, mountInfo[1], innerPath),
 		}
 
-		err := runCommands(ctx, commands, config.ctx, state)
+		err := runCommands(commands, config.ctx, state)
 		if err != nil {
 			state.Put("error", err)
 			ui.Error(err.Error())

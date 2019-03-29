@@ -22,7 +22,7 @@ type StepUploadGuestAdditions struct {
 	Ctx                interpolate.Context
 }
 
-func (s *StepUploadGuestAdditions) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepUploadGuestAdditions) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
@@ -61,7 +61,7 @@ func (s *StepUploadGuestAdditions) Run(ctx context.Context, state multistep.Stat
 	}
 
 	ui.Say("Uploading VirtualBox guest additions ISO...")
-	if err := comm.Upload(ctx, s.GuestAdditionsPath, f, nil); err != nil {
+	if err := comm.Upload(s.GuestAdditionsPath, f, nil); err != nil {
 		state.Put("error", fmt.Errorf("Error uploading guest additions: %s", err))
 		return multistep.ActionHalt
 	}

@@ -2,7 +2,6 @@ package provisioner
 
 import (
 	"bytes"
-	"context"
 	"encoding/xml"
 	"fmt"
 	"log"
@@ -121,7 +120,7 @@ if (Test-Path $log) {
 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($s) | Out-Null
 exit $result`))
 
-func GenerateElevatedRunner(ctx context.Context, command string, p ElevatedProvisioner) (uploadedPath string, err error) {
+func GenerateElevatedRunner(command string, p ElevatedProvisioner) (uploadedPath string, err error) {
 	log.Printf("Building elevated command wrapper for: %s", command)
 
 	var buffer bytes.Buffer
@@ -184,7 +183,7 @@ func GenerateElevatedRunner(ctx context.Context, command string, p ElevatedProvi
 	uuid := uuid.TimeOrderedUUID()
 	path := fmt.Sprintf(`C:/Windows/Temp/packer-elevated-shell-%s.ps1`, uuid)
 	log.Printf("Uploading elevated shell wrapper for command [%s] to [%s]", command, path)
-	err = p.Communicator().Upload(ctx, path, &buffer, nil)
+	err = p.Communicator().Upload(path, &buffer, nil)
 	if err != nil {
 		return "", fmt.Errorf("Error preparing elevated powershell script: %s", err)
 	}

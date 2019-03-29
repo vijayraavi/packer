@@ -74,7 +74,7 @@ func (c *MockCommunicator) Start(ctx context.Context, rc *RemoteCmd) error {
 	return nil
 }
 
-func (c *MockCommunicator) Upload(ctx context.Context, path string, r io.Reader, fi *os.FileInfo) error {
+func (c *MockCommunicator) Upload(path string, r io.Reader, fi *os.FileInfo) error {
 	c.UploadCalled = true
 	c.UploadPath = path
 
@@ -88,7 +88,7 @@ func (c *MockCommunicator) Upload(ctx context.Context, path string, r io.Reader,
 	return nil
 }
 
-func (c *MockCommunicator) UploadDir(ctx context.Context, dst string, src string, excl []string) error {
+func (c *MockCommunicator) UploadDir(dst string, src string, excl []string) error {
 	c.UploadDirDst = dst
 	c.UploadDirSrc = src
 	c.UploadDirExclude = excl
@@ -96,7 +96,7 @@ func (c *MockCommunicator) UploadDir(ctx context.Context, dst string, src string
 	return nil
 }
 
-func (c *MockCommunicator) Download(ctx context.Context, path string, w io.Writer) error {
+func (c *MockCommunicator) Download(path string, w io.Writer) error {
 	c.DownloadCalled = true
 	c.DownloadPath = path
 	w.Write([]byte(c.DownloadData))
@@ -104,7 +104,7 @@ func (c *MockCommunicator) Download(ctx context.Context, path string, w io.Write
 	return nil
 }
 
-func (c *MockCommunicator) DownloadDir(ctx context.Context, src string, dst string, excl []string) error {
+func (c *MockCommunicator) DownloadDir(src string, dst string, excl []string) error {
 	c.DownloadDirDst = dst
 	c.DownloadDirSrc = src
 	c.DownloadDirExclude = excl

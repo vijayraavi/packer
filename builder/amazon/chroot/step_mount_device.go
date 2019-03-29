@@ -31,7 +31,7 @@ type StepMountDevice struct {
 	mountPath string
 }
 
-func (s *StepMountDevice) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepMountDevice) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	ui := state.Get("ui").(packer.Ui)
 	device := state.Get("device").(string)
@@ -104,7 +104,7 @@ func (s *StepMountDevice) Run(ctx context.Context, state multistep.StateBag) mul
 		return multistep.ActionHalt
 	}
 	log.Printf("[DEBUG] (step mount) mount command is %s", mountCommand)
-	cmd := ShellCommand(ctx, mountCommand)
+	cmd := ShellCommand(mountCommand)
 	cmd.Stderr = stderr
 	if err := cmd.Run(); err != nil {
 		err := fmt.Errorf(
@@ -143,7 +143,7 @@ func (s *StepMountDevice) CleanupFunc(state multistep.StateBag) error {
 		return fmt.Errorf("Error creating unmount command: %s", err)
 	}
 
-	cmd := ShellCommand(ctx, unmountCommand)
+	cmd := ShellCommand(unmountCommand)
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("Error unmounting root device: %s", err)
 	}

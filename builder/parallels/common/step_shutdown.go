@@ -29,7 +29,7 @@ type StepShutdown struct {
 }
 
 // Run shuts down the VM.
-func (s *StepShutdown) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepShutdown) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	comm := state.Get("communicator").(packer.Communicator)
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
@@ -56,7 +56,7 @@ func (s *StepShutdown) Run(ctx context.Context, state multistep.StateBag) multis
 		log.Printf("Waiting max %s for shutdown to complete", s.Timeout)
 		shutdownTimer := time.After(s.Timeout)
 		for {
-			running, _ := driver.IsRunning(ctx, vmName)
+			running, _ := driver.IsRunning(vmName)
 			if !running {
 				break
 			}

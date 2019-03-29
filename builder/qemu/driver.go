@@ -81,7 +81,7 @@ func (d *QemuDriver) Qemu(qemuArgs ...string) error {
 	cmd.Stdout = stdout_w
 	cmd.Stderr = stderr_w
 
-	err := cmd.Start()
+	err := cmd.Start(ctx)
 	if err != nil {
 		err = fmt.Errorf("Error starting VM: %s", err)
 		return err

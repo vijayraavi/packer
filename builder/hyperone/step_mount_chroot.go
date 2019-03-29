@@ -36,7 +36,7 @@ func (s *stepMountChroot) Run(ctx context.Context, state multistep.StateBag) mul
 		fmt.Sprintf("mount %s %s %s", opts, deviceMount, config.ChrootMountPath),
 	}
 
-	err := runCommands(ctx, commands, config.ctx, state)
+	err := runCommands(commands, config.ctx, state)
 	if err != nil {
 		state.Put("error", err)
 		ui.Error(err.Error())

@@ -457,7 +457,7 @@ func (p *Provisioner) uploadFile(ui packer.Ui, comm packer.Communicator, dst, sr
 	}
 	defer f.Close()
 
-	if err = comm.Upload(ctx, dst, f, nil); err != nil {
+	if err = comm.Upload(dst, f, nil); err != nil {
 		return fmt.Errorf("Error uploading %s: %s", src, err)
 	}
 	return nil
@@ -505,5 +505,5 @@ func (p *Provisioner) uploadDir(ui packer.Ui, comm packer.Communicator, dst, src
 	if src[len(src)-1] != '/' {
 		src = src + "/"
 	}
-	return comm.UploadDir(ctx, dst, src, nil)
+	return comm.UploadDir(dst, src, nil)
 }

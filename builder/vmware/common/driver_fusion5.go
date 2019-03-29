@@ -95,7 +95,7 @@ func (d *Fusion5Driver) Stop(vmxPath string) error {
 	cmd := exec.Command(d.vmrunPath(), "-T", "fusion", "stop", vmxPath, "hard")
 	if _, _, err := runAndLog(cmd); err != nil {
 		// Check if the VM is running. If its not, it was already stopped
-		running, rerr := d.IsRunning(ctx, vmxPath)
+		running, rerr := d.IsRunning(vmxPath)
 		if rerr == nil && !running {
 			return nil
 		}

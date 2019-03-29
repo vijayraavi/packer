@@ -151,7 +151,7 @@ func (c *comm) Start(ctx context.Context, cmd *packer.RemoteCmd) (err error) {
 	return
 }
 
-func (c *comm) Upload(ctx context.Context, path string, input io.Reader, fi *os.FileInfo) error {
+func (c *comm) Upload(path string, input io.Reader, fi *os.FileInfo) error {
 	if c.config.UseSftp {
 		return c.sftpUploadSession(path, input, fi)
 	} else {
@@ -159,7 +159,7 @@ func (c *comm) Upload(ctx context.Context, path string, input io.Reader, fi *os.
 	}
 }
 
-func (c *comm) UploadDir(ctx context.Context, dst string, src string, excl []string) error {
+func (c *comm) UploadDir(dst string, src string, excl []string) error {
 	log.Printf("[DEBUG] Upload dir '%s' to '%s'", src, dst)
 	if c.config.UseSftp {
 		return c.sftpUploadDirSession(dst, src, excl)
@@ -168,7 +168,7 @@ func (c *comm) UploadDir(ctx context.Context, dst string, src string, excl []str
 	}
 }
 
-func (c *comm) DownloadDir(ctx context.Context, src string, dst string, excl []string) error {
+func (c *comm) DownloadDir(src string, dst string, excl []string) error {
 	log.Printf("[DEBUG] Download dir '%s' to '%s'", src, dst)
 	scpFunc := func(w io.Writer, stdoutR *bufio.Reader) error {
 		dirStack := []string{dst}
@@ -240,7 +240,7 @@ func (c *comm) DownloadDir(ctx context.Context, src string, dst string, excl []s
 	return c.scpSession("scp -vrf "+src, scpFunc)
 }
 
-func (c *comm) Download(ctx context.Context, path string, output io.Writer) error {
+func (c *comm) Download(path string, output io.Writer) error {
 	if c.config.UseSftp {
 		return c.sftpDownloadSession(path, output)
 	}

@@ -197,7 +197,7 @@ func (c *Adapter) exec(command string, in io.Reader, out io.Writer, err io.Write
 			exitStatus = 1
 		}
 	default:
-		exitStatus = c.remoteExec(ctx, command, in, out, err)
+		exitStatus = c.remoteExec(command, in, out, err)
 	}
 	return exitStatus
 }

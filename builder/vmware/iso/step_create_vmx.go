@@ -75,7 +75,7 @@ type stepCreateVMX struct {
 }
 
 /* regular steps */
-func (s *stepCreateVMX) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *stepCreateVMX) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	isoPath := state.Get("iso_path").(string)
 	ui := state.Get("ui").(packer.Ui)

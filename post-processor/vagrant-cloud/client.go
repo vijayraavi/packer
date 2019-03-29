@@ -119,7 +119,7 @@ func (v *VagrantCloudClient) Delete(path string) (*http.Response, error) {
 	return resp, err
 }
 
-func (v *VagrantCloudClient) Upload(ctx context.Context, path string, url string) (*http.Response, error) {
+func (v *VagrantCloudClient) Upload(path string, url string) (*http.Response, error) {
 	file, err := os.Open(path)
 
 	if err != nil {

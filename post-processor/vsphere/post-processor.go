@@ -168,7 +168,7 @@ func (p *PostProcessor) PostProcess(ctx context.Context, ui packer.Ui, artifact 
 
 	var errWriter io.Writer
 	var errOut bytes.Buffer
-	cmd := exec.CommandContext(ctx, ovftool, args...)
+	cmd := exec.Command(ovftool, args...)
 	errWriter = io.MultiWriter(os.Stderr, &errOut)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = errWriter

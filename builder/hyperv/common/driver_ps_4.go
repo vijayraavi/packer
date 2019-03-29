@@ -34,25 +34,25 @@ func NewHypervPS4Driver() (Driver, error) {
 }
 
 func (d *HypervPS4Driver) IsRunning(vmName string) (bool, error) {
-	return hyperv.IsRunning(ctx, vmName)
+	return hyperv.IsRunning(vmName)
 }
 
 func (d *HypervPS4Driver) IsOff(vmName string) (bool, error) {
-	return hyperv.IsOff(ctx, vmName)
+	return hyperv.IsOff(vmName)
 }
 
 func (d *HypervPS4Driver) Uptime(vmName string) (uint64, error) {
-	return hyperv.Uptime(ctx, vmName)
+	return hyperv.Uptime(vmName)
 }
 
 // Start starts a VM specified by the name given.
 func (d *HypervPS4Driver) Start(ctx context.Context, vmName string) error {
-	return hyperv.StartVirtualMachine(ctx, vmName)
+	return hyperv.StartVirtualMachine(vmName)
 }
 
 // Stop stops a VM specified by the name given.
 func (d *HypervPS4Driver) Stop(vmName string) error {
-	return hyperv.StopVirtualMachine(ctx, vmName)
+	return hyperv.StopVirtualMachine(vmName)
 }
 
 func (d *HypervPS4Driver) Verify() error {
@@ -286,7 +286,7 @@ func (d *HypervPS4Driver) verifyPSVersion() error {
 	versionCmd := "$host.version.Major"
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(ctx, versionCmd)
+	cmdOut, err := ps.Output(versionCmd)
 	if err != nil {
 		return err
 	}
@@ -315,7 +315,7 @@ func (d *HypervPS4Driver) verifyPSHypervModule() error {
 	versionCmd := "function foo(){try{ $commands = Get-Command -Module Hyper-V;if($commands.Length -eq 0){return $false} }catch{return $false}; return $true} foo"
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(ctx, versionCmd)
+	cmdOut, err := ps.Output(versionCmd)
 	if err != nil {
 		return err
 	}
@@ -340,7 +340,7 @@ return $principal.IsInRole($hypervrole)
 `
 
 	var ps powershell.PowerShellCmd
-	cmdOut, err := ps.Output(ctx, script)
+	cmdOut, err := ps.Output(script)
 	if err != nil {
 		return false, err
 	}

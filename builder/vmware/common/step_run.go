@@ -26,7 +26,7 @@ type StepRun struct {
 	vmxPath  string
 }
 
-func (s *StepRun) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepRun) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 	vmxPath := state.Get("vmx_path").(string)
@@ -84,7 +84,7 @@ func (s *StepRun) Cleanup(state multistep.StateBag) {
 		}
 
 		// See if it is running
-		running, _ := driver.IsRunning(ctx, s.vmxPath)
+		running, _ := driver.IsRunning(s.vmxPath)
 		if running {
 			ui.Say("Stopping virtual machine...")
 			if err := driver.Stop(s.vmxPath); err != nil {

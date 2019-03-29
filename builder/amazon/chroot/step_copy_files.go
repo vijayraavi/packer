@@ -20,7 +20,7 @@ type StepCopyFiles struct {
 	files []string
 }
 
-func (s *StepCopyFiles) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
+func (s *StepCopyFiles) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	config := state.Get("config").(*Config)
 	mountPath := state.Get("mount_path").(string)
 	ui := state.Get("ui").(packer.Ui)
@@ -44,7 +44,7 @@ func (s *StepCopyFiles) Run(ctx context.Context, state multistep.StateBag) multi
 			}
 
 			stderr.Reset()
-			cmd := ShellCommand(ctx, cmdText)
+			cmd := ShellCommand(cmdText)
 			cmd.Stderr = stderr
 			if err := cmd.Run(); err != nil {
 				err := fmt.Errorf(
@@ -79,7 +79,7 @@ func (s *StepCopyFiles) CleanupFunc(state multistep.StateBag) error {
 				return err
 			}
 
-			localCmd := ShellCommand(ctx, localCmdText)
+			localCmd := ShellCommand(localCmdText)
 			if err := localCmd.Run(); err != nil {
 				return err
 			}
