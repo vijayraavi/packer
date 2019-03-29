@@ -66,7 +66,6 @@ func (s *StepRun) Cleanup(state multistep.StateBag) {
 		return
 	}
 
-	ctx := context.TODO()
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 

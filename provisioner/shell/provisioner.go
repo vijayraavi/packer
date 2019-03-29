@@ -248,7 +248,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			}
 			remoteVFName := fmt.Sprintf("%s/%s", p.config.RemoteFolder,
 				fmt.Sprintf("varfile_%d.sh", rand.Intn(9999)))
-			if err := comm.Upload(ctx, remoteVFName, r, nil); err != nil {
+			if err := comm.Upload(remoteVFName, r, nil); err != nil {
 				return fmt.Errorf("Error uploading envVarFile: %s", err)
 			}
 			tf.Close()
@@ -261,6 +261,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 					"Error chmodding script file to 0600 in remote "+
 						"machine: %s", err)
 			}
+			cmd.Wait()
 			p.config.envVarFile = remoteVFName
 			return nil
 		})
@@ -306,7 +307,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 				r = &UnixReader{Reader: r}
 			}
 
-			if err := comm.Upload(ctx, p.config.RemotePath, r, nil); err != nil {
+			if err := comm.Upload(p.config.RemotePath, r, nil); err != nil {
 				return fmt.Errorf("Error uploading script: %s", err)
 			}
 

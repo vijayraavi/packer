@@ -58,7 +58,7 @@ func (s *StepPrlctl) Run(ctx context.Context, state multistep.StateBag) multiste
 		}
 
 		ui.Message(fmt.Sprintf("Executing: prlctl %s", strings.Join(command, " ")))
-		if err := driver.Prlctl(ctx, command...); err != nil {
+		if err := driver.Prlctl(command...); err != nil {
 			err = fmt.Errorf("Error executing command: %s", err)
 			state.Put("error", err)
 			ui.Error(err.Error())

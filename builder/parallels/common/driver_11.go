@@ -51,7 +51,7 @@ func (d *Parallels11Driver) SetDefaultConfiguration(vmName string) error {
 	commands[9] = []string{"set", vmName, "--sh-app-host-to-guest", "off"}
 
 	for _, command := range commands {
-		err := d.Prlctl(ctx, command...)
+		err := d.Prlctl(command...)
 		if err != nil {
 			return err
 		}

@@ -44,7 +44,7 @@ func (s *StepAttachFloppy) Run(ctx context.Context, state multistep.StateBag) mu
 		"--device-del", "fdd0",
 	}
 	// This will almost certainly fail with 'The fdd0 device does not exist.'
-	driver.Prlctl(ctx, delCommand...)
+	driver.Prlctl(delCommand...)
 
 	ui.Say("Attaching floppy disk...")
 	// Attaching the floppy disk
@@ -54,7 +54,7 @@ func (s *StepAttachFloppy) Run(ctx context.Context, state multistep.StateBag) mu
 		"--image", floppyPath,
 		"--connect",
 	}
-	if err := driver.Prlctl(ctx, addCommand...); err != nil {
+	if err := driver.Prlctl(addCommand...); err != nil {
 		state.Put("error", fmt.Errorf("Error adding floppy: %s", err))
 		return multistep.ActionHalt
 	}
@@ -79,5 +79,5 @@ func (s *StepAttachFloppy) Cleanup(state multistep.StateBag) {
 		"set", vmName,
 		"--device-del", "fdd0",
 	}
-	driver.Prlctl(ctx, command...)
+	driver.Prlctl(command...)
 }

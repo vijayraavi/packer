@@ -28,7 +28,7 @@ func (s *StepRun) Run(ctx context.Context, state multistep.StateBag) multistep.S
 
 	ui.Say("Starting the virtual machine...")
 	command := []string{"start", vmName}
-	if err := driver.Prlctl(ctx, command...); err != nil {
+	if err := driver.Prlctl(command...); err != nil {
 		err = fmt.Errorf("Error starting VM: %s", err)
 		state.Put("error", err)
 		ui.Error(err.Error())
@@ -49,7 +49,7 @@ func (s *StepRun) Cleanup(state multistep.StateBag) {
 	driver := state.Get("driver").(Driver)
 	ui := state.Get("ui").(packer.Ui)
 
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	if running, _ := driver.IsRunning(ctx, s.vmName); running {
 		if err := driver.Stop(s.vmName); err != nil {

@@ -50,10 +50,10 @@ func (s *StepMountDevice) Run(ctx context.Context, state multistep.StateBag) mul
 		log.Printf("Source image virtualization type is: %s", virtualizationType)
 	}
 
-	ictx := config.ctx
+	ctx := config.ctx
 
-	ictx.Data = &mountPathData{Device: filepath.Base(device)}
-	mountPath, err := interpolate.Render(config.MountPath, &ictx)
+	ctx.Data = &mountPathData{Device: filepath.Base(device)}
+	mountPath, err := interpolate.Render(config.MountPath, &ctx)
 
 	if err != nil {
 		err := fmt.Errorf("Error preparing mount directory: %s", err)

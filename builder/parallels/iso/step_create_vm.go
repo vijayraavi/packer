@@ -59,7 +59,7 @@ func (s *stepCreateVM) Run(ctx context.Context, state multistep.StateBag) multis
 
 	ui.Say("Creating virtual machine...")
 	for _, command := range commands {
-		if err := driver.Prlctl(ctx, command...); err != nil {
+		if err := driver.Prlctl(command...); err != nil {
 			err := fmt.Errorf("Error creating VM: %s", err)
 			state.Put("error", err)
 			ui.Error(err.Error())
@@ -94,7 +94,7 @@ func (s *stepCreateVM) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packer.Ui)
 
 	ui.Say("Unregistering virtual machine...")
-	if err := driver.Prlctl(ctx, "unregister", s.vmName); err != nil {
+	if err := driver.Prlctl("unregister", s.vmName); err != nil {
 		ui.Error(fmt.Sprintf("Error unregistering virtual machine: %s", err))
 	}
 }

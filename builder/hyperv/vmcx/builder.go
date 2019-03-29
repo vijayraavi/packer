@@ -151,21 +151,20 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 	log.Println(fmt.Sprintf("%s: %v", "VMName", b.config.VMName))
 
 	if b.config.SwitchName == "" {
-		b.config.SwitchName = b.detectSwitchName(ctx, )
+		b.config.SwitchName = b.detectSwitchName()
 	}
 
 	if b.config.Cpu < 1 {
 		b.config.Cpu = 1
 	}
 
-	ctx := context.TODO()
 	if b.config.CloneFromVMName == "" {
 		if b.config.CloneFromVMCXPath == "" {
 			errs = packer.MultiErrorAppend(errs, fmt.Errorf("The clone_from_vm_name must be specified if "+
 				"clone_from_vmcx_path is not specified."))
 		}
 	} else {
-		virtualMachineExists, err := powershell.DoesVirtualMachineExist(ctx, b.config.CloneFromVMName)
+		virtualMachineExists, err := powershell.DoesVirtualMachineExist(b.config.CloneFromVMName)
 		if err != nil {
 			errs = packer.MultiErrorAppend(errs, fmt.Errorf("Failed detecting if virtual machine to clone "+
 				"from exists: %s", err))
@@ -174,14 +173,14 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 				errs = packer.MultiErrorAppend(errs, fmt.Errorf("Virtual machine '%s' to clone from does not "+
 					"exist.", b.config.CloneFromVMName))
 			} else {
-				b.config.Generation, err = powershell.GetVirtualMachineGeneration(ctx, b.config.CloneFromVMName)
+				b.config.Generation, err = powershell.GetVirtualMachineGeneration(b.config.CloneFromVMName)
 				if err != nil {
 					errs = packer.MultiErrorAppend(errs, fmt.Errorf("Failed detecting virtual machine to clone "+
 						"from generation: %s", err))
 				}
 
 				if b.config.CloneFromSnapshotName != "" {
-					virtualMachineSnapshotExists, err := powershell.DoesVirtualMachineSnapshotExist(ctx,
+					virtualMachineSnapshotExists, err := powershell.DoesVirtualMachineSnapshotExist(
 						b.config.CloneFromVMName, b.config.CloneFromSnapshotName)
 					if err != nil {
 						errs = packer.MultiErrorAppend(errs, fmt.Errorf("Failed detecting if virtual machine "+
@@ -195,7 +194,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 					}
 				}
 
-				virtualMachineOn, err := powershell.IsVirtualMachineOn(ctx, b.config.CloneFromVMName)
+				virtualMachineOn, err := powershell.IsVirtualMachineOn(b.config.CloneFromVMName)
 				if err != nil {
 					errs = packer.MultiErrorAppend(errs, fmt.Errorf("Failed detecting if virtual machine to "+
 						"clone is running: %s", err))
@@ -310,7 +309,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 	}
 
 	if b.config.EnableVirtualizationExtensions {
-		hasVirtualMachineVirtualizationExtensions, err := powershell.HasVirtualMachineVirtualizationExtensions(ctx)
+		hasVirtualMachineVirtualizationExtensions, err := powershell.HasVirtualMachineVirtualizationExtensions()
 		if err != nil {
 			errs = packer.MultiErrorAppend(errs, fmt.Errorf("Failed detecting virtual machine virtualization "+
 				"extensions support: %s", err))
@@ -331,7 +330,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 				"will forcibly halt the virtual machine, which may result in data loss.")
 	}
 
-	warning := b.checkHostAvailableMemory(ctx)
+	warning := b.checkHostAvailableMemory()
 	if warning != "" {
 		warnings = appendWarnings(warnings, warning)
 	}
@@ -376,7 +375,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 // a Hyperv appliance.
 func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (packer.Artifact, error) {
 	// Create the driver that we'll use to communicate with Hyperv
-	driver, err := hypervcommon.NewHypervPS4Driver(ctx)
+	driver, err := hypervcommon.NewHypervPS4Driver()
 	if err != nil {
 		return nil, fmt.Errorf("Failed creating Hyper-V driver: %s", err)
 	}
@@ -582,11 +581,11 @@ func (b *Builder) checkRamSize() error {
 	return nil
 }
 
-func (b *Builder) checkHostAvailableMemory(ctx context.Context) string {
+func (b *Builder) checkHostAvailableMemory() string {
 	powershellAvailable, _, _ := powershell.IsPowershellAvailable()
 
 	if powershellAvailable {
-		freeMB := powershell.GetHostAvailableMemory(ctx)
+		freeMB := powershell.GetHostAvailableMemory()
 
 		if (freeMB - float64(b.config.RamSize)) < LowRam {
 			return fmt.Sprintf("Hyper-V might fail to create a VM if there is not enough free memory in the system.")
@@ -596,12 +595,12 @@ func (b *Builder) checkHostAvailableMemory(ctx context.Context) string {
 	return ""
 }
 
-func (b *Builder) detectSwitchName(ctx context.Context) string {
+func (b *Builder) detectSwitchName() string {
 	powershellAvailable, _, _ := powershell.IsPowershellAvailable()
 
 	if powershellAvailable {
 		// no switch name, try to get one attached to a online network adapter
-		onlineSwitchName, err := hyperv.GetExternalOnlineVirtualSwitch(ctx)
+		onlineSwitchName, err := hyperv.GetExternalOnlineVirtualSwitch()
 		if onlineSwitchName != "" && err == nil {
 			return onlineSwitchName
 		}

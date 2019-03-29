@@ -36,7 +36,7 @@ func (s *stepAttachISO) Run(ctx context.Context, state multistep.StateBag) multi
 		"--image", isoPath,
 		"--enable", "--connect",
 	}
-	if err := driver.Prlctl(ctx, command...); err != nil {
+	if err := driver.Prlctl(command...); err != nil {
 		err := fmt.Errorf("Error attaching ISO: %s", err)
 		state.Put("error", err)
 		ui.Error(err.Error())
@@ -66,7 +66,7 @@ func (s *stepAttachISO) Cleanup(state multistep.StateBag) {
 		"--image", "", "--disconnect", "--enable",
 	}
 
-	if err := driver.Prlctl(ctx, command...); err != nil {
+	if err := driver.Prlctl(command...); err != nil {
 		ui.Error(fmt.Sprintf("Error detaching ISO: %s", err))
 	}
 }

@@ -32,7 +32,7 @@ type Parallels9Driver struct {
 
 // Import creates a clone of the source VM and reassigns the MAC address if needed.
 func (d *Parallels9Driver) Import(name, srcPath, dstDir string, reassignMAC bool) error {
-	err := d.Prlctl(ctx, "register", srcPath, "--preserve-uuid")
+	err := d.Prlctl("register", srcPath, "--preserve-uuid")
 	if err != nil {
 		return err
 	}
@@ -50,17 +50,17 @@ func (d *Parallels9Driver) Import(name, srcPath, dstDir string, reassignMAC bool
 		}
 	}
 
-	err = d.Prlctl(ctx, "clone", srcID, "--name", name, "--dst", dstDir)
+	err = d.Prlctl("clone", srcID, "--name", name, "--dst", dstDir)
 	if err != nil {
 		return err
 	}
 
-	err = d.Prlctl(ctx, "unregister", srcID)
+	err = d.Prlctl("unregister", srcID)
 	if err != nil {
 		return err
 	}
 
-	err = d.Prlctl(ctx, "set", name, "--device-set", "net0", "--mac", srcMAC)
+	err = d.Prlctl("set", name, "--device-set", "net0", "--mac", srcMAC)
 	if err != nil {
 		return err
 	}
@@ -224,7 +224,7 @@ func (d *Parallels9Driver) IsRunning(name string) (bool, error) {
 
 // Stop forcibly stops the VM.
 func (d *Parallels9Driver) Stop(name string) error {
-	if err := d.Prlctl(ctx, "stop", name, "--kill"); err != nil {
+	if err := d.Prlctl("stop", name, "--kill"); err != nil {
 		return err
 	}
 
@@ -341,7 +341,7 @@ func (d *Parallels9Driver) SetDefaultConfiguration(vmName string) error {
 	commands[4] = []string{"set", vmName, "--smart-guard", "off"}
 
 	for _, command := range commands {
-		err := d.Prlctl(ctx, command...)
+		err := d.Prlctl(command...)
 		if err != nil {
 			return err
 		}

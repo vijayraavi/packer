@@ -29,7 +29,7 @@ func (s *stepCreateDisk) Run(ctx context.Context, state multistep.StateBag) mult
 	}
 
 	ui.Say("Creating hard drive...")
-	err := driver.Prlctl(ctx, command...)
+	err := driver.Prlctl(command...)
 	if err != nil {
 		err := fmt.Errorf("Error creating hard drive: %s", err)
 		state.Put("error", err)

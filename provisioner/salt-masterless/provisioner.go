@@ -244,7 +244,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	}
 
 	ui.Message(fmt.Sprintf("Creating remote temporary directory: %s", p.config.TempConfigDir))
-	if err := p.createDir(ctx, ui, comm, p.config.TempConfigDir); err != nil {
+	if err := p.createDir(ui, comm, p.config.TempConfigDir); err != nil {
 		return fmt.Errorf("Error creating remote temporary directory: %s", err)
 	}
 
@@ -252,18 +252,18 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		ui.Message(fmt.Sprintf("Uploading minion config: %s", p.config.MinionConfig))
 		src = p.config.MinionConfig
 		dst = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "minion"))
-		if err = p.uploadFile(ctx, ui, comm, dst, src); err != nil {
+		if err = p.uploadFile(ui, comm, dst, src); err != nil {
 			return fmt.Errorf("Error uploading local minion config file to remote: %s", err)
 		}
 
 		// move minion config into /etc/salt
 		ui.Message(fmt.Sprintf("Make sure directory %s exists", p.guestOSTypeConfig.configDir))
-		if err := p.createDir(ctx, ui, comm, p.guestOSTypeConfig.configDir); err != nil {
+		if err := p.createDir(ui, comm, p.guestOSTypeConfig.configDir); err != nil {
 			return fmt.Errorf("Error creating remote salt configuration directory: %s", err)
 		}
 		src = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "minion"))
 		dst = filepath.ToSlash(filepath.Join(p.guestOSTypeConfig.configDir, "minion"))
-		if err = p.moveFile(ctx, ui, comm, dst, src); err != nil {
+		if err = p.moveFile(ui, comm, dst, src); err != nil {
 			return fmt.Errorf("Unable to move %s/minion to %s/minion: %s", p.config.TempConfigDir, p.guestOSTypeConfig.configDir, err)
 		}
 	}
@@ -272,18 +272,18 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		ui.Message(fmt.Sprintf("Uploading grains file: %s", p.config.GrainsFile))
 		src = p.config.GrainsFile
 		dst = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "grains"))
-		if err = p.uploadFile(ctx, ui, comm, dst, src); err != nil {
+		if err = p.uploadFile(ui, comm, dst, src); err != nil {
 			return fmt.Errorf("Error uploading local grains file to remote: %s", err)
 		}
 
 		// move grains file into /etc/salt
 		ui.Message(fmt.Sprintf("Make sure directory %s exists", p.guestOSTypeConfig.configDir))
-		if err := p.createDir(ctx, ui, comm, p.guestOSTypeConfig.configDir); err != nil {
+		if err := p.createDir(ui, comm, p.guestOSTypeConfig.configDir); err != nil {
 			return fmt.Errorf("Error creating remote salt configuration directory: %s", err)
 		}
 		src = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "grains"))
 		dst = filepath.ToSlash(filepath.Join(p.guestOSTypeConfig.configDir, "grains"))
-		if err = p.moveFile(ctx, ui, comm, dst, src); err != nil {
+		if err = p.moveFile(ui, comm, dst, src); err != nil {
 			return fmt.Errorf("Unable to move %s/grains to %s/grains: %s", p.config.TempConfigDir, p.guestOSTypeConfig.configDir, err)
 		}
 	}
@@ -291,7 +291,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 	ui.Message(fmt.Sprintf("Uploading local state tree: %s", p.config.LocalStateTree))
 	src = p.config.LocalStateTree
 	dst = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "states"))
-	if err = p.uploadDir(ctx, ui, comm, dst, src, []string{".git"}); err != nil {
+	if err = p.uploadDir(ui, comm, dst, src, []string{".git"}); err != nil {
 		return fmt.Errorf("Error uploading local state tree to remote: %s", err)
 	}
 
@@ -303,13 +303,13 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		dst = p.guestOSTypeConfig.stateRoot
 	}
 
-	if err = p.statPath(ctx, ui, comm, dst); err != nil {
-		if err = p.removeDir(ctx, ui, comm, dst); err != nil {
+	if err = p.statPath(ui, comm, dst); err != nil {
+		if err = p.removeDir(ui, comm, dst); err != nil {
 			return fmt.Errorf("Unable to clear salt tree: %s", err)
 		}
 	}
 
-	if err = p.moveFile(ctx, ui, comm, dst, src); err != nil {
+	if err = p.moveFile(ui, comm, dst, src); err != nil {
 		return fmt.Errorf("Unable to move %s/states to %s: %s", p.config.TempConfigDir, dst, err)
 	}
 
@@ -317,7 +317,7 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 		ui.Message(fmt.Sprintf("Uploading local pillar roots: %s", p.config.LocalPillarRoots))
 		src = p.config.LocalPillarRoots
 		dst = filepath.ToSlash(filepath.Join(p.config.TempConfigDir, "pillar"))
-		if err = p.uploadDir(ctx, ui, comm, dst, src, []string{".git"}); err != nil {
+		if err = p.uploadDir(ui, comm, dst, src, []string{".git"}); err != nil {
 			return fmt.Errorf("Error uploading local pillar roots to remote: %s", err)
 		}
 
@@ -329,13 +329,13 @@ func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.C
 			dst = p.guestOSTypeConfig.pillarRoot
 		}
 
-		if err = p.statPath(ctx, ui, comm, dst); err != nil {
-			if err = p.removeDir(ctx, ui, comm, dst); err != nil {
+		if err = p.statPath(ui, comm, dst); err != nil {
+			if err = p.removeDir(ui, comm, dst); err != nil {
 				return fmt.Errorf("Unable to clear pillar root: %s", err)
 			}
 		}
 
-		if err = p.moveFile(ctx, ui, comm, dst, src); err != nil {
+		if err = p.moveFile(ui, comm, dst, src); err != nil {
 			return fmt.Errorf("Unable to move %s/pillar to %s: %s", p.config.TempConfigDir, dst, err)
 		}
 	}
@@ -392,7 +392,7 @@ func validateFileConfig(path string, name string, required bool) error {
 	return nil
 }
 
-func (p *Provisioner) uploadFile(ctx context.Context, ui packer.Ui, comm packer.Communicator, dst, src string) error {
+func (p *Provisioner) uploadFile(ui packer.Ui, comm packer.Communicator, dst, src string) error {
 	f, err := os.Open(src)
 	if err != nil {
 		return fmt.Errorf("Error opening: %s", err)
@@ -405,7 +405,7 @@ func (p *Provisioner) uploadFile(ctx context.Context, ui packer.Ui, comm packer.
 	return nil
 }
 
-func (p *Provisioner) moveFile(ctx context.Context, ui packer.Ui, comm packer.Communicator, dst string, src string) error {
+func (p *Provisioner) moveFile(ui packer.Ui, comm packer.Communicator, dst string, src string) error {
 	ui.Message(fmt.Sprintf("Moving %s to %s", src, dst))
 	cmd := &packer.RemoteCmd{
 		Command: p.sudo(p.guestCommands.MovePath(src, dst)),
@@ -420,7 +420,7 @@ func (p *Provisioner) moveFile(ctx context.Context, ui packer.Ui, comm packer.Co
 	return nil
 }
 
-func (p *Provisioner) createDir(ctx context.Context, ui packer.Ui, comm packer.Communicator, dir string) error {
+func (p *Provisioner) createDir(ui packer.Ui, comm packer.Communicator, dir string) error {
 	ui.Message(fmt.Sprintf("Creating directory: %s", dir))
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.CreateDir(dir),
@@ -434,7 +434,7 @@ func (p *Provisioner) createDir(ctx context.Context, ui packer.Ui, comm packer.C
 	return nil
 }
 
-func (p *Provisioner) statPath(ctx context.Context, ui packer.Ui, comm packer.Communicator, path string) error {
+func (p *Provisioner) statPath(ui packer.Ui, comm packer.Communicator, path string) error {
 	ui.Message(fmt.Sprintf("Verifying Path: %s", path))
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.StatPath(path),
@@ -448,7 +448,7 @@ func (p *Provisioner) statPath(ctx context.Context, ui packer.Ui, comm packer.Co
 	return nil
 }
 
-func (p *Provisioner) removeDir(ctx context.Context, ui packer.Ui, comm packer.Communicator, dir string) error {
+func (p *Provisioner) removeDir(ui packer.Ui, comm packer.Communicator, dir string) error {
 	ui.Message(fmt.Sprintf("Removing directory: %s", dir))
 	cmd := &packer.RemoteCmd{
 		Command: p.guestCommands.RemoveDir(dir),
@@ -462,8 +462,8 @@ func (p *Provisioner) removeDir(ctx context.Context, ui packer.Ui, comm packer.C
 	return nil
 }
 
-func (p *Provisioner) uploadDir(ctx context.Context, ui packer.Ui, comm packer.Communicator, dst, src string, ignore []string) error {
-	if err := p.createDir(ctx, ui, comm, dst); err != nil {
+func (p *Provisioner) uploadDir(ui packer.Ui, comm packer.Communicator, dst, src string, ignore []string) error {
+	if err := p.createDir(ui, comm, dst); err != nil {
 		return err
 	}
 

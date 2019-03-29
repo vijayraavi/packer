@@ -1,7 +1,5 @@
 package common
 
-import "context"
-
 type RemoteDriverMock struct {
 	DriverMock
 

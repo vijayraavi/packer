@@ -99,8 +99,6 @@ func (c *Adapter) handleSession(newChannel ssh.NewChannel) error {
 
 	done := make(chan struct{})
 
-	ctx := context.TODO()
-
 	// Sessions have requests such as "pty-req", "shell", "env", and "exec".
 	// see RFC 4254, section 6
 	go func(in <-chan *ssh.Request) {

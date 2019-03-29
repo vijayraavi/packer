@@ -92,13 +92,13 @@ func (p *Provisioner) Prepare(raws ...interface{}) error {
 
 func (p *Provisioner) Provision(ctx context.Context, ui packer.Ui, comm packer.Communicator) error {
 	if p.config.Direction == "download" {
-		return p.ProvisionDownload(ctx, ui, comm)
+		return p.ProvisionDownload(ui, comm)
 	} else {
-		return p.ProvisionUpload(ctx, ui, comm)
+		return p.ProvisionUpload(ui, comm)
 	}
 }
 
-func (p *Provisioner) ProvisionDownload(ctx context.Context, ui packer.Ui, comm packer.Communicator) error {
+func (p *Provisioner) ProvisionDownload(ui packer.Ui, comm packer.Communicator) error {
 	for _, src := range p.config.Sources {
 		dst := p.config.Destination
 		ui.Say(fmt.Sprintf("Downloading %s => %s", src, dst))
@@ -139,7 +139,7 @@ func (p *Provisioner) ProvisionDownload(ctx context.Context, ui packer.Ui, comm 
 	return nil
 }
 
-func (p *Provisioner) ProvisionUpload(ctx context.Context, ui packer.Ui, comm packer.Communicator) error {
+func (p *Provisioner) ProvisionUpload(ui packer.Ui, comm packer.Communicator) error {
 	for _, src := range p.config.Sources {
 		dst := p.config.Destination
 

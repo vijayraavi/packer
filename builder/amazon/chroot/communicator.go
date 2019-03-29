@@ -38,7 +38,7 @@ func (c *Communicator) Start(ctx context.Context, cmd *packer.RemoteCmd) error {
 	localCmd.Stdout = cmd.Stdout
 	localCmd.Stderr = cmd.Stderr
 	log.Printf("Executing: %s %#v", localCmd.Path, localCmd.Args)
-	if err := localCmd.Start(); err != nil {
+	if err := localCmd.Start(ctx); err != nil {
 		return err
 	}
 
